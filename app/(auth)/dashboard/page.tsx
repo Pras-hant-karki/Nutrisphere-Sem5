@@ -1,7 +1,7 @@
 export default function Page() {
     return (
         <div>
-            About US
+            Welcome to Dashboard
         </div>
     );
 }
