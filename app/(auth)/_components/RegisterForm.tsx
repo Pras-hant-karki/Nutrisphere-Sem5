@@ -27,18 +27,76 @@ export default function RegisterForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(submit)} className="space-y-4">
+    <form
+      onSubmit={handleSubmit(submit)}
+      className="space-y-4 text-black"
+    >
+      {/* Full name */}
+      <div>
+        <input
+          {...register("name")}
+          placeholder="Full name"
+          className="w-full h-11 border border-gray-300 rounded-md px-4 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400"
+        />
+        {errors.name && (
+          <p className="text-sm text-red-500 mt-1">
+            {errors.name.message}
+          </p>
+        )}
+      </div>
 
-      <input {...register("name")} placeholder="Full name" className="w-full h-11 border rounded-md px-3" />
-      <input {...register("email")} placeholder="Email" className="w-full h-11 border rounded-md px-3" />
-      <input type="password" {...register("password")} placeholder="Password" className="w-full h-11 border rounded-md px-3" />
-      <input type="password" {...register("confirmPassword")} placeholder="Confirm password" className="w-full h-11 border rounded-md px-3" />
+      {/* Email */}
+      <div>
+        <input
+          {...register("email")}
+          placeholder="Email"
+          className="w-full h-11 border border-gray-300 rounded-md px-4 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400"
+        />
+        {errors.email && (
+          <p className="text-sm text-red-500 mt-1">
+            {errors.email.message}
+          </p>
+        )}
+      </div>
 
-      <button className="w-full h-11 rounded-md bg-orange-500 text-white font-semibold">
+      {/* Password */}
+      <div>
+        <input
+          type="password"
+          {...register("password")}
+          placeholder="Password"
+          className="w-full h-11 border border-gray-300 rounded-md px-4 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400"
+        />
+        {errors.password && (
+          <p className="text-sm text-red-500 mt-1">
+            {errors.password.message}
+          </p>
+        )}
+      </div>
+
+      {/* Confirm Password */}
+      <div>
+        <input
+          type="password"
+          {...register("confirmPassword")}
+          placeholder="Confirm password"
+          className="w-full h-11 border border-gray-300 rounded-md px-4 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400"
+        />
+        {errors.confirmPassword && (
+          <p className="text-sm text-red-500 mt-1">
+            {errors.confirmPassword.message}
+          </p>
+        )}
+      </div>
+
+      <button
+        disabled={pending}
+        className="w-full h-11 rounded-md bg-orange-500 hover:bg-orange-600 transition text-white font-semibold"
+      >
         {pending ? "Creating..." : "Create account"}
       </button>
 
-      <p className="text-center text-sm">
+      <p className="text-center text-sm text-gray-600">
         Already have an account?{" "}
         <Link href="/login" className="text-orange-500 font-semibold">
           Log in

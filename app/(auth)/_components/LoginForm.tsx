@@ -65,10 +65,11 @@ export default function LoginForm() {
       </button>
 
       <p className="text-center text-sm text-gray-700">
-        Don’t have an account?{" "}
+        Don't have an account?{" "}
         <Link href="/register" className="text-orange-500 font-semibold">
           Register
         </Link>
+        
       </p>
     </form>
   );
