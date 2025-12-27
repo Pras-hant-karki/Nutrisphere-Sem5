@@ -22,7 +22,7 @@ export default function LoginForm() {
   const submit = (values: LoginData) => {
     startTransition(() => {
       console.log(values);
-      router.push("/");
+      router.push("/dashboard");
     });
   };
 
