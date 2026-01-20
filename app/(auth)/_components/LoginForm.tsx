@@ -3,13 +3,17 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useTransition } from "react";
+import { useTransition, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LoginData, loginSchema } from "../schema";
+import { setAuthToken, setUserData } from "@/app/lib/cookie";
+import { login } from "@/app/lib/api/auth";
+
 
 export default function LoginForm() {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
+  const [error, setError] = useState<string>("");
 
   const {
     register,
@@ -19,15 +23,32 @@ export default function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
 
-  const submit = (values: LoginData) => {
-    startTransition(() => {
-      console.log(values);
-      router.push("/dashboard");
-    });
+  const submit = async (values: LoginData) => {
+    setError("");
+    try{
+      
+      const result= await login(values)
+      await setAuthToken( result.token );
+      await setUserData( result.data );
+       if (result.success) {
+                router.push("/dashboard");
+            } else {
+                throw new Error(result.message || "Registration failed");
+            }
+      
+    }catch(err: Error | any){
+      setError(err.message || "Login failed");
+    }
+
   };
 
   return (
     <form onSubmit={handleSubmit(submit)} className="space-y-4">
+      {error && (
+        <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {error}
+        </div>
+      )}
 
       <input
         {...register("email")}
@@ -50,7 +71,7 @@ export default function LoginForm() {
 
       <div className="flex justify-end text-sm">
         <Link
-          href="/forgot-password"
+          href="/forgotPassword"
           className="text-orange-500 hover:underline"
         >
           Forgot password?
@@ -59,7 +80,7 @@ export default function LoginForm() {
 
       <button
         disabled={pending}
-        className="w-full h-11 rounded-md bg-orange-500 text-white font-semibold"
+        className="w-full h-11 rounded-md bg-orange-500 text-white font-semibold disabled:opacity-50"
       >
         {pending ? "Logging in..." : "Log in"}
       </button>
