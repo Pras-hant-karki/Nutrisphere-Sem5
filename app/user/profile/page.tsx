@@ -172,7 +172,7 @@ export default function ProfilePage() {
 
               <div className="w-full">
                 <label htmlFor="image" className="block text-sm font-semibold text-[#D4AF37] mb-2">
-                  📸 Profile Picture
+                   Profile Picture
                 </label>
                 <input
                   id="image"
@@ -192,7 +192,7 @@ export default function ProfilePage() {
                   htmlFor="fullName"
                   className="block text-sm font-semibold text-[#D4AF37] mb-2"
                 >
-                  👤 Full Name
+                   Full Name
                 </label>
                 <input
                   id="fullName"
@@ -214,7 +214,7 @@ export default function ProfilePage() {
                   htmlFor="email"
                   className="block text-sm font-semibold text-[#9FB3A6] mb-2"
                 >
-                  📧 Email (Non-editable)
+                   Email (Non-editable)
                 </label>
                 <input
                   id="email"
@@ -231,7 +231,7 @@ export default function ProfilePage() {
                   htmlFor="role"
                   className="block text-sm font-semibold text-[#9FB3A6] mb-2"
                 >
-                  👑 Role (Non-editable)
+                   Role (Non-editable)
                 </label>
                 <input
                   id="role"
@@ -248,7 +248,7 @@ export default function ProfilePage() {
                   htmlFor="phone"
                   className="block text-sm font-semibold text-[#D4AF37] mb-2"
                 >
-                  📱 Phone (Optional)
+                   Phone (Optional)
                 </label>
                 <input
                   id="phone"
@@ -267,7 +267,7 @@ export default function ProfilePage() {
                 disabled={isLoading}
                 className="flex-1 px-6 py-3 rounded-lg bg-[#2ECC71] text-[#0F1310] font-bold hover:bg-[#26c969] disabled:opacity-60 transition-all shadow-lg"
               >
-                {isLoading ? "💾 Saving..." : "💾 Save Changes"}
+                {isLoading ? " Saving..." : " Save Changes"}
               </button>
               <button
                 type="button"

@@ -10,7 +10,6 @@ import { setAuthToken, setUserData } from "@/app/lib/cookie";
 import { login } from "@/app/lib/api/auth";
 import { setAuth } from "@/app/lib/auth-helpers";
 
-
 export default function LoginForm() {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -26,25 +25,37 @@ export default function LoginForm() {
 
   const submit = async (values: LoginData) => {
     setError("");
-    try{
-      
-      const result= await login(values)
-      await setAuthToken( result.token );
-      await setUserData( result.data );
-      
-      // Store in localStorage for auth-helpers
+    try {
+      const result = await login(values);
+
+      console.log("Login result:", result);
+
+      if (!result || !result.token) {
+        throw new Error("Invalid response from server");
+      }
+
+      const userData = result.user || result.data;
+
+      if (!userData) {
+        throw new Error("User data not found in response");
+      }
+
+      await setAuthToken(result.token);
+      await setUserData(userData);
+
+      const userId = userData._id || userData.id || "";
+
       setAuth(result.token, {
-        id: result.data._id || result.data.id,
-        email: result.data.email,
-        role: result.data.role,
-        fullName: result.data.fullName,
-        phone: result.data.phone,
-        image: result.data.image,
+        id: userId,
+        email: userData.email || "",
+        role: userData.role || "user",
+        fullName: userData.fullName || userData.name || "",
+        phone: userData.phone || "",
+        image: userData.image || "",
       });
-      
+
       if (result.success) {
-        // Redirect based on role
-        if (result.data.role === "admin") {
+        if (userData.role === "admin") {
           router.push("/admin/dashboard");
         } else {
           router.push("/user/profile");
@@ -52,63 +63,99 @@ export default function LoginForm() {
       } else {
         throw new Error(result.message || "Login failed");
       }
-      
-    }catch(err: Error | any){
+    } catch (err: Error | any) {
+      console.error("Login error:", err);
       setError(err.message || "Login failed");
     }
-
   };
 
+  const inputBase =
+    "w-full rounded-xl px-4 text-base outline-none transition-all";
+
   return (
-    <form onSubmit={handleSubmit(submit)} className="space-y-4">
-      {error && (
-        <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-          {error}
+    <div>
+      <h2 className="text-3xl font-extrabold mb-6" style={{ color: "#D4AF37" }}>
+        Log in
+      </h2>
+
+      <form onSubmit={handleSubmit(submit)} className="space-y-5">
+        {error && (
+          <div
+            className="p-4 border rounded-xl text-sm font-medium"
+            style={{
+              backgroundColor: "#E53935",
+              borderColor: "#E53935",
+              color: "#FFFFFF",
+            }}
+          >
+            {error}
+          </div>
+        )}
+
+        <div>
+          <input
+            {...register("email")}
+            placeholder="Email"
+            className={`${inputBase} h-12 border`}
+            style={{
+              backgroundColor: "#1B211D",
+              borderColor: "#26322B",
+              color: "#FFFFFF",
+              borderWidth: "2px",
+            }}
+            onFocus={(e) => (e.target.style.borderColor = "#D4AF37")}
+            onBlur={(e) => (e.target.style.borderColor = "#26322B")}
+          />
+          {errors.email && (
+            <p className="text-sm mt-2" style={{ color: "#E53935" }}>
+              {errors.email.message}
+            </p>
+          )}
         </div>
-      )}
 
-      <input
-        {...register("email")}
-        placeholder="Email"
-        className="w-full h-11 border rounded-md px-3 text-gray-900 placeholder:text-gray-400"
-      />
-      {errors.email && (
-        <p className="text-xs text-red-500">{errors.email.message}</p>
-      )}
+        <div>
+          <input
+            type="password"
+            {...register("password")}
+            placeholder="Password"
+            className={`${inputBase} h-12 border`}
+            style={{
+              backgroundColor: "#1B211D",
+              borderColor: "#26322B",
+              color: "#FFFFFF",
+              borderWidth: "2px",
+            }}
+            onFocus={(e) => (e.target.style.borderColor = "#D4AF37")}
+            onBlur={(e) => (e.target.style.borderColor = "#26322B")}
+          />
+          {errors.password && (
+            <p className="text-sm mt-2" style={{ color: "#E53935" }}>
+              {errors.password.message}
+            </p>
+          )}
+        </div>
 
-      <input
-        type="password"
-        {...register("password")}
-        placeholder="Password"
-        className="w-full h-11 border rounded-md px-3 text-gray-900 placeholder:text-gray-400"
-      />
-      {errors.password && (
-        <p className="text-xs text-red-500">{errors.password.message}</p>
-      )}
+        <div className="flex justify-end text-sm">
+          <Link href="/forgotPassword" style={{ color: "#D4AF37" }} className="hover:underline">
+            Forgot password?
+          </Link>
+        </div>
 
-      <div className="flex justify-end text-sm">
-        <Link
-          href="/forgotPassword"
-          className="text-orange-500 hover:underline"
+        <button
+          disabled={pending}
+          className="w-full h-12 rounded-xl font-bold disabled:opacity-50 shadow-md"
+          style={{ backgroundColor: "#2ECC71", color: "#0F1310" }}
         >
-          Forgot password?
-        </Link>
-      </div>
+          {pending ? "Logging in..." : "Log in"}
+        </button>
 
-      <button
-        disabled={pending}
-        className="w-full h-11 rounded-md bg-orange-500 text-white font-semibold disabled:opacity-50"
-      >
-        {pending ? "Logging in..." : "Log in"}
-      </button>
-
-      <p className="text-center text-sm text-gray-700">
-        Don't have an account?{" "}
-        <Link href="/register" className="text-orange-500 font-semibold">
-          Register
-        </Link>
-        
-      </p>
-    </form>
+        <p className="text-center text-sm" style={{ color: "#9FB3A6" }}>
+          Don't have an account?{" "}
+          <Link href="/register" style={{ color: "#D4AF37" }} className="font-semibold hover:underline">
+            Register
+          </Link>
+        </p>
+      </form>
+    </div>
   );
 }

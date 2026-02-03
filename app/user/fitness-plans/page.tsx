@@ -9,7 +9,7 @@ export default function FitnessPlansPage() {
 
         <div className="rounded-lg border border-[#26322B] bg-[#171C18] p-6 shadow-lg">
           <div className="text-center py-12">
-            <p className="text-[#9FB3A6] text-lg">📋 Your fitness plans will appear here</p>
+            <p className="text-[#9FB3A6] text-lg"> Your fitness plans will appear here</p>
             <p className="text-[#7C8C83] text-sm mt-2">Check back soon for personalized workout and diet plans!</p>
           </div>
         </div>

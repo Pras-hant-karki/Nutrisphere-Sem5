@@ -9,25 +9,25 @@ const userNavItems = [
   {
     name: "Profile",
     href: "/user/profile",
-    icon: "👤",
+    icon: "",
     description: "Manage your profile",
   },
   {
     name: "Fitness Plans",
     href: "/user/fitness-plans",
-    icon: "💪",
+    icon: "",
     description: "View your plans",
   },
   {
     name: "Progress",
     href: "/user/progress",
-    icon: "📊",
+    icon: "",
     description: "Track progress",
   },
   {
     name: "Appointments",
     href: "/user/appointments",
-    icon: "📅",
+    icon: "",
     description: "Book sessions",
   },
 ];

@@ -9,25 +9,25 @@ const adminNavItems = [
   {
     name: "Dashboard",
     href: "/admin/dashboard",
-    icon: "📊",
+    icon: "",
     description: "Overview & stats",
   },
   {
     name: "Users",
     href: "/admin/users",
-    icon: "👥",
+    icon: "",
     description: "Manage users",
   },
   {
     name: "Create User",
     href: "/admin/users/create",
-    icon: "➕",
+    icon: "",
     description: "Add new user",
   },
   {
     name: "Fitness Content",
     href: "/admin/fitness-content",
-    icon: "🏋️",
+    icon: "",
     description: "Manage content",
   },
 ];

@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Page() {
   return (
-    <main className="w-full bg-white text-black">
+    <main className="w-full bg-[#0F1310] text-white">
 
       {/* NAVBAR */}
       <header className="w-full px-8 py-4 flex justify-between items-center">
@@ -31,7 +31,7 @@ export default function Page() {
         </div>
       </header>
 
-      {/* HERO / LANDING */}
+      {/* HOME / LANDING */}
       <section className="min-h-screen flex items-center px-10">
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
 
@@ -48,11 +48,11 @@ export default function Page() {
 
           {/* RIGHT — TEXT */}
           <div>
-            <h1 className="text-5xl font-bold leading-tight">
+            <h1 className="text-5xl font-bold leading-tight text-[#D4AF37]">
               Train Together, <br /> Grow Together
             </h1>
 
-            <p className="mt-4 text-lg text-gray-600 max-w-md">
+            <p className="mt-4 text-lg text-white max-w-md">
               Become part of a driven fitness family.
               Get coached, stay accountable, and push beyond
               your limits with confidence.
@@ -63,17 +63,21 @@ export default function Page() {
       </section>
 
       {/* PERSONAL TRAINING */}
-      <section className="min-h-screen flex items-center px-10 bg-gray-50">
+      <section className="min-h-screen flex items-center px-10 bg-[#0F1310]">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
 
           {/* TEXT LEFT */}
           <div>
-            <h2 className="text-3xl font-semibold">Personal Training</h2>
-            <p className="mt-3 text-gray-600">
-              Get personalized instruction and workout plans
-              tailored specifically to your goals.
-            </p>
+            <h2 className="text-xl font-bold" style={{ color: "#D4AF37" }}>
+            Personal Training
+          </h2>
+
+          <p className="text-sm mt-2" style={{ color: "#C0C0C0" }}>
+            Get personalized instruction and workout plans
+            tailored specifically to your goals.
+          </p>
           </div>
+
 
           {/* IMAGE RIGHT */}
           <div className="relative w-full h-[320px]">
@@ -89,9 +93,10 @@ export default function Page() {
       </section>
 
       {/* PERSONAL PLANS */}
-      <section className="min-h-screen flex items-center px-10">
+      <section className="min-h-screen flex items-center px-10 bg-[#0F1310]">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
 
+          {/* IMAGE LEFT */}
           <div className="relative w-full h-[320px]">
             <Image
               src="/image/plan.png"
@@ -101,30 +106,40 @@ export default function Page() {
             />
           </div>
 
+          {/* TEXT RIGHT */}
           <div>
-            <h2 className="text-3xl font-semibold">Personal Plans</h2>
-            <p className="mt-3 text-gray-600">
-              Customized diet and fitness plans based on your
+            <h2 className="text-xl font-bold" style={{ color: "#D4AF37" }}>
+            Personal Plans
+          </h2>
+
+          <p className="text-sm mt-2" style={{ color: "#C0C0C0" }}>
+            Customized diet and fitness plans based on your
               body type and lifestyle.
-            </p>
+          </p>
           </div>
+          
 
         </div>
       </section>
 
       {/* PROGRESS TRACKING */}
-      <section className="min-h-screen flex items-center px-10 bg-gray-50">
+      <section className="min-h-screen flex items-center px-10 bg-[#0F1310]">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
 
+          {/* TEXT LEFT */}
           <div>
-            <h2 className="text-3xl font-semibold">Progress Tracking</h2>
-            <p className="mt-3 text-gray-600">
-              Track workouts, body stats, and achievements
+            <h2 className="text-xl font-bold" style={{ color: "#D4AF37" }}>
+            Progress Tracking
+          </h2>
+
+          <p className="text-sm mt-2" style={{ color: "#C0C0C0" }}>
+            Track workouts, body stats, and achievements
               all in one place.
-            </p>
+          </p>
           </div>
 
-          <div className="relative w-full h-[320px]">
+          {/* IMAGE RIGHT */}
+          <div className="relative w-full h-[350px]">
             <Image
               src="/image/track.png"
               alt="Progress Tracking"

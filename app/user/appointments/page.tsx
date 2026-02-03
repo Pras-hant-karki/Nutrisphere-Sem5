@@ -9,7 +9,7 @@ export default function AppointmentsPage() {
 
         <div className="rounded-lg border border-[#26322B] bg-[#171C18] p-6 shadow-lg">
           <div className="text-center py-12">
-            <p className="text-[#9FB3A6] text-lg">📅 Book your appointments here</p>
+            <p className="text-[#9FB3A6] text-lg"> Book your appointments here</p>
             <p className="text-[#7C8C83] text-sm mt-2">Schedule sessions with your trainer</p>
           </div>
         </div>

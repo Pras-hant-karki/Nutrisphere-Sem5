@@ -11,7 +11,7 @@ import { handleRegister } from "@/app/lib/actions/auth-action";
 export default function RegisterForm() {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
-  const [error, setError] = useState<string >("");
+  const [error, setError] = useState<string>("");
 
   const {
     register,
@@ -23,7 +23,7 @@ export default function RegisterForm() {
 
   const submit = async (values: RegisterData) => {
     setError("");
-    try{
+    try {
       const result = await handleRegister(values);
       if (result.success) {
         startTransition(() => {
@@ -32,93 +32,135 @@ export default function RegisterForm() {
       } else {
         setError(result.message || "Registration failed");
       }
-    }catch(err: Error | any){
+    } catch (err: Error | any) {
       setError(err.message || "Registration failed");
     }
   };
 
+  const inputBase =
+    "w-full h-12 border rounded-xl px-4 text-base outline-none transition-all";
+
   return (
-    <form
-      onSubmit={handleSubmit(submit)}
-      className="space-y-4 text-black"
-    >
-      {error && (
-        <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-          {error}
+    <div>
+      <h2 className="text-3xl font-extrabold mb-6" style={{ color: "#D4AF37" }}>
+        Create account
+      </h2>
+
+      <form onSubmit={handleSubmit(submit)} className="space-y-5">
+        {error && (
+          <div
+            className="p-4 border rounded-xl text-sm font-medium"
+            style={{
+              backgroundColor: "#E53935",
+              borderColor: "#E53935",
+              color: "#FFFFFF",
+            }}
+          >
+            {error}
+          </div>
+        )}
+
+        <div>
+          <input
+            {...register("fullName")}
+            placeholder="Full name"
+            className={inputBase}
+            style={{
+              backgroundColor: "#1B211D",
+              borderColor: "#26322B",
+              color: "#FFFFFF",
+              borderWidth: "2px",
+            }}
+            onFocus={(e) => (e.target.style.borderColor = "#D4AF37")}
+            onBlur={(e) => (e.target.style.borderColor = "#26322B")}
+          />
+          {errors.fullName && (
+            <p className="text-sm mt-2" style={{ color: "#E53935" }}>
+              {errors.fullName.message}
+            </p>
+          )}
         </div>
-      )}
 
-      {/* Full name */}
-      <div>
-        <input
-          {...register("fullName")}
-          placeholder="Full name"
-          className="w-full h-11 border border-gray-300 rounded-md px-4 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400"
-        />
-        {errors.fullName && (
-          <p className="text-sm text-red-500 mt-1">
-            {errors.fullName.message}
-          </p>
-        )}
-      </div>
+        <div>
+          <input
+            {...register("email")}
+            placeholder="Email"
+            className={inputBase}
+            style={{
+              backgroundColor: "#1B211D",
+              borderColor: "#26322B",
+              color: "#FFFFFF",
+              borderWidth: "2px",
+            }}
+            onFocus={(e) => (e.target.style.borderColor = "#D4AF37")}
+            onBlur={(e) => (e.target.style.borderColor = "#26322B")}
+          />
+          {errors.email && (
+            <p className="text-sm mt-2" style={{ color: "#E53935" }}>
+              {errors.email.message}
+            </p>
+          )}
+        </div>
 
-      {/* Email */}
-      <div>
-        <input
-          {...register("email")}
-          placeholder="Email"
-          className="w-full h-11 border border-gray-300 rounded-md px-4 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400"
-        />
-        {errors.email && (
-          <p className="text-sm text-red-500 mt-1">
-            {errors.email.message}
-          </p>
-        )}
-      </div>
+        <div>
+          <input
+            type="password"
+            {...register("password")}
+            placeholder="Password"
+            className={inputBase}
+            style={{
+              backgroundColor: "#1B211D",
+              borderColor: "#26322B",
+              color: "#FFFFFF",
+              borderWidth: "2px",
+            }}
+            onFocus={(e) => (e.target.style.borderColor = "#D4AF37")}
+            onBlur={(e) => (e.target.style.borderColor = "#26322B")}
+          />
+          {errors.password && (
+            <p className="text-sm mt-2" style={{ color: "#E53935" }}>
+              {errors.password.message}
+            </p>
+          )}
+        </div>
 
-      {/* Password */}
-      <div>
-        <input
-          type="password"
-          {...register("password")}
-          placeholder="Password"
-          className="w-full h-11 border border-gray-300 rounded-md px-4 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400"
-        />
-        {errors.password && (
-          <p className="text-sm text-red-500 mt-1">
-            {errors.password.message}
-          </p>
-        )}
-      </div>
+        <div>
+          <input
+            type="password"
+            {...register("confirmPassword")}
+            placeholder="Confirm password"
+            className={inputBase}
+            style={{
+              backgroundColor: "#1B211D",
+              borderColor: "#26322B",
+              color: "#FFFFFF",
+              borderWidth: "2px",
+            }}
+            onFocus={(e) => (e.target.style.borderColor = "#D4AF37")}
+            onBlur={(e) => (e.target.style.borderColor = "#26322B")}
+          />
+          {errors.confirmPassword && (
+            <p className="text-sm mt-2" style={{ color: "#E53935" }}>
+              {errors.confirmPassword.message}
+            </p>
+          )}
+        </div>
 
-      {/* Confirm Password */}
-      <div>
-        <input
-          type="password"
-          {...register("confirmPassword")}
-          placeholder="Confirm password"
-          className="w-full h-11 border border-gray-300 rounded-md px-4 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400"
-        />
-        {errors.confirmPassword && (
-          <p className="text-sm text-red-500 mt-1">
-            {errors.confirmPassword.message}
-          </p>
-        )}
-      </div>
+        <button
+          disabled={pending}
+          className="w-full h-12 rounded-xl font-bold disabled:opacity-50 shadow-md"
+          style={{ backgroundColor: "#2ECC71", color: "#0F1310" }}
+        >
+          {pending ? "Creating..." : "Create account"}
+        </button>
 
-      <button
-        disabled={pending}
-        className="w-full h-11 rounded-md bg-orange-500 hover:bg-orange-600 transition text-white font-semibold disabled:opacity-50"
-      >
-        {pending ? "Creating..." : "Create account"}
-      </button>
-
-      <p className="text-center text-sm text-gray-600">
-        Already have an account?{" "}
-        <Link href="/login" className="text-orange-500 font-semibold">
-          Log in
-        </Link>
-      </p>
-    </form>
+        <p className="text-center text-sm" style={{ color: "#9FB3A6" }}>
+          Already have an account?{" "}
+          <Link href="/login" style={{ color: "#D4AF37" }} className="font-semibold hover:underline">
+            Log in
+          </Link>
+        </p>
+      </form>
+    </div>
   );
 }

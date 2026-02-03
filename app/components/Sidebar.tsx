@@ -61,7 +61,7 @@ export function Sidebar({ navItems, title, onLogout }: SidebarProps) {
             Welcome, {user?.fullName || "User"}
           </p>
           <div className="text-xs text-[#7C8C83] mt-2 capitalize">
-            {user?.role === "admin" ? "👑 Administrator" : "👤 Member"}
+            {user?.role === "admin" ? " Administrator" : " Member"}
           </div>
         </div>
 
