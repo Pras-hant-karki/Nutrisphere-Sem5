@@ -128,12 +128,12 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-8">
+    <div className="min-h-screen bg-[#0F1310] p-4 md:p-8">
       <div className="mx-auto max-w-2xl">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground">My Profile</h1>
-          <p className="text-foreground/60 mt-1">Manage your profile information</p>
+          <h1 className="text-4xl font-bold text-[#D4AF37] mb-2">My Profile</h1>
+          <p className="text-[#9FB3A6]">Manage your personal information</p>
         </div>
 
         {/* Messages */}
@@ -141,8 +141,8 @@ export default function ProfilePage() {
           <div
             className={`mb-6 p-4 rounded-lg ${
               message.type === "success"
-                ? "bg-green-500/10 text-green-600 border border-green-500/30"
-                : "bg-red-500/10 text-red-600 border border-red-500/30"
+                ? "bg-[#2ECC71]/10 text-[#2ECC71] border border-[#2ECC71]/30"
+                : "bg-[#E53935]/10 text-[#E53935] border border-[#E53935]/30"
             }`}
           >
             {message.text}
@@ -150,20 +150,20 @@ export default function ProfilePage() {
         )}
 
         {/* Profile Card */}
-        <div className="rounded-lg border border-foreground/10 bg-foreground/5 p-6 md:p-8">
+        <div className="rounded-lg border border-[#26322B] bg-[#171C18] p-6 md:p-8 shadow-lg">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Profile Picture Section */}
-            <div className="flex flex-col items-center gap-4 pb-6 border-b border-foreground/10">
+            <div className="flex flex-col items-center gap-4 pb-6 border-b border-[#26322B]">
               <div className="relative">
                 {imagePreview ? (
                   <img
                     src={imagePreview}
                     alt="Profile"
-                    className="h-32 w-32 rounded-full object-cover border-4 border-foreground/20"
+                    className="h-32 w-32 rounded-full object-cover border-4 border-[#D4AF37] shadow-lg"
                   />
                 ) : (
-                  <div className="h-32 w-32 rounded-full bg-foreground/10 flex items-center justify-center border-4 border-foreground/20">
-                    <span className="text-3xl font-bold text-foreground/60">
+                  <div className="h-32 w-32 rounded-full bg-[#1B211D] flex items-center justify-center border-4 border-[#D4AF37]">
+                    <span className="text-5xl font-bold text-[#D4AF37]">
                       {getInitials(user.fullName)}
                     </span>
                   </div>
@@ -171,15 +171,15 @@ export default function ProfilePage() {
               </div>
 
               <div className="w-full">
-                <label htmlFor="image" className="block text-sm font-medium text-foreground mb-2">
-                  Profile Picture
+                <label htmlFor="image" className="block text-sm font-semibold text-[#D4AF37] mb-2">
+                  📸 Profile Picture
                 </label>
                 <input
                   id="image"
                   type="file"
                   accept="image/*"
                   onChange={handleImageChange}
-                  className="w-full px-4 py-2 rounded-lg border border-foreground/20 bg-background text-sm text-foreground/60 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-foreground file:text-background hover:file:bg-foreground/90"
+                  className="w-full px-4 py-2 rounded-lg border-2 border-[#26322B] bg-[#1B211D] text-sm text-[#9FB3A6] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#2ECC71] file:text-[#0F1310] hover:file:bg-[#26c969] focus:border-[#D4AF37] focus:outline-none transition-colors"
                 />
               </div>
             </div>
@@ -190,19 +190,19 @@ export default function ProfilePage() {
               <div>
                 <label
                   htmlFor="fullName"
-                  className="block text-sm font-medium text-foreground mb-2"
+                  className="block text-sm font-semibold text-[#D4AF37] mb-2"
                 >
-                  Full Name *
+                  👤 Full Name
                 </label>
                 <input
                   id="fullName"
                   type="text"
                   {...register("fullName")}
-                  className="w-full px-4 py-2 rounded-lg border border-foreground/20 bg-background text-foreground placeholder-foreground/40 outline-none focus:border-foreground/50 transition-colors"
+                  className="w-full px-4 py-2 rounded-lg border-2 border-[#26322B] bg-[#1B211D] text-[#FFFFFF] placeholder-[#7C8C83] outline-none focus:border-[#D4AF37] focus:shadow-lg transition-all"
                   placeholder="Enter your full name"
                 />
                 {errors.fullName && (
-                  <p className="mt-1 text-sm text-red-600">
+                  <p className="mt-1 text-sm text-[#E53935]">
                     {errors.fullName.message}
                   </p>
                 )}
@@ -212,16 +212,16 @@ export default function ProfilePage() {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-foreground mb-2"
+                  className="block text-sm font-semibold text-[#9FB3A6] mb-2"
                 >
-                  Email (Non-editable)
+                  📧 Email (Non-editable)
                 </label>
                 <input
                   id="email"
                   type="email"
                   {...register("email")}
                   disabled
-                  className="w-full px-4 py-2 rounded-lg border border-foreground/20 bg-foreground/5 text-foreground/60 cursor-not-allowed"
+                  className="w-full px-4 py-2 rounded-lg border-2 border-[#26322B] bg-[#1B211D] text-[#7C8C83] cursor-not-allowed opacity-60"
                 />
               </div>
 
@@ -229,16 +229,16 @@ export default function ProfilePage() {
               <div>
                 <label
                   htmlFor="role"
-                  className="block text-sm font-medium text-foreground mb-2"
+                  className="block text-sm font-semibold text-[#9FB3A6] mb-2"
                 >
-                  Role (Non-editable)
+                  👑 Role (Non-editable)
                 </label>
                 <input
                   id="role"
                   type="text"
                   {...register("role")}
                   disabled
-                  className="w-full px-4 py-2 rounded-lg border border-foreground/20 bg-foreground/5 text-foreground/60 cursor-not-allowed capitalize"
+                  className="w-full px-4 py-2 rounded-lg border-2 border-[#26322B] bg-[#1B211D] text-[#7C8C83] cursor-not-allowed opacity-60 capitalize"
                 />
               </div>
 
@@ -246,15 +246,15 @@ export default function ProfilePage() {
               <div>
                 <label
                   htmlFor="phone"
-                  className="block text-sm font-medium text-foreground mb-2"
+                  className="block text-sm font-semibold text-[#D4AF37] mb-2"
                 >
-                  Phone (Optional)
+                  📱 Phone (Optional)
                 </label>
                 <input
                   id="phone"
                   type="tel"
                   {...register("phone")}
-                  className="w-full px-4 py-2 rounded-lg border border-foreground/20 bg-background text-foreground placeholder-foreground/40 outline-none focus:border-foreground/50 transition-colors"
+                  className="w-full px-4 py-2 rounded-lg border-2 border-[#26322B] bg-[#1B211D] text-[#FFFFFF] placeholder-[#7C8C83] outline-none focus:border-[#D4AF37] focus:shadow-lg transition-all"
                   placeholder="Enter your phone number"
                 />
               </div>
@@ -265,9 +265,9 @@ export default function ProfilePage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="flex-1 px-6 py-2 rounded-lg bg-foreground text-background font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity"
+                className="flex-1 px-6 py-3 rounded-lg bg-[#2ECC71] text-[#0F1310] font-bold hover:bg-[#26c969] disabled:opacity-60 transition-all shadow-lg"
               >
-                {isLoading ? "Saving..." : "Save Changes"}
+                {isLoading ? "💾 Saving..." : "💾 Save Changes"}
               </button>
               <button
                 type="button"
@@ -280,9 +280,9 @@ export default function ProfilePage() {
                   );
                   setSelectedFile(null);
                 }}
-                className="flex-1 px-6 py-2 rounded-lg border border-foreground/20 text-foreground font-semibold hover:bg-foreground/5 transition-colors"
+                className="flex-1 px-6 py-3 rounded-lg border-2 border-[#26322B] text-[#9FB3A6] font-semibold hover:border-[#D4AF37] hover:text-[#D4AF37] transition-all"
               >
-                Cancel
+                ↺ Reset
               </button>
             </div>
           </form>

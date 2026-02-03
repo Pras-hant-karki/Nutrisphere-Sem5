@@ -118,12 +118,12 @@ export default function CreateUserPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-8">
+    <div className="min-h-screen bg-[#0F1310] p-4 md:p-8">
       <div className="mx-auto max-w-2xl">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground">Create New User</h1>
-          <p className="text-foreground/60 mt-1">Add a new user to the system</p>
+          <h1 className="text-4xl font-bold text-[#D4AF37] mb-2">Create New User</h1>
+          <p className="text-[#9FB3A6]">Add a new user to the system</p>
         </div>
 
         {/* Messages */}
@@ -131,8 +131,8 @@ export default function CreateUserPage() {
           <div
             className={`mb-6 p-4 rounded-lg ${
               message.type === "success"
-                ? "bg-green-500/10 text-green-600 border border-green-500/30"
-                : "bg-red-500/10 text-red-600 border border-red-500/30"
+                ? "bg-[#2ECC71]/10 text-[#2ECC71] border border-[#2ECC71]/30"
+                : "bg-[#E53935]/10 text-[#E53935] border border-[#E53935]/30"
             }`}
           >
             {message.text}
@@ -140,19 +140,19 @@ export default function CreateUserPage() {
         )}
 
         {/* Form Card */}
-        <div className="rounded-lg border border-foreground/10 bg-foreground/5 p-6 md:p-8">
+        <div className="rounded-lg border border-[#26322B] bg-[#171C18] p-6 md:p-8 shadow-lg">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Profile Picture Section */}
-            <div className="pb-6 border-b border-foreground/10">
-              <label className="block text-sm font-medium text-foreground mb-4">
-                Profile Picture (Optional)
+            <div className="pb-6 border-b border-[#26322B]">
+              <label className="block text-sm font-bold text-[#D4AF37] mb-4">
+                📸 Profile Picture (Optional)
               </label>
               {imagePreview && (
                 <div className="mb-4">
                   <img
                     src={imagePreview}
                     alt="Preview"
-                    className="h-32 w-32 rounded-lg object-cover border-2 border-foreground/20"
+                    className="h-32 w-32 rounded-lg object-cover border-2 border-[#D4AF37] shadow-lg"
                   />
                 </div>
               )}
@@ -161,7 +161,7 @@ export default function CreateUserPage() {
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
-                className="w-full px-4 py-2 rounded-lg border border-foreground/20 bg-background text-sm text-foreground/60 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-foreground file:text-background hover:file:bg-foreground/90"
+                className="w-full px-4 py-2 rounded-lg border-2 border-[#26322B] bg-[#1B211D] text-sm text-[#9FB3A6] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#2ECC71] file:text-[#0F1310] hover:file:bg-[#26c969] focus:border-[#D4AF37] focus:outline-none transition-colors"
               />
             </div>
 
@@ -171,19 +171,19 @@ export default function CreateUserPage() {
               <div>
                 <label
                   htmlFor="fullName"
-                  className="block text-sm font-medium text-foreground mb-2"
+                  className="block text-sm font-bold text-[#D4AF37] mb-2"
                 >
-                  Full Name *
+                  👤 Full Name *
                 </label>
                 <input
                   id="fullName"
                   type="text"
                   {...register("fullName")}
-                  className="w-full px-4 py-2 rounded-lg border border-foreground/20 bg-background text-foreground placeholder-foreground/40 outline-none focus:border-foreground/50 transition-colors"
+                  className="w-full px-4 py-2 rounded-lg border-2 border-[#26322B] bg-[#1B211D] text-[#FFFFFF] placeholder-[#7C8C83] outline-none focus:border-[#D4AF37] focus:shadow-lg transition-all"
                   placeholder="John Doe"
                 />
                 {errors.fullName && (
-                  <p className="mt-1 text-sm text-red-600">
+                  <p className="mt-1 text-sm text-[#E53935]">
                     {errors.fullName.message}
                   </p>
                 )}
@@ -193,19 +193,19 @@ export default function CreateUserPage() {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-foreground mb-2"
+                  className="block text-sm font-bold text-[#D4AF37] mb-2"
                 >
-                  Email *
+                  📧 Email *
                 </label>
                 <input
                   id="email"
                   type="email"
                   {...register("email")}
-                  className="w-full px-4 py-2 rounded-lg border border-foreground/20 bg-background text-foreground placeholder-foreground/40 outline-none focus:border-foreground/50 transition-colors"
+                  className="w-full px-4 py-2 rounded-lg border-2 border-[#26322B] bg-[#1B211D] text-[#FFFFFF] placeholder-[#7C8C83] outline-none focus:border-[#D4AF37] focus:shadow-lg transition-all"
                   placeholder="john@example.com"
                 />
                 {errors.email && (
-                  <p className="mt-1 text-sm text-red-600">
+                  <p className="mt-1 text-sm text-[#E53935]">
                     {errors.email.message}
                   </p>
                 )}
@@ -215,15 +215,15 @@ export default function CreateUserPage() {
               <div>
                 <label
                   htmlFor="phone"
-                  className="block text-sm font-medium text-foreground mb-2"
+                  className="block text-sm font-bold text-[#D4AF37] mb-2"
                 >
-                  Phone (Optional)
+                  📱 Phone (Optional)
                 </label>
                 <input
                   id="phone"
                   type="tel"
                   {...register("phone")}
-                  className="w-full px-4 py-2 rounded-lg border border-foreground/20 bg-background text-foreground placeholder-foreground/40 outline-none focus:border-foreground/50 transition-colors"
+                  className="w-full px-4 py-2 rounded-lg border-2 border-[#26322B] bg-[#1B211D] text-[#FFFFFF] placeholder-[#7C8C83] outline-none focus:border-[#D4AF37] focus:shadow-lg transition-all"
                   placeholder="+1 (555) 000-0000"
                 />
               </div>
@@ -232,19 +232,19 @@ export default function CreateUserPage() {
               <div>
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-foreground mb-2"
+                  className="block text-sm font-bold text-[#D4AF37] mb-2"
                 >
-                  Password *
+                  🔐 Password *
                 </label>
                 <input
                   id="password"
                   type="password"
                   {...register("password")}
-                  className="w-full px-4 py-2 rounded-lg border border-foreground/20 bg-background text-foreground placeholder-foreground/40 outline-none focus:border-foreground/50 transition-colors"
+                  className="w-full px-4 py-2 rounded-lg border-2 border-[#26322B] bg-[#1B211D] text-[#FFFFFF] placeholder-[#7C8C83] outline-none focus:border-[#D4AF37] focus:shadow-lg transition-all"
                   placeholder="••••••"
                 />
                 {errors.password && (
-                  <p className="mt-1 text-sm text-red-600">
+                  <p className="mt-1 text-sm text-[#E53935]">
                     {errors.password.message}
                   </p>
                 )}
@@ -254,19 +254,19 @@ export default function CreateUserPage() {
               <div>
                 <label
                   htmlFor="confirmPassword"
-                  className="block text-sm font-medium text-foreground mb-2"
+                  className="block text-sm font-bold text-[#D4AF37] mb-2"
                 >
-                  Confirm Password *
+                  🔐 Confirm Password *
                 </label>
                 <input
                   id="confirmPassword"
                   type="password"
                   {...register("confirmPassword")}
-                  className="w-full px-4 py-2 rounded-lg border border-foreground/20 bg-background text-foreground placeholder-foreground/40 outline-none focus:border-foreground/50 transition-colors"
+                  className="w-full px-4 py-2 rounded-lg border-2 border-[#26322B] bg-[#1B211D] text-[#FFFFFF] placeholder-[#7C8C83] outline-none focus:border-[#D4AF37] focus:shadow-lg transition-all"
                   placeholder="••••••"
                 />
                 {errors.confirmPassword && (
-                  <p className="mt-1 text-sm text-red-600">
+                  <p className="mt-1 text-sm text-[#E53935]">
                     {errors.confirmPassword.message}
                   </p>
                 )}
@@ -276,21 +276,21 @@ export default function CreateUserPage() {
               <div>
                 <label
                   htmlFor="role"
-                  className="block text-sm font-medium text-foreground mb-2"
+                  className="block text-sm font-bold text-[#D4AF37] mb-2"
                 >
-                  Role *
+                  👑 Role *
                 </label>
                 <select
                   id="role"
                   {...register("role")}
-                  className="w-full px-4 py-2 rounded-lg border border-foreground/20 bg-background text-foreground outline-none focus:border-foreground/50 transition-colors"
+                  className="w-full px-4 py-2 rounded-lg border-2 border-[#26322B] bg-[#1B211D] text-[#FFFFFF] outline-none focus:border-[#D4AF37] focus:shadow-lg transition-all"
                 >
                   <option value="">Select a role</option>
-                  <option value="user">User</option>
-                  <option value="admin">Admin</option>
+                  <option value="user">👤 User</option>
+                  <option value="admin">👑 Admin</option>
                 </select>
                 {errors.role && (
-                  <p className="mt-1 text-sm text-red-600">
+                  <p className="mt-1 text-sm text-[#E53935]">
                     {errors.role.message}
                   </p>
                 )}
@@ -302,16 +302,16 @@ export default function CreateUserPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="flex-1 px-6 py-2 rounded-lg bg-foreground text-background font-semibold hover:opacity-90 disabled:opacity-60 transition-opacity"
+                className="flex-1 px-6 py-3 rounded-lg bg-[#2ECC71] text-[#0F1310] font-bold hover:bg-[#26c969] disabled:opacity-60 transition-all shadow-lg"
               >
-                {isLoading ? "Creating..." : "Create User"}
+                {isLoading ? "💾 Creating..." : "💾 Create User"}
               </button>
               <button
                 type="button"
                 onClick={() => router.push("/admin/users")}
-                className="flex-1 px-6 py-2 rounded-lg border border-foreground/20 text-foreground font-semibold hover:bg-foreground/5 transition-colors"
+                className="flex-1 px-6 py-3 rounded-lg border-2 border-[#26322B] text-[#9FB3A6] font-semibold hover:border-[#D4AF37] hover:text-[#D4AF37] transition-all"
               >
-                Cancel
+                ✕ Cancel
               </button>
             </div>
           </form>

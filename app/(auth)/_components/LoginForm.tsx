@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { LoginData, loginSchema } from "../schema";
 import { setAuthToken, setUserData } from "@/app/lib/cookie";
 import { login } from "@/app/lib/api/auth";
+import { setAuth } from "@/app/lib/auth-helpers";
 
 
 export default function LoginForm() {
@@ -30,11 +31,27 @@ export default function LoginForm() {
       const result= await login(values)
       await setAuthToken( result.token );
       await setUserData( result.data );
-       if (result.success) {
-                router.push("/dashboard");
-            } else {
-                throw new Error(result.message || "Registration failed");
-            }
+      
+      // Store in localStorage for auth-helpers
+      setAuth(result.token, {
+        id: result.data._id || result.data.id,
+        email: result.data.email,
+        role: result.data.role,
+        fullName: result.data.fullName,
+        phone: result.data.phone,
+        image: result.data.image,
+      });
+      
+      if (result.success) {
+        // Redirect based on role
+        if (result.data.role === "admin") {
+          router.push("/admin/dashboard");
+        } else {
+          router.push("/user/profile");
+        }
+      } else {
+        throw new Error(result.message || "Login failed");
+      }
       
     }catch(err: Error | any){
       setError(err.message || "Login failed");

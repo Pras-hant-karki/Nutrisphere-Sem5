@@ -69,55 +69,55 @@ export default function UsersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-8">
+    <div className="min-h-screen bg-[#0F1310] p-4 md:p-8">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Users Management</h1>
-            <p className="text-foreground/60 mt-1">View and manage all system users</p>
+            <h1 className="text-4xl font-bold text-[#D4AF37] mb-2">Users Management</h1>
+            <p className="text-[#9FB3A6]">View and manage all system users</p>
           </div>
           <Link
             href="/admin/users/create"
-            className="mt-4 md:mt-0 px-6 py-2 rounded-lg bg-foreground text-background font-semibold hover:opacity-90 transition-opacity inline-flex items-center gap-2 w-fit"
+            className="mt-4 md:mt-0 px-6 py-3 rounded-lg bg-[#2ECC71] text-[#0F1310] font-bold hover:bg-[#26c969] transition-all inline-flex items-center gap-2 w-fit shadow-lg"
           >
-            + Create User
+            ➕ Create User
           </Link>
         </div>
 
         {/* Error Message */}
         {error && (
-          <div className="mb-6 p-4 rounded-lg bg-red-500/10 text-red-600 border border-red-500/30">
+          <div className="mb-6 p-4 rounded-lg bg-[#E53935]/10 text-[#E53935] border border-[#E53935]/30">
             {error}
           </div>
         )}
 
         {/* Table */}
-        <div className="rounded-lg border border-foreground/10 bg-foreground/5 overflow-hidden">
+        <div className="rounded-lg border border-[#26322B] bg-[#171C18] overflow-hidden shadow-lg">
           {isLoading ? (
-            <div className="p-8 text-center text-foreground/60">Loading users...</div>
+            <div className="p-8 text-center text-[#9FB3A6]">Loading users...</div>
           ) : users.length === 0 ? (
-            <div className="p-8 text-center text-foreground/60">
-              No users found. <Link href="/admin/users/create" className="underline hover:no-underline">Create one</Link>
+            <div className="p-8 text-center text-[#9FB3A6]">
+              No users found. <Link href="/admin/users/create" className="text-[#D4AF37] hover:underline">Create one</Link>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-foreground/10 bg-foreground/10">
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">
+                  <tr className="border-b border-[#26322B] bg-[#1B211D]">
+                    <th className="px-6 py-3 text-left text-sm font-bold text-[#D4AF37]">
                       Name
                     </th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">
+                    <th className="px-6 py-3 text-left text-sm font-bold text-[#D4AF37]">
                       Email
                     </th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">
+                    <th className="px-6 py-3 text-left text-sm font-bold text-[#D4AF37]">
                       Role
                     </th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">
+                    <th className="px-6 py-3 text-left text-sm font-bold text-[#D4AF37]">
                       Phone
                     </th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">
+                    <th className="px-6 py-3 text-left text-sm font-bold text-[#D4AF37]">
                       Actions
                     </th>
                   </tr>
@@ -126,47 +126,47 @@ export default function UsersPage() {
                   {users.map((user) => (
                     <tr
                       key={user._id}
-                      className="border-b border-foreground/10 hover:bg-foreground/5 transition-colors"
+                      className="border-b border-[#26322B] hover:bg-[#1B211D] transition-colors"
                     >
-                      <td className="px-6 py-4 text-sm text-foreground font-medium">
+                      <td className="px-6 py-4 text-sm text-[#FFFFFF] font-semibold">
                         {user.fullName}
                       </td>
-                      <td className="px-6 py-4 text-sm text-foreground/60">
+                      <td className="px-6 py-4 text-sm text-[#9FB3A6]">
                         {user.email}
                       </td>
                       <td className="px-6 py-4 text-sm">
                         <span
-                          className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold ${
+                          className={`inline-flex px-3 py-1 rounded-full text-xs font-bold ${
                             user.role === "admin"
-                              ? "bg-purple-500/20 text-purple-700"
-                              : "bg-blue-500/20 text-blue-700"
+                              ? "bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/30"
+                              : "bg-[#2ECC71]/20 text-[#2ECC71] border border-[#2ECC71]/30"
                           }`}
                         >
-                          {user.role}
+                          {user.role === "admin" ? "👑 " : "👤 "}{user.role}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-sm text-foreground/60">
+                      <td className="px-6 py-4 text-sm text-[#9FB3A6]">
                         {user.phone || "--"}
                       </td>
                       <td className="px-6 py-4 text-sm">
-                        <div className="flex gap-2">
+                        <div className="flex gap-3">
                           <Link
                             href={`/admin/users/${user._id}`}
-                            className="text-blue-600 hover:underline"
+                            className="text-[#2ECC71] hover:text-[#26c969] font-semibold transition-colors"
                           >
-                            View
+                            👁️ View
                           </Link>
                           <Link
                             href={`/admin/users/${user._id}/edit`}
-                            className="text-blue-600 hover:underline"
+                            className="text-[#D4AF37] hover:text-[#F0C960] font-semibold transition-colors"
                           >
-                            Edit
+                            ✏️ Edit
                           </Link>
                           <button
                             onClick={() => handleDelete(user._id)}
-                            className="text-red-600 hover:underline"
+                            className="text-[#E53935] hover:text-[#FF6B6B] font-semibold transition-colors"
                           >
-                            Delete
+                            🗑️ Delete
                           </button>
                         </div>
                       </td>
