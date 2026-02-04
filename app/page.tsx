@@ -9,10 +9,10 @@ export default function Page() {
       <header className="w-full px-8 py-4 flex justify-between items-center">
         <div className="flex items-center gap-6">
           <span className="flex items-center gap-1 font-medium">
-            🏠 Home
+            Home
           </span>
           <span className="flex items-center gap-1 font-medium">
-            👤 About Us
+            About Us
           </span>
         </div>
 

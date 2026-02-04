@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { logout, getUser } from "../lib/auth-helpers";
+import { logout, getUser } from "@/lib/auth-helpers";
 
 interface NavItem {
   name: string;

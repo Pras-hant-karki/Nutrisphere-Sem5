@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useTransition, useState } from "react";
 import { useRouter } from "next/navigation";
 import { RegisterData, registerSchema } from "../schema";
-import { handleRegister } from "@/app/lib/actions/auth-action";
+import { handleRegister } from "@/lib/actions/auth-action";
 
 export default function RegisterForm() {
   const router = useRouter();

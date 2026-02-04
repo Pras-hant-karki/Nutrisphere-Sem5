@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import axios from "axios";
-import { getToken } from "../../lib/auth-helpers";
+import { getToken } from "@/lib/auth-helpers";
 
 interface User {
   _id: string;

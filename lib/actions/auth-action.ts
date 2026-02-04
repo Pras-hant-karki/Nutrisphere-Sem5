@@ -1,5 +1,5 @@
 "use server";
-import { login, register } from "@/app/lib/api/auth"
+import { login, register } from "@/lib/api/auth"
 import { LoginData, RegisterData } from "@/app/(auth)/schema"
 import { setAuthToken, setUserData, clearAuthCookies } from "../cookie"
 import { redirect } from "next/navigation";

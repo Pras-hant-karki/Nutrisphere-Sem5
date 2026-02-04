@@ -1,105 +1,182 @@
 "use client";
 
 import Link from "next/link";
-import { getUser } from "../../lib/auth-helpers";
+import { getUser } from "@/lib/auth-helpers";
 import { useState } from "react";
 
 export default function AdminDashboard() {
   const [user] = useState(getUser());
 
   return (
-    // IMPORTANT FIX: dashboard was going behind sidebar
-
-    <div className="min-h-screen bg-[#0F1310] px-4 py-6 md:py-10 md:pl-[280px] md:pr-10">
-      <div className="mx-auto max-w-7xl">
-        {/* Header */}
-        <div className="mb-10">
-          <h1 className="text-4xl font-extrabold text-[#D4AF37] mb-2">
-            Admin Dashboard
-          </h1>
-          <p className="text-[#9FB3A6] text-base">
-            Welcome back, {user?.fullName}! 
-          </p>
-        </div>
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-          <div className="rounded-2xl border border-[#26322B] bg-[#171C18] p-6 hover:bg-[#1B211D] hover:border-[#D4AF37] transition-all cursor-pointer shadow-lg">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-[#9FB3A6] text-sm font-semibold">Total Users</p>
-                <p className="text-4xl font-bold text-[#2ECC71] mt-2">--</p>
-              </div>
-              <div className="h-14 w-14 rounded-2xl bg-[#2ECC71]/20 flex items-center justify-center">
-                <span className="text-2xl">👥</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-[#26322B] bg-[#171C18] p-6 hover:bg-[#1B211D] hover:border-[#D4AF37] transition-all cursor-pointer shadow-lg">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-[#9FB3A6] text-sm font-semibold">Fitness Content</p>
-                <p className="text-4xl font-bold text-[#2ECC71] mt-2">--</p>
-              </div>
-              <div className="h-14 w-14 rounded-2xl bg-[#2ECC71]/20 flex items-center justify-center">
-                <span className="text-2xl"></span>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-[#26322B] bg-[#171C18] p-6 hover:bg-[#1B211D] hover:border-[#D4AF37] transition-all cursor-pointer shadow-lg">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-[#9FB3A6] text-sm font-semibold">Admin Users</p>
-                <p className="text-4xl font-bold text-[#2ECC71] mt-2">--</p>
-              </div>
-              <div className="h-14 w-14 rounded-2xl bg-[#D4AF37]/20 flex items-center justify-center">
-                <span className="text-2xl"></span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="rounded-2xl border border-[#26322B] bg-[#171C18] p-6 shadow-lg">
-          <h2 className="text-xl font-bold text-[#D4AF37] mb-5">
-             Quick Actions
+    <div className="min-h-screen bg-black">
+      <div className="mx-auto max-w-4xl px-4 py-8">
+        {/* Welcome Header */}
+        <div className="mb-12">
+          <h2 className="text-white text-lg mb-1">
+            Welcome, <span className="font-semibold">{user?.fullName || "Admin"}</span>
           </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <Link
-              href="/admin/users"
-              className="flex items-center justify-between p-5 rounded-2xl border border-[#26322B] bg-[#1B211D] hover:bg-[#242A26] hover:border-[#D4AF37] transition-all"
-            >
-              <div>
-                <p className="font-semibold text-[#D4AF37]"> Manage Users</p>
-                <p className="text-sm text-[#9FB3A6] mt-1">
-                  View and manage all users
-                </p>
-              </div>
-              <span className="text-xl text-[#C0C0C0]">→</span>
-            </Link>
-
-            <Link
-              href="/admin/users/create"
-              className="flex items-center justify-between p-5 rounded-2xl border border-[#26322B] bg-[#1B211D] hover:bg-[#242A26] hover:border-[#D4AF37] transition-all"
-            >
-              <div>
-                <p className="font-semibold text-[#D4AF37]"> Create User</p>
-                <p className="text-sm text-[#9FB3A6] mt-1">
-                  Add a new user to system
-                </p>
-              </div>
-              <span className="text-xl text-[#C0C0C0]">→</span>
-            </Link>
-          </div>
+          <p className="text-gray-400 text-sm">User</p>
         </div>
 
-        <div className="mt-8 p-5 rounded-2xl bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-[#D4AF37]">
-          <p className="text-sm font-semibold">
-             More analytics and features coming soon!
-          </p>
+        {/* Welcome to Dashboard Title */}
+        <h1 className="text-[#D4AF37] text-4xl md:text-5xl font-bold text-center mb-16">
+          Welcome to Dashboard !
+        </h1>
+
+        {/* Dashboard Cards */}
+        <div className="space-y-6">
+          {/* Manage Sessions */}
+          <Link href="/admin/appointments">
+            <div className="group relative border border-gray-700 rounded-2xl p-6 hover:border-[#D4AF37] transition-all cursor-pointer bg-black">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-full bg-white flex items-center justify-center">
+                    <span className="text-2xl">⏰</span>
+                  </div>
+                  <div>
+                    <h3 className="text-[#D4AF37] text-xl font-semibold mb-1">
+                      Manage Sessions
+                    </h3>
+                    <p className="text-gray-400 text-sm">
+                      Default workout
+                      <br />
+                      (Starts at 8 AM, 11/23/025)
+                    </p>
+                  </div>
+                </div>
+                <svg
+                  className="w-6 h-6 text-gray-400 group-hover:text-[#D4AF37] transition-colors"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </div>
+          </Link>
+
+          {/* Workout Records */}
+          <Link href="/admin/fitness-content">
+            <div className="group relative border border-gray-700 rounded-2xl p-6 hover:border-[#D4AF37] transition-all cursor-pointer bg-black">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-full bg-white flex items-center justify-center">
+                    <span className="text-2xl">✏️</span>
+                  </div>
+                  <div>
+                    <h3 className="text-[#D4AF37] text-xl font-semibold mb-1">
+                      Workout Records
+                    </h3>
+                    <p className="text-gray-400 text-sm">
+                      Track your workouts here everyday
+                    </p>
+                  </div>
+                </div>
+                <svg
+                  className="w-6 h-6 text-gray-400 group-hover:text-[#D4AF37] transition-colors"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </div>
+          </Link>
+
+          {/* Manage Users */}
+          <Link href="/admin/users">
+            <div className="group relative border border-gray-700 rounded-2xl p-6 hover:border-[#D4AF37] transition-all cursor-pointer bg-black">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-full bg-white flex items-center justify-center">
+                    <span className="text-2xl">👤</span>
+                  </div>
+                  <div>
+                    <h3 className="text-[#D4AF37] text-xl font-semibold mb-1">
+                      Manage Users
+                    </h3>
+                    <p className="text-gray-400 text-sm">
+                      Know your Trainer !
+                    </p>
+                  </div>
+                </div>
+                <svg
+                  className="w-6 h-6 text-gray-400 group-hover:text-[#D4AF37] transition-colors"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </div>
+          </Link>
+        </div>
+
+        {/* Settings Button - Bottom Left */}
+        <div className="fixed bottom-8 left-8">
+          <Link
+            href="/admin/settings"
+            className="flex items-center gap-2 text-gray-400 hover:text-[#D4AF37] transition-colors"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+            <span className="text-sm">Settings</span>
+          </Link>
+        </div>
+
+        {/* Notification Icon - Top Right */}
+        <div className="fixed top-8 right-8">
+          <button className="relative p-2 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors">
+            <svg
+              className="w-6 h-6 text-white"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+              />
+            </svg>
+            <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
+          </button>
         </div>
       </div>
     </div>

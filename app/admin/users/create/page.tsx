@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { getToken } from "../../../lib/auth-helpers";
+import { getToken } from "@/lib/auth-helpers";
 
 // Validation schema
 const createUserSchema = z

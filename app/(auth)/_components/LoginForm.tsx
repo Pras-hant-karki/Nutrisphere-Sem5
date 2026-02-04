@@ -6,9 +6,9 @@ import Link from "next/link";
 import { useTransition, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LoginData, loginSchema } from "../schema";
-import { setAuthToken, setUserData } from "@/app/lib/cookie";
-import { login } from "@/app/lib/api/auth";
-import { setAuth } from "@/app/lib/auth-helpers";
+import { setAuthToken, setUserData } from "@/lib/cookie";
+import { login } from "@/lib/api/auth";
+import { setAuth } from "@/lib/auth-helpers";
 
 export default function LoginForm() {
   const router = useRouter();
