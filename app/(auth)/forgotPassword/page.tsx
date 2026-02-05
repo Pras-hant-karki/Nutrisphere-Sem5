@@ -1,43 +1,35 @@
-"use client";
-
 import Link from "next/link";
 
 export default function ForgotPasswordPage() {
   return (
-    <div>
-      <h1 className="text-3xl font-extrabold text-center mb-3" style={{ color: "#D4AF37" }}>
-        Forgot password
+    <div className="w-full">
+      <h1 className="text-4xl font-extrabold mb-10 text-[#D4AF37]">
+        Forgot Password
       </h1>
 
-      <p className="text-sm text-center mb-8" style={{ color: "#9FB3A6" }}>
-        Enter your email to reset your password
-      </p>
+      <div className="space-y-8">
+        <div className="relative flex items-center">
+          <span className="absolute left-4 text-white/70 pointer-events-none">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </span>
+          <input
+            type="email"
+            placeholder="Enter your email"
+            className="w-full h-14 rounded-xl pl-12 pr-6 text-base text-white bg-[#1B211D] border-2 border-[#E53935] outline-none transition-all focus:border-[#ff5252]"
+          />
+        </div>
 
-      <input
-        type="email"
-        placeholder="Email"
-        className="w-full h-12 border rounded-xl px-4 mb-5 text-base outline-none transition-all"
-        style={{
-          backgroundColor: "#1B211D",
-          borderColor: "#26322B",
-          color: "#FFFFFF",
-          borderWidth: "2px",
-        }}
-        onFocus={(e) => (e.target.style.borderColor = "#D4AF37")}
-        onBlur={(e) => (e.target.style.borderColor = "#26322B")}
-      />
+        <button className="w-full h-14 rounded-full font-semibold text-white text-lg bg-[#E53935] hover:bg-[#ff5252] transition-colors">
+          Reset password
+        </button>
 
-      <button
-        className="w-full h-12 rounded-xl font-bold shadow-md"
-        style={{ backgroundColor: "#2ECC71", color: "#0F1310" }}
-      >
-        Reset password
-      </button>
-
-      <div className="text-center mt-6">
-        <Link href="/login" className="text-sm hover:underline" style={{ color: "#D4AF37" }}>
-          ← Back to login
-        </Link>
+        <div className="text-left pt-2">
+          <Link href="/login" className="text-base text-[#9FB3A6] hover:underline">
+            ← Go back
+          </Link>
+        </div>
       </div>
     </div>
   );

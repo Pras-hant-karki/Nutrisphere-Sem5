@@ -10,14 +10,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </div>
 
         {/* RIGHT SIDE FORM */}
-        <div className="flex items-center justify-center px-6 py-10">
-          <div
-            className="w-full max-w-md p-10 rounded-2xl shadow-lg"
-            style={{
-              backgroundColor: "#171C18",
-              border: "1px solid #26322B",
-            }}
-          >
+        <div className="flex items-center justify-center px-8 py-12">
+          <div className="w-full max-w-md">
             {children}
           </div>
         </div>

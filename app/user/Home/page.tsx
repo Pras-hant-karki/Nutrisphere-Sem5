@@ -4,21 +4,21 @@ import Link from "next/link";
 
 export default function HomePage() {
   return (
-    <div className="w-full max-w-5xl mx-auto">
+    <div className="w-full">
       {/* Page Title */}
-      <h1 className="text-4xl font-bold text-[#D4AF37] mb-8 text-center">
+      <h1 className="text-4xl font-bold italic text-[#D4AF37] mb-10 text-center">
         Welcome to Dashboard !
       </h1>
 
       {/* Cards */}
-      <div className="space-y-4">
+      <div className="space-y-6 max-w-3xl mx-auto">
         {/* Sessions Card */}
         <Link href="/user/Home/sessions" className="block">
-          <div className="bg-[#171C18] border border-[#26322B] rounded-2xl p-6 flex items-center justify-between hover:border-[#D4AF37] transition-all duration-300 cursor-pointer group shadow-lg">
-            <div className="flex items-center gap-4 flex-1 min-w-0">
-              <div className="w-12 h-12 flex items-center justify-center flex-shrink-0 bg-[#D4AF37]/10 rounded-xl">
+          <div className="bg-[#1B211D] border-2 border-[#D4AF37]/60 rounded-2xl p-6 flex items-center justify-between hover:border-[#D4AF37] transition-all duration-300 cursor-pointer group">
+            <div className="flex items-center gap-5 flex-1 min-w-0">
+              <div className="w-12 h-12 flex items-center justify-center flex-shrink-0">
                 <svg
-                  className="w-7 h-7 text-white"
+                  className="w-8 h-8 text-white"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -26,7 +26,7 @@ export default function HomePage() {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
+                    strokeWidth={1.5}
                     d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
@@ -38,14 +38,14 @@ export default function HomePage() {
                 </h2>
                 <p className="text-[#9FB3A6] text-sm">Circuit workout</p>
                 <p className="text-[#9FB3A6] text-xs mt-0.5">
-                  (Starts at 8 AM, 11/23/2025)
+                  (Starts at 8 AM, 11/23/025)
                 </p>
               </div>
             </div>
 
-            <div className="text-white group-hover:text-[#D4AF37] transition-colors flex-shrink-0 ml-4">
+            <div className="text-white/80 group-hover:text-[#D4AF37] transition-colors flex-shrink-0 ml-4">
               <svg
-                className="w-6 h-6"
+                className="w-8 h-8"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -63,11 +63,11 @@ export default function HomePage() {
 
         {/* Workout Records Card */}
         <Link href="/user/Home/workout-records" className="block">
-          <div className="bg-[#171C18] border border-[#26322B] rounded-2xl p-6 flex items-center justify-between hover:border-[#D4AF37] transition-all duration-300 cursor-pointer group shadow-lg">
-            <div className="flex items-center gap-4 flex-1 min-w-0">
-              <div className="w-12 h-12 flex items-center justify-center flex-shrink-0 bg-[#D4AF37]/10 rounded-xl">
+          <div className="bg-[#171C18] border-2 border-[#D4AF37]/60 rounded-2xl p-6 flex items-center justify-between hover:border-[#D4AF37] transition-all duration-300 cursor-pointer group">
+            <div className="flex items-center gap-5 flex-1 min-w-0">
+              <div className="w-14 h-14 flex items-center justify-center flex-shrink-0 bg-[#D4AF37]/10 rounded-xl">
                 <svg
-                  className="w-7 h-7 text-white"
+                  className="w-8 h-8 text-white"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -93,7 +93,7 @@ export default function HomePage() {
 
             <div className="text-white group-hover:text-[#D4AF37] transition-colors flex-shrink-0 ml-4">
               <svg
-                className="w-6 h-6"
+                className="w-7 h-7"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -111,11 +111,11 @@ export default function HomePage() {
 
         {/* Trainer Details Card */}
         <Link href="/user/Home/trainer-details" className="block">
-          <div className="bg-[#171C18] border border-[#26322B] rounded-2xl p-6 flex items-center justify-between hover:border-[#D4AF37] transition-all duration-300 cursor-pointer group shadow-lg">
-            <div className="flex items-center gap-4 flex-1 min-w-0">
-              <div className="w-12 h-12 flex items-center justify-center flex-shrink-0 bg-[#D4AF37]/10 rounded-xl">
+          <div className="bg-[#171C18] border-2 border-[#D4AF37]/60 rounded-2xl p-6 flex items-center justify-between hover:border-[#D4AF37] transition-all duration-300 cursor-pointer group">
+            <div className="flex items-center gap-5 flex-1 min-w-0">
+              <div className="w-14 h-14 flex items-center justify-center flex-shrink-0 bg-[#D4AF37]/10 rounded-xl">
                 <svg
-                  className="w-7 h-7 text-white"
+                  className="w-8 h-8 text-white"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -139,7 +139,7 @@ export default function HomePage() {
 
             <div className="text-white group-hover:text-[#D4AF37] transition-colors flex-shrink-0 ml-4">
               <svg
-                className="w-6 h-6"
+                className="w-7 h-7"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
