@@ -35,7 +35,7 @@ export default function ViewUserPage() {
       setError(null);
       const token = getToken();
       const response = await axios.get(
-        `http://localhost:5050/api/admin/users/${userId}`,
+        `http://localhost:5000/api/admin/users/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -93,7 +93,7 @@ export default function ViewUserPage() {
                 <div className="h-24 w-24 rounded-full bg-[#D4AF37]/20 flex items-center justify-center text-4xl border-2 border-[#D4AF37]">
                   {user.image ? (
                     <img
-                      src={`http://localhost:5050${user.image}`}
+                      src={`http://localhost:5000${user.image}`}
                       alt={user.fullName}
                       className="h-full w-full rounded-full object-cover"
                     />

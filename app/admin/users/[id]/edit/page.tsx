@@ -66,7 +66,7 @@ export default function EditUserPage() {
       setError(null);
       const token = getToken();
       const response = await axios.get(
-        `http://localhost:5050/api/admin/users/${userId}`,
+        `http://localhost:5000/api/admin/users/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -78,7 +78,7 @@ export default function EditUserPage() {
         const userData = response.data.data;
         setUser(userData);
         if (userData.image) {
-          setImagePreview(`http://localhost:5050${userData.image}`);
+          setImagePreview(`http://localhost:5000${userData.image}`);
         }
         reset({
           fullName: userData.fullName,
@@ -129,7 +129,7 @@ export default function EditUserPage() {
 
       const token = getToken();
       const response = await axios.put(
-        `http://localhost:5050/api/admin/users/${userId}`,
+        `http://localhost:5000/api/admin/users/${userId}`,
         formData,
         {
           headers: {

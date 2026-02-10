@@ -41,29 +41,26 @@ const weeklySchedule = [
 
 export default function SessionsPage() {
   return (
-    <div className="w-full">
+    <div className="w-full max-w-3xl mx-auto">
       {/* Page Header */}
-      <h1 className="text-4xl font-bold italic text-[#D4AF37] mb-10 text-center">
+      <h1 className="text-3xl font-bold text-[#D4AF37] mb-6 text-center">
         Workout Sessions
       </h1>
 
       {/* Weekly Schedule */}
-      <div className="space-y-8">
+      <div className="space-y-4">
         {weeklySchedule.map((daySchedule, idx) => (
-          <div key={idx}>
-            {/* Day Label */}
-            <h2 className="text-white font-bold text-lg mb-4">{daySchedule.day}</h2>
-            
-            {/* Time Slots */}
+          <div key={idx} className="bg-[#171C18] border border-[#26322B] rounded-xl p-4">
+            <h2 className="text-white font-semibold text-sm mb-3">{daySchedule.day}</h2>
             {daySchedule.sessions.length > 0 ? (
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-2">
                 {daySchedule.sessions.map((session, sessionIdx) => (
                   <div
                     key={sessionIdx}
-                    className={`px-6 py-3 rounded-lg border text-sm font-medium transition-all ${
+                    className={`px-4 py-2 rounded-lg text-sm font-medium ${
                       session.highlighted
-                        ? "bg-[#26322B] border-[#D4AF37] text-white"
-                        : "bg-[#1B211D] border-[#26322B] text-[#9FB3A6]"
+                        ? "bg-[#D4AF37]/15 border border-[#D4AF37]/40 text-[#D4AF37]"
+                        : "bg-[#1B211D] border border-[#26322B] text-[#9FB3A6]"
                     }`}
                   >
                     {session.time}
@@ -71,7 +68,7 @@ export default function SessionsPage() {
                 ))}
               </div>
             ) : (
-              <div className="text-[#7C8C83] text-sm">No sessions scheduled</div>
+              <p className="text-[#7C8C83] text-sm">No sessions scheduled</p>
             )}
           </div>
         ))}

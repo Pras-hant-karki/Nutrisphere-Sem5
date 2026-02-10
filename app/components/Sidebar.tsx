@@ -30,6 +30,11 @@ export function Sidebar({ navItems, title, onLogout }: SidebarProps) {
     onLogout?.();
   };
 
+  const handleSettings = () => {
+    // Navigate to settings page or open settings modal
+    router.push("/user/profile"); // Assuming profile has settings
+  };
+
   const isActive = (href: string) => pathname === href;
 
   return (
@@ -66,36 +71,46 @@ export function Sidebar({ navItems, title, onLogout }: SidebarProps) {
         </div>
 
         {/* Navigation Items */}
-        <nav className="flex-1 px-4 py-6 space-y-2">
+        <nav className="flex-1 px-4 py-6 space-y-1.5">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               onClick={() => setIsMobileOpen(false)}
-              className={`block w-full p-4 rounded-lg transition-all duration-200 ${
+              className={`block w-full p-3.5 rounded-xl transition-all duration-200 ${
                 isActive(item.href)
-                  ? "bg-[#2ECC71] text-[#0F1310] shadow-lg border border-[#D4AF37]"
+                  ? "bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/30"
                   : "hover:bg-[#1B211D] text-[#9FB3A6] hover:text-[#D4AF37] border border-transparent hover:border-[#26322B]"
               }`}
             >
-              <div className="flex items-start gap-3">
-                <span className="text-xl mt-1">{item.icon}</span>
+              <div className="flex items-center gap-3">
+                <span className="text-lg">{item.icon}</span>
                 <div className="text-left">
                   <p className="font-semibold text-sm">{item.name}</p>
-                  <p className="text-xs opacity-75">{item.description}</p>
+                  <p className="text-xs opacity-60">{item.description}</p>
                 </div>
               </div>
             </Link>
           ))}
         </nav>
 
-        {/* Settings Button */}
-        <div className="px-4 py-4 border-t border-[#26322B]">
+        {/* Bottom Actions */}
+        <div className="px-4 py-4 border-t border-[#26322B] space-y-2">
           <button
             onClick={handleSettings}
-            className="w-full px-4 py-2 rounded-lg bg-[#E53935] hover:bg-[#C41C3B] text-white font-semibold transition-colors duration-200 text-sm"
+            className="w-full px-4 py-2.5 rounded-lg border border-[#26322B] hover:border-[#D4AF37]/40 hover:bg-[#1B211D] text-[#9FB3A6] hover:text-[#D4AF37] font-medium transition-all duration-200 text-sm flex items-center justify-center gap-2"
           >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
             Settings
+          </button>
+          <button
+            onClick={handleLogout}
+            className="w-full px-4 py-2.5 rounded-lg bg-[#E53935]/10 hover:bg-[#E53935]/20 text-[#E53935] font-medium transition-all duration-200 text-sm border border-[#E53935]/20 hover:border-[#E53935]/40"
+          >
+            Logout
           </button>
         </div>
       </aside>

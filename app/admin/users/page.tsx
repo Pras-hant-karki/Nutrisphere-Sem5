@@ -28,7 +28,7 @@ export default function UsersPage() {
       setIsLoading(true);
       setError(null);
       const token = getToken();
-      const response = await axios.get("http://localhost:5050/api/admin/users", {
+      const response = await axios.get("http://localhost:5000/api/admin/users", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -53,7 +53,7 @@ export default function UsersPage() {
 
     try {
       const token = getToken();
-      await axios.delete(`http://localhost:5050/api/admin/users/${id}`, {
+      await axios.delete(`http://localhost:5000/api/admin/users/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

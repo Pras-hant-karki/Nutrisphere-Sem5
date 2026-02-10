@@ -1,159 +1,65 @@
 "use client";
 
-import Link from "next/link";
+import { Calendar, BarChart3, Users, ChevronRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function HomePage() {
+  const router = useRouter();
+
+  const dashboardCards = [
+    {
+      title: "Sessions",
+      description: "Circuit workout",
+      subtitle: "Starts at 8 AM, 11/23/025",
+      icon: Calendar,
+      href: "/user/home/sessions",
+    },
+    {
+      title: "Workout Records",
+      description: "Track your workouts here everyday",
+      subtitle: "",
+      icon: BarChart3,
+      href: "/user/home/workout-records",
+    },
+    {
+      title: "Trainer Details",
+      description: "Know your Trainer!",
+      subtitle: "",
+      icon: Users,
+      href: "/user/home/trainer-details",
+    },
+  ];
+
   return (
-    <div className="w-full">
-      {/* Page Title */}
-      <h1 className="text-4xl font-bold italic text-[#D4AF37] mb-10 text-center">
-        Welcome to Dashboard !
+    <div className="w-full max-w-2xl mx-auto pt-4">
+      <h1 className="text-3xl font-bold text-[#D4AF37] text-center mb-10">
+        Welcome to Dashboard!
       </h1>
 
-      {/* Cards */}
-      <div className="space-y-6 max-w-3xl mx-auto">
-        {/* Sessions Card */}
-        <Link href="/user/Home/sessions" className="block">
-          <div className="bg-[#1B211D] border-2 border-[#D4AF37]/60 rounded-2xl p-6 flex items-center justify-between hover:border-[#D4AF37] transition-all duration-300 cursor-pointer group">
-            <div className="flex items-center gap-5 flex-1 min-w-0">
-              <div className="w-12 h-12 flex items-center justify-center flex-shrink-0">
-                <svg
-                  className="w-8 h-8 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
+      <div className="space-y-4">
+        {dashboardCards.map((card) => (
+          <div
+            key={card.title}
+            onClick={() => router.push(card.href)}
+            className="group bg-[#161B17] border border-[#2A3630] rounded-2xl p-5 cursor-pointer transition-all duration-200 hover:border-[#D4AF37]/50 hover:shadow-[0_0_20px_rgba(212,175,55,0.05)] flex items-center justify-between"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-[#D4AF37]/15 flex items-center justify-center flex-shrink-0 border border-[#D4AF37]/20">
+                <card.icon size={22} className="text-[#D4AF37]" />
               </div>
-
-              <div className="min-w-0 flex-1">
-                <h2 className="text-[#D4AF37] font-bold text-xl mb-1">
-                  Sessions
-                </h2>
-                <p className="text-[#9FB3A6] text-sm">Circuit workout</p>
-                <p className="text-[#9FB3A6] text-xs mt-0.5">
-                  (Starts at 8 AM, 11/23/025)
+              <div>
+                <h2 className="text-white text-base font-semibold">{card.title}</h2>
+                <p className="text-[#9FB3A6] text-sm mt-0.5">
+                  {card.description}
+                  {card.subtitle && (
+                    <span className="text-[#7C8C83] ml-1">({card.subtitle})</span>
+                  )}
                 </p>
               </div>
             </div>
-
-            <div className="text-white/80 group-hover:text-[#D4AF37] transition-colors flex-shrink-0 ml-4">
-              <svg
-                className="w-8 h-8"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </div>
+            <ChevronRight size={20} className="text-[#4A5A50] group-hover:text-[#D4AF37] transition-colors flex-shrink-0" />
           </div>
-        </Link>
-
-        {/* Workout Records Card */}
-        <Link href="/user/Home/workout-records" className="block">
-          <div className="bg-[#171C18] border-2 border-[#D4AF37]/60 rounded-2xl p-6 flex items-center justify-between hover:border-[#D4AF37] transition-all duration-300 cursor-pointer group">
-            <div className="flex items-center gap-5 flex-1 min-w-0">
-              <div className="w-14 h-14 flex items-center justify-center flex-shrink-0 bg-[#D4AF37]/10 rounded-xl">
-                <svg
-                  className="w-8 h-8 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                  />
-                </svg>
-              </div>
-
-              <div className="min-w-0 flex-1">
-                <h2 className="text-[#D4AF37] font-bold text-xl mb-1">
-                  Workout Records
-                </h2>
-                <p className="text-[#9FB3A6] text-sm">
-                  Track your workouts here everyday
-                </p>
-              </div>
-            </div>
-
-            <div className="text-white group-hover:text-[#D4AF37] transition-colors flex-shrink-0 ml-4">
-              <svg
-                className="w-7 h-7"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </div>
-          </div>
-        </Link>
-
-        {/* Trainer Details Card */}
-        <Link href="/user/Home/trainer-details" className="block">
-          <div className="bg-[#171C18] border-2 border-[#D4AF37]/60 rounded-2xl p-6 flex items-center justify-between hover:border-[#D4AF37] transition-all duration-300 cursor-pointer group">
-            <div className="flex items-center gap-5 flex-1 min-w-0">
-              <div className="w-14 h-14 flex items-center justify-center flex-shrink-0 bg-[#D4AF37]/10 rounded-xl">
-                <svg
-                  className="w-8 h-8 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
-              </div>
-
-              <div className="min-w-0 flex-1">
-                <h2 className="text-[#D4AF37] font-bold text-xl mb-1">
-                  Trainer Details
-                </h2>
-                <p className="text-[#9FB3A6] text-sm">Know your Trainer !</p>
-              </div>
-            </div>
-
-            <div className="text-white group-hover:text-[#D4AF37] transition-colors flex-shrink-0 ml-4">
-              <svg
-                className="w-7 h-7"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </div>
-          </div>
-        </Link>
+        ))}
       </div>
     </div>
   );

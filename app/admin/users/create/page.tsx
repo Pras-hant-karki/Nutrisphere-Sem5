@@ -77,7 +77,7 @@ export default function CreateUserPage() {
 
       const token = getToken();
       const response = await axios.post(
-        "http://localhost:5050/api/admin/users",
+        "http://localhost:5000/api/admin/users",
         formData,
         {
           headers: {
