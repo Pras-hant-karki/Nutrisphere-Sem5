@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { isAuthenticated, getUser, logout } from "@/lib/auth-helpers";
-import { Home, FileText, Calendar, User, Settings } from "lucide-react";
+import { Home, FileText, Calendar, User, Settings, Menu, X } from "lucide-react";
 
 const navItems = [
   { name: "Home", href: "/user/home", icon: Home },
@@ -18,6 +18,7 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   const [user, setUser] = useState<ReturnType<typeof getUser>>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -32,11 +33,17 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
 
  const isActive = (href: string) => pathname === href;
 
+  const handleNavClick = () => {
+    setSidebarOpen(false);
+  };
+
   return (
     <div className="min-h-screen bg-[#0F1310] flex">
       
       {/* SIDEBAR */}
-      <aside className="w-[220px] fixed left-0 top-0 h-screen border-r border-[#26322B] bg-[#111613] z-20 flex flex-col">
+      <aside className={`fixed left-0 top-0 h-screen border-r border-[#26322B] bg-[#111613] z-20 flex flex-col transition-transform duration-300 ${
+        sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+      } w-[220px]`}>
         {/* App Branding */}
         <div className="px-5 pt-6 pb-4 border-b border-[#26322B]">
           <h1 className="text-xl font-bold text-[#D4AF37] tracking-tight">NutriSphere</h1>
@@ -50,6 +57,7 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
             <Link
               key={item.href}
               href={item.href}
+              onClick={handleNavClick}
               className={`flex items-center gap-3 w-full h-[42px] rounded-xl px-3 text-sm font-medium transition-all duration-200 ${
                 isActive(item.href)
                   ? "bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/30"
@@ -73,11 +81,26 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
         </div>
       </aside>
 
+      {/* OVERLAY */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-10"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* MAIN CONTENT */}
-      <div className="ml-[220px] flex-1 h-screen overflow-hidden z-10 flex flex-col">
+      <div className="flex-1 h-screen overflow-hidden flex flex-col">
         
         {/* TOP BAR */}
-        <div className="flex justify-end items-center px-6 h-14 flex-shrink-0 border-b border-[#26322B]/40 bg-[#0F1310]">
+        <div className="flex justify-between items-center px-6 h-14 flex-shrink-0 border-b border-[#26322B]/40 bg-[#0F1310]">
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="p-2 rounded-lg text-[#9FB3A6] hover:bg-[#1A201C] hover:text-white transition-colors"
+          >
+            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+          
           <div className="relative">
             <div className="w-9 h-9 rounded-full bg-[#1B211D] border border-[#26322B] flex items-center justify-center text-sm text-[#9FB3A6] font-semibold">
               {user?.fullName?.charAt(0) || "U"}

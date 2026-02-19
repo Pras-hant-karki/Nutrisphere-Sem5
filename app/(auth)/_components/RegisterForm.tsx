@@ -38,13 +38,13 @@ export default function RegisterForm() {
   };
 
   const inputBase =
-    "w-full h-14 rounded-xl pl-12 pr-6 text-base text-white bg-[#1B211D] border-2 border-[#D4AF37] outline-none transition-all focus:border-[#F2B632]";
+    "w-full h-14 rounded-xl pl-14 pr-6 text-base text-white bg-[#2A2A2A] border border-[#D4AF37] outline-none transition-all focus:border-[#F2B632] placeholder:text-white/40 placeholder:text-sm";
 
   return (
     <div className="w-full">
-      <h2 className="text-4xl font-extrabold mb-10 text-[#D4AF37]">Register</h2>
+      <h2 className="text-4xl font-extrabold mb-10 text-[#D4AF37] italic">Register</h2>
 
-      <form onSubmit={handleSubmit(submit)} className="space-y-6">
+      <form onSubmit={handleSubmit(submit)} className="space-y-5">
         {error && (
           <div
             className="p-4 border rounded-xl text-sm font-medium"
@@ -58,11 +58,12 @@ export default function RegisterForm() {
           </div>
         )}
 
-        <div className="mb-6">
+        {/* Full Name */}
+        <div>
           <div className="relative flex items-center">
-            <span className="absolute left-4 text-white/70 pointer-events-none">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            <span className="absolute left-4 text-white/50 pointer-events-none">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
             </span>
             <input
@@ -78,11 +79,12 @@ export default function RegisterForm() {
           )}
         </div>
 
-        <div className="mb-6">
+        {/* Email */}
+        <div>
           <div className="relative flex items-center">
-            <span className="absolute left-4 text-white/70 pointer-events-none">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            <span className="absolute left-4 text-white/50 pointer-events-none">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
               </svg>
             </span>
             <input
@@ -98,11 +100,12 @@ export default function RegisterForm() {
           )}
         </div>
 
-        <div className="mb-6">
+        {/* Password */}
+        <div>
           <div className="relative flex items-center">
-            <span className="absolute left-4 text-white/70 pointer-events-none">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            <span className="absolute left-4 text-white/50 pointer-events-none">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
               </svg>
             </span>
             <input
@@ -119,11 +122,12 @@ export default function RegisterForm() {
           )}
         </div>
 
-        <div className="mb-6">
+        {/* Confirm Password */}
+        <div>
           <div className="relative flex items-center">
-            <span className="absolute left-4 text-white/70 pointer-events-none">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            <span className="absolute left-4 text-white/50 pointer-events-none">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
               </svg>
             </span>
             <input
@@ -140,19 +144,13 @@ export default function RegisterForm() {
           )}
         </div>
 
+        {/* Register Button */}
         <button
           disabled={pending}
-          className="w-full h-14 rounded-full font-semibold text-lg disabled:opacity-50 shadow-md bg-[#F26B2C] text-white hover:bg-[#ff7b3d] transition-colors mt-2"
+          className="w-full h-14 rounded-full font-bold text-lg disabled:opacity-50 shadow-md bg-[#4ADE80] text-[#1A1008] hover:bg-[#3ecf70] transition-colors mt-4"
         >
           {pending ? "Creating..." : "Register"}
         </button>
-
-        <p className="text-center text-base text-[#9FB3A6] pt-2">
-          Already have an account?{" "}
-          <Link href="/login" className="font-semibold text-[#D4AF37] hover:underline">
-            Log in
-          </Link>
-        </p>
       </form>
     </div>
   );
