@@ -1,157 +1,243 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
-import { useTransition, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { RegisterData, registerSchema } from "../schema";
+import Link from "next/link";
+import { User, Mail, Lock, CheckCircle } from "lucide-react";
 import { handleRegister } from "@/lib/actions/auth-action";
 
 export default function RegisterForm() {
   const router = useRouter();
-  const [pending, startTransition] = useTransition();
-  const [error, setError] = useState<string>("");
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<RegisterData>({
-    resolver: zodResolver(registerSchema),
-  });
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [obscurePassword, setObscurePassword] = useState(true);
+  const [obscureConfirmPassword, setObscureConfirmPassword] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const submit = async (values: RegisterData) => {
+  // Validations
+  const validateFullName = (value: string) => {
+    if (!value) return "Full name is required";
+    if (value.length < 2) return "Full name must be at least 2 characters";
+    if (!/^[a-zA-Z\s]+$/.test(value)) return "Full name can only contain letters and spaces";
+    return null;
+  };
+
+  const validateEmail = (value: string) => {
+    if (!value) return "Email is required";
+    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)) return "Please enter a valid email address";
+    return null;
+  };
+
+  const validatePassword = (value: string) => {
+    if (!value) return "Password is required";
+    if (value.length < 6) return "Password must be at least 6 characters";
+    return null;
+  };
+
+  const validateConfirmPassword = (value: string) => {
+    if (!value) return "Please confirm your password";
+    if (value !== password) return "Passwords do not match";
+    return null;
+  };
+
+  const handleSignup = async () => {
+    if (!agreedToTerms) {
+      setError("Please agree to Terms & Conditions");
+      return;
+    }
+
+    const fullNameError = validateFullName(fullName);
+    const emailError = validateEmail(email);
+    const passwordError = validatePassword(password);
+    const confirmError = validateConfirmPassword(confirmPassword);
+
+    if (fullNameError || emailError || passwordError || confirmError) {
+      setError(fullNameError || emailError || passwordError || confirmError || "");
+      return;
+    }
+
     setError("");
+    setIsLoading(true);
+
     try {
-      const result = await handleRegister(values);
+      const result = await handleRegister({
+        fullName: fullName.trim(),
+        email: email.trim(),
+        password: password.trim(),
+        confirmPassword: confirmPassword.trim(),
+      });
+
       if (result.success) {
-        startTransition(() => {
-          router.push("/login");
-        });
+        router.push("/dashboard");
       } else {
         setError(result.message || "Registration failed");
       }
-    } catch (err: Error | any) {
+    } catch (err: any) {
       setError(err.message || "Registration failed");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const inputBase =
-    "w-full h-14 rounded-xl pl-14 pr-6 text-base text-white bg-[#2A2A2A] border border-[#D4AF37] outline-none transition-all focus:border-[#F2B632] placeholder:text-white/40 placeholder:text-sm";
-
   return (
     <div className="w-full">
-      <h2 className="text-4xl font-extrabold mb-10 text-[#D4AF37] italic">Register</h2>
+      {/* Header */}
+      <div className="mb-12">
+        <h2 className="text-4xl font-extrabold text-[var(--text-primary)] mb-3 tracking-tight">
+          Create Account
+        </h2>
+        <p className="text-[var(--text-secondary)] font-medium text-base">
+          Get started with your free account
+        </p>
+      </div>
 
-      <form onSubmit={handleSubmit(submit)} className="space-y-5">
-        {error && (
-          <div
-            className="p-4 border rounded-xl text-sm font-medium"
-            style={{
-              backgroundColor: "#E53935",
-              borderColor: "#E53935",
-              color: "#FFFFFF",
-            }}
-          >
-            {error}
-          </div>
-        )}
+      {error && (
+        <div className="mb-6 p-4 bg-[var(--error)]/10 border border-[var(--error)]/30 rounded-[var(--radius-lg)]">
+          <p className="text-[var(--error)] text-sm font-medium flex items-center gap-2">
+            ⚠️ {error}
+          </p>
+        </div>
+      )}
 
+      <form onSubmit={(e) => { e.preventDefault(); handleSignup(); }} className="space-y-9">
         {/* Full Name */}
-        <div>
-          <div className="relative flex items-center">
-            <span className="absolute left-4 text-white/50 pointer-events-none">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-            </span>
+        <div className="space-y-2 mb-5">
+          {/* <label htmlFor="fullName" className="block text-sm font-bold text-[var(--text-secondary)] ml-1">
+            Full Name
+          </label> */}
+          <div className="relative group">
+            <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
+              <User className="h-5 w-5 transition-colors text-[var(--text-muted)] group-focus-within:text-[var(--gold)]" />
+            </div>
             <input
-              {...register("fullName")}
+              id="fullName"
+              name="fullName"
+              type="text"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              className="w-full h-[var(--input-h)] pl-14 pr-4 border border-[var(--border)] rounded-[var(--radius-lg)] bg-[var(--bg-input)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] outline-none transition-all duration-300 focus:border-[var(--gold)] focus:ring-2 focus:ring-[var(--gold)]/20"
               placeholder="Full Name"
-              className={inputBase}
             />
           </div>
-          {errors.fullName && (
-            <p className="text-sm mt-2" style={{ color: "#E53935" }}>
-              {errors.fullName.message}
-            </p>
-          )}
         </div>
 
         {/* Email */}
-        <div>
-          <div className="relative flex items-center">
-            <span className="absolute left-4 text-white/50 pointer-events-none">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-              </svg>
-            </span>
+        <div className="space-y-2 mb-5">
+          {/* <label htmlFor="email" className="block text-sm font-bold text-[var(--text-secondary)] ml-1">
+          </label> */}
+          <div className="relative group">
+            <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
+              <Mail className="h-5 w-5 transition-colors text-[var(--text-muted)] group-focus-within:text-[var(--gold)]" />
+            </div>
             <input
-              {...register("email")}
-              placeholder="Email"
-              className={inputBase}
+              id="email"
+              name="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full h-[var(--input-h)] pl-14 pr-4 border border-[var(--border)] rounded-[var(--radius-lg)] bg-[var(--bg-input)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] outline-none transition-all duration-300 focus:border-[var(--gold)] focus:ring-2 focus:ring-[var(--gold)]/20"
+              placeholder="Enter your email"
             />
           </div>
-          {errors.email && (
-            <p className="text-sm mt-2" style={{ color: "#E53935" }}>
-              {errors.email.message}
-            </p>
-          )}
         </div>
 
         {/* Password */}
-        <div>
-          <div className="relative flex items-center">
-            <span className="absolute left-4 text-white/50 pointer-events-none">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-              </svg>
-            </span>
+        <div className="space-y-2 mb-5">
+          {/* <label htmlFor="password" className="block text-sm font-bold text-[var(--text-secondary)] ml-1">
+            Password
+          </label> */}
+          <div className="relative group">
+            <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
+              <Lock className="h-5 w-5 transition-colors text-[var(--text-muted)] group-focus-within:text-[var(--gold)]" />
+            </div>
             <input
-              type="password"
-              {...register("password")}
+              id="password"
+              name="password"
+              type={obscurePassword ? "password" : "text"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full h-[var(--input-h)] pl-14 pr-4 border border-[var(--border)] rounded-[var(--radius-lg)] bg-[var(--bg-input)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] outline-none transition-all duration-300 focus:border-[var(--gold)] focus:ring-2 focus:ring-[var(--gold)]/20"
               placeholder="Password"
-              className={inputBase}
             />
           </div>
-          {errors.password && (
-            <p className="text-sm mt-2" style={{ color: "#E53935" }}>
-              {errors.password.message}
-            </p>
-          )}
         </div>
 
         {/* Confirm Password */}
-        <div>
-          <div className="relative flex items-center">
-            <span className="absolute left-4 text-white/50 pointer-events-none">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-              </svg>
-            </span>
+        <div className="space-y-2 mb-5">
+          {/* <label htmlFor="confirmPassword" className="block text-sm font-bold text-[var(--text-secondary)] ml-1">
+            Confirm Password
+          </label> */}
+          <div className="relative group">
+            <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
+              <Lock className="h-5 w-5 transition-colors text-[var(--text-muted)] group-focus-within:text-[var(--gold)]" />
+            </div>
             <input
-              type="password"
-              {...register("confirmPassword")}
-              placeholder="Confirm password"
-              className={inputBase}
+              id="confirmPassword"
+              name="confirmPassword"
+              type={obscureConfirmPassword ? "password" : "text"}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full h-[var(--input-h)] pl-14 pr-4 border border-[var(--border)] rounded-[var(--radius-lg)] bg-[var(--bg-input)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] outline-none transition-all duration-300 focus:border-[var(--gold)] focus:ring-2 focus:ring-[var(--gold)]/20"
+              placeholder="Confirm Password"
             />
           </div>
-          {errors.confirmPassword && (
-            <p className="text-sm mt-2" style={{ color: "#E53935" }}>
-              {errors.confirmPassword.message}
-            </p>
-          )}
         </div>
 
-        {/* Register Button */}
+        {/* Terms & Show Passwords row */}
+        <div className="flex items-center justify-between pt-2">
+          <div className="flex items-center space-x-3">
+            <input
+              type="checkbox"
+              id="terms"
+              checked={agreedToTerms}
+              onChange={(e) => setAgreedToTerms(e.target.checked)}
+              className="w-4 h-4 accent-[var(--gold)] border-[var(--border)] rounded cursor-pointer"
+            />
+            <label htmlFor="terms" className="text-sm text-[var(--text-secondary)] font-medium">
+              I agree to the Terms & Conditions
+            </label>
+          </div>
+          <button
+            type="button"
+            onClick={() => { setObscurePassword(!obscurePassword); setObscureConfirmPassword(!obscureConfirmPassword); }}
+            className="text-xs font-semibold text-[var(--gold)] hover:opacity-80 transition-colors"
+          >
+            {obscurePassword ? "Show" : "Hide"}
+          </button>
+        </div>
+
+        {/* Submit Button */}
         <button
-          disabled={pending}
-          className="w-full h-14 rounded-full font-bold text-lg disabled:opacity-50 shadow-md bg-[#4ADE80] text-[#1A1008] hover:bg-[#3ecf70] transition-colors mt-4"
+          type="submit"
+          disabled={isLoading}
+          className="group w-full h-[var(--button-h)] bg-[var(--primary)] hover:opacity-90 text-white font-bold rounded-[var(--radius-lg)] transition-all duration-300 shadow-lg shadow-[var(--primary)]/25 hover:shadow-xl hover:shadow-[var(--primary)]/40 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-3 mt-4"
         >
-          {pending ? "Creating..." : "Register"}
+          {isLoading ? (
+            <>
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              <span>Creating account...</span>
+            </>
+          ) : (
+            <>
+              <span>Sign Up</span>
+              <CheckCircle className="w-5 h-5 group-hover:scale-110 transition-transform" />
+            </>
+          )}
         </button>
       </form>
+
+      {/* Login Link */}
+      <p className="mt-8 text-center text-[var(--text-secondary)] font-medium">
+        Already have an account?{" "}
+        <Link href="/login" className="font-bold text-[var(--gold)] hover:opacity-80 transition-colors ml-1">
+          Log in
+        </Link>
+      </p>
     </div>
   );
 }

@@ -7,6 +7,8 @@ export const handleRegister = async (data: RegisterData) => {
     try {
         const response = await register(data)
         if (response.success) {
+            await setAuthToken(response.token)
+            await setUserData(response.data)
             return {
                 success: true,
                 message: 'Registration successful',

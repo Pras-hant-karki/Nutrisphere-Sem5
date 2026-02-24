@@ -1,7 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
 
-/* ─── Feature sections shown below the hero ─── */
 const sections = [
   {
     title: "Personal\nTraining",
@@ -29,12 +27,9 @@ const sections = [
 export default function Page() {
   return (
     <main className="w-full min-h-screen bg-[#170306] text-white">
-
-      {/* ═══════════════ HERO SECTION ═══════════════ */}
       <section className="min-h-[calc(100vh-50px)] flex items-center px-6 md:px-12 lg:px-20">
         <div className="mx-auto grid w-full max-w-[1940px] grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16">
-          {/* Logo */}
-          <div className="relative h-[200px] sm:h-[260px] md:h-[300px]">
+          <div className="relative h-[200px] sm:h-[260px] md:h-[420px]">
             <Image
               src="/image/logo.png"
               alt="NutriSphere Logo"
@@ -44,7 +39,6 @@ export default function Page() {
             />
           </div>
 
-          {/* Tagline */}
           <div className="max-w-lg">
             <h1 className="text-[38px] sm:text-[48px] md:text-[56px] lg:text-[64px] font-extrabold leading-[1.05] text-[#F2C200]">
               Train Together,
@@ -60,19 +54,15 @@ export default function Page() {
         </div>
       </section>
 
-      {/* ═══════════════ FEATURE SECTIONS ═══════════════ */}
       {sections.map((section) => (
         <section
           key={section.title}
           className="min-h-[calc(100vh-50px)] flex items-center px-6 md:px-12 lg:px-20"
         >
           <div className="mx-auto grid w-full max-w-[1940px] grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16">
-            {/* Text block */}
             <div
               className={`max-w-md text-center md:text-left ${
-                section.reverse
-                  ? "md:order-2 md:justify"
-                  : ""
+                section.reverse ? "md:order-2 md:justify" : ""
               }`}
             >
               <h2 className="text-[40px] sm:text-[50px] md:text-[58px] font-extrabold leading-[1.08] text-[#F2C200] whitespace-pre-line">
@@ -83,7 +73,6 @@ export default function Page() {
               </p>
             </div>
 
-            {/* Image block */}
             <div
               className={`relative h-[260px] sm:h-[320px] md:h-[400px] ${
                 section.reverse ? "md:order-1" : ""

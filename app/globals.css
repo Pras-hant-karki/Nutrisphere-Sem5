@@ -1,31 +1,45 @@
 @import "tailwindcss";
 
+/* ===============================
+   DESIGN TOKENS 
+   =============================== */
 :root {
-  /* Backgrounds - Dark Green Theme */
-  --bg-primary: #0F1310;
+  /* Backgrounds */
+  --bg-main: #0F1310;
   --bg-card: #171C18;
   --bg-input: #1B211D;
 
-  /* Text Colors */
+  /* Text */
   --text-primary: #FFFFFF;
   --text-secondary: #9FB3A6;
   --text-muted: #7C8C83;
 
   /* Accents */
-  --primary-green: #2ECC71;
+  --primary: #2ECC71;
   --gold: #D4AF37;
-  --silver: #C0C0C0;
   --border: #26322B;
   --error: #E53935;
+
+  /* Sizes (Flutter derived) */
+  --input-h: 56px;
+  --button-h: 48px;
+  --radius-lg: 20px;
+
+  /* Spacing */
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 30px;
+
+  /* Fonts */
+  --font-body: "Open Sans", system-ui, sans-serif;
+  --font-display: "Montserrat", system-ui, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--bg-primary);
-  --color-foreground: var(--text-primary);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
+/* ===============================
+   BASE RESET
+   =============================== */
 * {
   margin: 0;
   padding: 0;
@@ -37,20 +51,56 @@ html {
 }
 
 body {
-  background-color: var(--bg-primary);
+  background-color: var(--bg-main);
   color: var(--text-primary);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font-body);
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  line-height: 1.6;
 }
 
-/* Custom Scrollbar */
+/* ===============================
+   FORM NORMALIZATION 
+   =============================== */
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
+  font-size: 14px;
+}
+
+/* Remove browser styles */
+input,
+textarea,
+select {
+  appearance: none;
+  background: none;
+}
+
+/* Focus — match with my app */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.15);
+}
+
+/* Autofill fix for dark UI */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--bg-input) inset !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+  caret-color: var(--text-primary);
+}
+
+/* ===============================
+   SCROLLBAR
+   =============================== */
 ::-webkit-scrollbar {
   width: 8px;
-  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -66,17 +116,10 @@ body {
   background: var(--text-muted);
 }
 
-/* Selection Color */
+/* ===============================
+   SELECTION
+   =============================== */
 ::selection {
-  background-color: var(--primary-green);
-  color: var(--bg-primary);
-}
-
-/* Focus Styles */
-input:focus,
-textarea:focus,
-select:focus {
-  outline: none;
-  border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+  background: var(--primary);
+  color: var(--bg-main);
 }

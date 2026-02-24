@@ -65,11 +65,11 @@ export default function LoginForm() {
   };
 
   const inputBase =
-    "w-full h-14 rounded-xl pl-14 pr-6 text-base text-white bg-[#2A2A2A] border border-[#D4AF37] outline-none transition-all focus:border-[#F2B632] placeholder:text-white/40 placeholder:text-sm";
+    "w-full h-14 rounded-[20px] pl-12 pr-6 text-base text-white bg-[#1B211D] border-[1.5px] border-[#26322B] outline-none transition-all focus:border-[#D4AF37] focus:border-2 placeholder:text-[#7C8C83] placeholder:text-sm";
 
   return (
     <div className="w-full">
-      <h2 className="text-4xl font-extrabold mb-10 text-[#D4AF37] italic">Log in</h2>
+      <h2 className="text-7xl font-extrabold mb-10 text-[#D4AF37]">Log in</h2>
 
       <form onSubmit={handleSubmit(submit)} className="space-y-5">
         {error && (
@@ -84,6 +84,7 @@ export default function LoginForm() {
             {error}
           </div>
         )}
+        <div className="h-20" />
 
         {/* EMAIL */}
         <div>
@@ -105,6 +106,8 @@ export default function LoginForm() {
             </p>
           )}
         </div>
+        <div className="h-4" />
+
 
         {/* PASSWORD */}
         <div>
@@ -127,6 +130,8 @@ export default function LoginForm() {
             </p>
           )}
         </div>
+        <div className="h-4" />
+
 
         {/* REMEMBER & FORGOT */}
         <div className="flex items-center justify-between text-sm pt-1">
@@ -141,14 +146,18 @@ export default function LoginForm() {
             Forgot password?
           </Link>
         </div>
+        <div className="h-4" />
+
 
         {/* LOGIN BUTTON */}
         <button
           disabled={pending}
-          className="w-full h-14 rounded-full font-bold text-lg disabled:opacity-50 shadow-md bg-[#4ADE80] text-[#1A1008] hover:bg-[#3ecf70] transition-colors mt-2"
+          className="w-full h-14 rounded-full font-bold text-lg disabled:opacity-50 shadow-md bg-[#4ADE80] text-[#0F1310] hover:bg-[#3ecf70] transition-colors mt-2"
         >
           {pending ? "Logging in..." : "Log in"}
         </button>
+        <div className="h-4" />
+
 
         {/* REGISTER LINK */}
         <p className="text-center text-base text-[#9FB3A6] pt-4">
@@ -157,6 +166,8 @@ export default function LoginForm() {
             Register !
           </Link>
         </p>
+        <div className="h-4" />
+
       </form>
     </div>
   );

@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { isAuthenticated, isAdmin } from "@/lib/auth-helpers";
-import { Sidebar } from "../components/Sidebar";
+import { Sidebar } from "../components/ui/Sidebar";
 
 const adminNavItems = [
   {
