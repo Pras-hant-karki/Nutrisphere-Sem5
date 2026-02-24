@@ -1,40 +1,47 @@
 import Link from "next/link";
+import { Mail, ArrowLeft } from "lucide-react";
 
 export default function ForgotPasswordPage() {
   return (
-    <div className="w-full">
-      <h1 className="text-4xl font-extrabold mb-10 text-[#D4AF37]">
-        Forgot Password
-      </h1>
-      <div className="h-15" />
-    
-      <div className="space-y-6">
-        <div className="relative flex items-center">
-          <span className="absolute left-4 text-white/50 pointer-events-none">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-            </svg>
-          </span>
-          <input
-            type="email"
-            placeholder="Enter your email"
-            className="w-full h-14 rounded-[20px] pl-12 pr-6 text-base text-white bg-[#1B211D] border-[1.5px] border-[#E53935] outline-none transition-all focus:border-[#ff5252] focus:border-2 placeholder:text-[#7C8C83] placeholder:text-sm"
-          />
+    <div className="w-full max-w-md mx-auto">
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-extrabold text-[var(--text-primary)] mb-2 tracking-tight">
+          Forgot Password
+        </h1>
+        <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
+          Enter your email and we will send reset instructions
+        </p>
+      </div>
+
+      <div className="space-y-4">
+        <div className="space-y-2.5">
+          <label htmlFor="email" className="block text-sm font-semibold text-[var(--text-secondary)]">
+            Email Address
+          </label>
+          <div className="h-[var(--input-h)] w-full border border-[var(--border)] rounded-[var(--radius-lg)] bg-[var(--bg-input)] transition-colors focus-within:border-[var(--gold)]">
+            <div className="h-full w-full flex items-center">
+              <div className="h-full w-12 shrink-0 flex items-center justify-center border-r border-[var(--border)] text-[var(--text-muted)]">
+                <Mail className="w-5 h-5" />
+              </div>
+              <div className="min-w-0 flex-1 h-full">
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  className="h-full w-full bg-transparent px-4 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] outline-none"
+                />
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="h-4" />
 
-
-        <button className="w-full h-14 rounded-full font-bold text-white text-lg bg-[#E53935] hover:bg-[#ff5252] transition-colors">
-          Reset password
+        <button className="group mt-2 w-full h-[var(--button-h)] bg-[var(--primary)] hover:opacity-90 text-white font-bold rounded-[var(--radius-lg)] transition-all duration-300 shadow-lg shadow-[var(--primary)]/25 hover:shadow-xl hover:shadow-[var(--primary)]/40 active:scale-[0.98]">
+          Send Reset Link
         </button>
-        <div className="h-4" />
-
 
         <div className="flex items-center gap-2 pt-2">
-          <svg className="w-4 h-4 text-[#9FB3A6]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          <Link href="/login" className="text-base text-[#9FB3A6] hover:underline">
+          <ArrowLeft className="w-4 h-4 text-[var(--text-secondary)]" />
+          <Link href="/login" className="text-sm text-[var(--text-secondary)] hover:opacity-80 transition-colors font-medium">
             Go back
           </Link>
         </div>

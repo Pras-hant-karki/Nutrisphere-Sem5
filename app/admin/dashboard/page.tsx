@@ -1,80 +1,60 @@
 "use client";
 
 import Link from "next/link";
-import { getUser } from "@/lib/auth-helpers";
-import { useState } from "react";
+import { Calendar, ChevronRight, Users, UserCircle } from "lucide-react";
 
 export default function AdminDashboard() {
-  const [user] = useState(getUser());
+  const dashboardCards = [
+    {
+      title: "Manage Sessions",
+      subtitle: "Create and update workout sessions",
+      icon: Calendar,
+      href: "/admin/sessions",
+    },
+    {
+      title: "User Management",
+      subtitle: "View, edit and control user accounts",
+      icon: Users,
+      href: "/admin/users",
+    },
+    {
+      title: "My Bio",
+      subtitle: "Manage your trainer bio and profile",
+      icon: UserCircle,
+      href: "/admin/profile",
+    },
+  ];
 
   return (
-    <div className="max-w-3xl mx-auto">
-      {/* Welcome Header */}
-      <h1 className="text-3xl font-bold text-[#D4AF37] text-center mb-10">
-        Welcome to Dashboard!
-      </h1>
+    <div className="flex flex-col items-center min-h-screen">
+      <div className="w-full text-center mb-20">
+        <h1 className="text-4xl font-bold text-[#D4AF37]">Welcome to Admin Dashboard !</h1>
+      </div>
 
-      {/* Dashboard Cards */}
-      <div className="space-y-4">
-        {/* Manage Sessions */}
-        <Link href="/admin/appointments">
-          <div className="group bg-[#171C18] border border-[#26322B] rounded-2xl p-5 hover:border-[#D4AF37]/60 hover:bg-[#1B211D] transition-all cursor-pointer">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-11 h-11 rounded-xl bg-[#D4AF37]/10 flex items-center justify-center flex-shrink-0">
-                  <span className="text-xl">⏰</span>
-                </div>
-                <div>
-                  <h3 className="text-[#D4AF37] text-lg font-semibold">Manage Sessions</h3>
-                  <p className="text-[#9FB3A6] text-sm mt-0.5">Default workout · Starts at 8 AM</p>
+      <div className="w-full max-w-3xl flex flex-col gap-8">
+        {dashboardCards.map((card) => {
+          const IconComponent = card.icon;
+          return (
+            <Link
+              key={card.title}
+              href={card.href}
+              className="flex items-center justify-between h-36 px-10 bg-gradient-to-r from-[#1a1f1e] to-[#151a19] border border-[#2a3530] rounded-2xl shadow-lg cursor-pointer transition-all duration-200 hover:border-[#D4AF37]/50 hover:shadow-xl"
+            >
+              <div className="flex items-center gap-8 flex-1 min-w-0">
+                <IconComponent size={28} strokeWidth={1.5} className="text-[#D4AF37] flex-shrink-0" />
+                <div className="flex flex-col justify-center min-w-0">
+                  <h2 className="text-xl font-semibold text-[#D4AF37] leading-tight">{card.title}</h2>
+                  <p className="text-sm text-[#9FB3A6] mt-2 leading-tight line-clamp-1">{card.subtitle}</p>
                 </div>
               </div>
-              <svg className="w-5 h-5 text-[#7C8C83] group-hover:text-[#D4AF37] transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
-          </div>
-        </Link>
-
-        {/* Manage Users */}
-        <Link href="/admin/users">
-          <div className="group bg-[#171C18] border border-[#26322B] rounded-2xl p-5 hover:border-[#D4AF37]/60 hover:bg-[#1B211D] transition-all cursor-pointer">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-11 h-11 rounded-xl bg-[#D4AF37]/10 flex items-center justify-center flex-shrink-0">
-                  <span className="text-xl">👤</span>
-                </div>
-                <div>
-                  <h3 className="text-[#D4AF37] text-lg font-semibold">Manage Users</h3>
-                  <p className="text-[#9FB3A6] text-sm mt-0.5">View and manage all users</p>
-                </div>
-              </div>
-              <svg className="w-5 h-5 text-[#7C8C83] group-hover:text-[#D4AF37] transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
-          </div>
-        </Link>
-
-        {/* My BIo */}
-        <Link href="/admin/fitness-content">
-          <div className="group bg-[#171C18] border border-[#26322B] rounded-2xl p-5 hover:border-[#D4AF37]/60 hover:bg-[#1B211D] transition-all cursor-pointer">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-11 h-11 rounded-xl bg-[#D4AF37]/10 flex items-center justify-center flex-shrink-0">
-                  <span className="text-xl">✏️</span>
-                </div>
-                <div>
-                  <h3 className="text-[#D4AF37] text-lg font-semibold">Fitness Content</h3>
-                  <p className="text-[#9FB3A6] text-sm mt-0.5">Manage workout plans and content</p>
-                </div>
-              </div>
-              <svg className="w-5 h-5 text-[#7C8C83] group-hover:text-[#D4AF37] transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
-          </div>
-        </Link>
+              <ChevronRight
+                size={32}
+                strokeWidth={1.5}
+                className="text-[#7C8C83] hover:text-[#D4AF37] transition-colors ml-6 flex-shrink-0"
+              />
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

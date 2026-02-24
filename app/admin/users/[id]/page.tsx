@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
 import { getToken } from "@/lib/auth-helpers";
+import { API_BASE_URL, buildApiUrl } from "@/lib/api/base-url";
 
 interface User {
   _id: string;
@@ -35,7 +36,7 @@ export default function ViewUserPage() {
       setError(null);
       const token = getToken();
       const response = await axios.get(
-        `http://localhost:5000/api/admin/users/${userId}`,
+        buildApiUrl(`/api/admin/users/${userId}`),
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -93,7 +94,7 @@ export default function ViewUserPage() {
                 <div className="h-24 w-24 rounded-full bg-[#D4AF37]/20 flex items-center justify-center text-4xl border-2 border-[#D4AF37]">
                   {user.image ? (
                     <img
-                      src={`http://localhost:5000${user.image}`}
+                      src={`${API_BASE_URL}${user.image}`}
                       alt={user.fullName}
                       className="h-full w-full rounded-full object-cover"
                     />

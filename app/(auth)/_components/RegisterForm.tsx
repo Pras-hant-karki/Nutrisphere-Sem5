@@ -1,10 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { User, Mail, Lock, CheckCircle } from "lucide-react";
+import { User, Mail, Lock, CheckCircle, Eye, EyeOff, AlertCircle } from "lucide-react";
 import { handleRegister } from "@/lib/actions/auth-action";
+
+type FieldRowProps = {
+  id: string;
+  label: string;
+  icon: ReactNode;
+  children: ReactNode;
+};
+
+function FieldRow({ id, label, icon, children }: FieldRowProps) {
+  return (
+    <div className="space-y-2.5">
+      <label htmlFor={id} className="block text-sm font-semibold text-[var(--text-secondary)]">
+        {label}
+      </label>
+      <div className="h-[var(--input-h)] w-full border border-[var(--border)] rounded-[var(--radius-lg)] bg-[var(--bg-input)] transition-colors focus-within:border-[var(--gold)]">
+        <div className="h-full w-full flex items-center">
+          <div className="h-full w-12 shrink-0 flex items-center justify-center border-r border-[var(--border)] text-[var(--text-muted)]">
+            {icon}
+          </div>
+          <div className="min-w-0 flex-1 h-full">{children}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -85,137 +110,116 @@ export default function RegisterForm() {
   };
 
   return (
-    <div className="w-full">
-      {/* Header */}
-      <div className="mb-12">
-        <h2 className="text-4xl font-extrabold text-[var(--text-primary)] mb-3 tracking-tight">
-          Create Account
+    <div className="w-full max-w-md mx-auto">
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-extrabold text-[var(--text-primary)] mb-2 tracking-tight">
+          Join NutriSphere
         </h2>
-        <p className="text-[var(--text-secondary)] font-medium text-base">
-          Get started with your free account
+        <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
+          Create your account to start your nutrition journey
         </p>
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-[var(--error)]/10 border border-[var(--error)]/30 rounded-[var(--radius-lg)]">
-          <p className="text-[var(--error)] text-sm font-medium flex items-center gap-2">
-            ⚠️ {error}
-          </p>
+        <div className="mb-6 p-3.5 bg-[var(--error)]/10 border border-[var(--error)]/30 rounded-[var(--radius-lg)] flex items-center gap-2.5">
+          <AlertCircle className="w-4.5 h-4.5 text-[var(--error)] shrink-0" />
+          <p className="text-[var(--error)] text-sm font-medium">{error}</p>
         </div>
       )}
 
-      <form onSubmit={(e) => { e.preventDefault(); handleSignup(); }} className="space-y-9">
-        {/* Full Name */}
-        <div className="space-y-2 mb-5">
-          {/* <label htmlFor="fullName" className="block text-sm font-bold text-[var(--text-secondary)] ml-1">
-            Full Name
-          </label> */}
-          <div className="relative group">
-            <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
-              <User className="h-5 w-5 transition-colors text-[var(--text-muted)] group-focus-within:text-[var(--gold)]" />
-            </div>
-            <input
-              id="fullName"
-              name="fullName"
-              type="text"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              className="w-full h-[var(--input-h)] pl-14 pr-4 border border-[var(--border)] rounded-[var(--radius-lg)] bg-[var(--bg-input)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] outline-none transition-all duration-300 focus:border-[var(--gold)] focus:ring-2 focus:ring-[var(--gold)]/20"
-              placeholder="Full Name"
-            />
-          </div>
-        </div>
+      <form onSubmit={(e) => { e.preventDefault(); handleSignup(); }} className="space-y-4">
+        <FieldRow id="fullName" label="Full Name" icon={<User className="w-5 h-5" />}>
+          <input
+            id="fullName"
+            name="fullName"
+            type="text"
+            placeholder="Enter your full name"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            className="h-full w-full bg-transparent px-4 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] outline-none"
+          />
+        </FieldRow>
 
-        {/* Email */}
-        <div className="space-y-2 mb-5">
-          {/* <label htmlFor="email" className="block text-sm font-bold text-[var(--text-secondary)] ml-1">
-          </label> */}
-          <div className="relative group">
-            <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
-              <Mail className="h-5 w-5 transition-colors text-[var(--text-muted)] group-focus-within:text-[var(--gold)]" />
-            </div>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full h-[var(--input-h)] pl-14 pr-4 border border-[var(--border)] rounded-[var(--radius-lg)] bg-[var(--bg-input)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] outline-none transition-all duration-300 focus:border-[var(--gold)] focus:ring-2 focus:ring-[var(--gold)]/20"
-              placeholder="Enter your email"
-            />
-          </div>
-        </div>
+        <FieldRow id="email" label="Email Address" icon={<Mail className="w-5 h-5" />}>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="h-full w-full bg-transparent px-4 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] outline-none"
+          />
+        </FieldRow>
 
-        {/* Password */}
-        <div className="space-y-2 mb-5">
-          {/* <label htmlFor="password" className="block text-sm font-bold text-[var(--text-secondary)] ml-1">
-            Password
-          </label> */}
-          <div className="relative group">
-            <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
-              <Lock className="h-5 w-5 transition-colors text-[var(--text-muted)] group-focus-within:text-[var(--gold)]" />
-            </div>
+        <FieldRow id="password" label="Password" icon={<Lock className="w-5 h-5" />}>
+          <div className="h-full w-full flex items-center">
             <input
               id="password"
               name="password"
               type={obscurePassword ? "password" : "text"}
+              placeholder="Create a password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full h-[var(--input-h)] pl-14 pr-4 border border-[var(--border)] rounded-[var(--radius-lg)] bg-[var(--bg-input)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] outline-none transition-all duration-300 focus:border-[var(--gold)] focus:ring-2 focus:ring-[var(--gold)]/20"
-              placeholder="Password"
+              className="h-full min-w-0 flex-1 bg-transparent px-4 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] outline-none"
             />
+            <button
+              type="button"
+              onClick={() => setObscurePassword(!obscurePassword)}
+              className="h-full px-3 text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors"
+              aria-label={obscurePassword ? "Show password" : "Hide password"}
+            >
+              {obscurePassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            </button>
           </div>
-        </div>
+        </FieldRow>
 
-        {/* Confirm Password */}
-        <div className="space-y-2 mb-5">
-          {/* <label htmlFor="confirmPassword" className="block text-sm font-bold text-[var(--text-secondary)] ml-1">
-            Confirm Password
-          </label> */}
-          <div className="relative group">
-            <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
-              <Lock className="h-5 w-5 transition-colors text-[var(--text-muted)] group-focus-within:text-[var(--gold)]" />
-            </div>
+        <FieldRow id="confirmPassword" label="Confirm Password" icon={<Lock className="w-5 h-5" />}>
+          <div className="h-full w-full flex items-center">
             <input
               id="confirmPassword"
               name="confirmPassword"
               type={obscureConfirmPassword ? "password" : "text"}
+              placeholder="Confirm your password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full h-[var(--input-h)] pl-14 pr-4 border border-[var(--border)] rounded-[var(--radius-lg)] bg-[var(--bg-input)] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] outline-none transition-all duration-300 focus:border-[var(--gold)] focus:ring-2 focus:ring-[var(--gold)]/20"
-              placeholder="Confirm Password"
+              className="h-full min-w-0 flex-1 bg-transparent px-4 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] outline-none"
             />
+            <button
+              type="button"
+              onClick={() => setObscureConfirmPassword(!obscureConfirmPassword)}
+              className="h-full px-3 text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors"
+              aria-label={obscureConfirmPassword ? "Show password" : "Hide password"}
+            >
+              {obscureConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            </button>
           </div>
+        </FieldRow>
+
+        <div className="pt-1 flex items-start gap-3">
+          <input
+            type="checkbox"
+            id="terms"
+            checked={agreedToTerms}
+            onChange={(e) => setAgreedToTerms(e.target.checked)}
+            className="w-4 h-4 mt-0.5 cursor-pointer rounded border border-white bg-white appearance-none checked:bg-[var(--primary)] checked:border-[var(--primary)] checked:bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2012%2010%22%20fill=%22none%22%3E%3Cpath%20d=%22M1%205L4.5%208.5L11%201.5%22%20stroke=%22%23111417%22%20stroke-width=%223%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22/%3E%3Cpath%20d=%22M1%205L4.5%208.5L11%201.5%22%20stroke=%22%23D4AF37%22%20stroke-width=%221.8%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22/%3E%3C/svg%3E')] checked:bg-center checked:bg-no-repeat checked:bg-[length:10px_10px]"
+          />
+          <label htmlFor="terms" className="text-sm text-[var(--text-secondary)] leading-relaxed">
+            I agree to the{" "}
+            <Link href="/terms" className="text-[var(--gold)] hover:underline font-medium">
+              Terms & Conditions
+            </Link>{" "}
+            and{" "}
+            <Link href="/privacy" className="text-[var(--gold)] hover:underline font-medium">
+              Privacy Policy
+            </Link>
+          </label>
         </div>
 
-        {/* Terms & Show Passwords row */}
-        <div className="flex items-center justify-between pt-2">
-          <div className="flex items-center space-x-3">
-            <input
-              type="checkbox"
-              id="terms"
-              checked={agreedToTerms}
-              onChange={(e) => setAgreedToTerms(e.target.checked)}
-              className="w-4 h-4 accent-[var(--gold)] border-[var(--border)] rounded cursor-pointer"
-            />
-            <label htmlFor="terms" className="text-sm text-[var(--text-secondary)] font-medium">
-              I agree to the Terms & Conditions
-            </label>
-          </div>
-          <button
-            type="button"
-            onClick={() => { setObscurePassword(!obscurePassword); setObscureConfirmPassword(!obscureConfirmPassword); }}
-            className="text-xs font-semibold text-[var(--gold)] hover:opacity-80 transition-colors"
-          >
-            {obscurePassword ? "Show" : "Hide"}
-          </button>
-        </div>
-
-        {/* Submit Button */}
         <button
           type="submit"
           disabled={isLoading}
-          className="group w-full h-[var(--button-h)] bg-[var(--primary)] hover:opacity-90 text-white font-bold rounded-[var(--radius-lg)] transition-all duration-300 shadow-lg shadow-[var(--primary)]/25 hover:shadow-xl hover:shadow-[var(--primary)]/40 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-3 mt-4"
+          className="group mt-2 w-full h-[var(--button-h)] bg-[var(--primary)] hover:opacity-90 text-white font-bold rounded-[var(--radius-lg)] transition-all duration-300 shadow-lg shadow-[var(--primary)]/25 hover:shadow-xl hover:shadow-[var(--primary)]/40 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2"
         >
           {isLoading ? (
             <>
@@ -224,18 +228,17 @@ export default function RegisterForm() {
             </>
           ) : (
             <>
-              <span>Sign Up</span>
+              <span>Create Account</span>
               <CheckCircle className="w-5 h-5 group-hover:scale-110 transition-transform" />
             </>
           )}
         </button>
       </form>
 
-      {/* Login Link */}
-      <p className="mt-8 text-center text-[var(--text-secondary)] font-medium">
+      <p className="mt-6 text-center text-[var(--text-secondary)] text-sm font-medium">
         Already have an account?{" "}
-        <Link href="/login" className="font-bold text-[var(--gold)] hover:opacity-80 transition-colors ml-1">
-          Log in
+        <Link href="/login" className="font-bold text-[var(--gold)] hover:opacity-80 transition-colors">
+          Sign in here
         </Link>
       </p>
     </div>

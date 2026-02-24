@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import axios from "axios";
 import { getToken } from "@/lib/auth-helpers";
+import { API_BASE_URL, buildApiUrl } from "@/lib/api/base-url";
 
 // Validation schema
 const editUserSchema = z.object({
@@ -66,7 +67,7 @@ export default function EditUserPage() {
       setError(null);
       const token = getToken();
       const response = await axios.get(
-        `http://localhost:5000/api/admin/users/${userId}`,
+        buildApiUrl(`/api/admin/users/${userId}`),
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -78,7 +79,7 @@ export default function EditUserPage() {
         const userData = response.data.data;
         setUser(userData);
         if (userData.image) {
-          setImagePreview(`http://localhost:5000${userData.image}`);
+          setImagePreview(`${API_BASE_URL}${userData.image}`);
         }
         reset({
           fullName: userData.fullName,
@@ -129,7 +130,7 @@ export default function EditUserPage() {
 
       const token = getToken();
       const response = await axios.put(
-        `http://localhost:5000/api/admin/users/${userId}`,
+        buildApiUrl(`/api/admin/users/${userId}`),
         formData,
         {
           headers: {

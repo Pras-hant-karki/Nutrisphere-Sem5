@@ -7,6 +7,7 @@ import z from "zod";
 import axios from "axios";
 import { getUser, getToken, setAuth, logout } from "@/lib/auth-helpers";
 import { Camera, Mail, Phone, User, MapPin, LogOut, Save, X, Check } from "lucide-react";
+import { API_BASE_URL, buildApiUrl } from "@/lib/api/base-url";
 
 const updateProfileSchema = z.object({
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
@@ -42,7 +43,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (currentUser?.image) {
-      setImagePreview(`http://localhost:5000${currentUser.image}`);
+      setImagePreview(`${API_BASE_URL}${currentUser.image}`);
     }
   }, [currentUser?.image]);
 
@@ -72,7 +73,7 @@ export default function ProfilePage() {
 
       const token = getToken();
       const response = await axios.put(
-        "http://localhost:5000/api/auth/update-profile",
+        buildApiUrl("/api/auth/update-profile"),
         formData,
         {
           headers: {
@@ -274,7 +275,7 @@ export default function ProfilePage() {
                   reset();
                   setImagePreview(
                     currentUser?.image
-                      ? `http://localhost:5000${currentUser.image}`
+                      ? `${API_BASE_URL}${currentUser.image}`
                       : null
                   );
                   setSelectedFile(null);

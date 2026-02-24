@@ -7,6 +7,7 @@ import z from "zod";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { getToken } from "@/lib/auth-helpers";
+import { buildApiUrl } from "@/lib/api/base-url";
 
 // Validation schema
 const createUserSchema = z
@@ -77,7 +78,7 @@ export default function CreateUserPage() {
 
       const token = getToken();
       const response = await axios.post(
-        "http://localhost:5000/api/admin/users",
+        buildApiUrl("/api/admin/users"),
         formData,
         {
           headers: {

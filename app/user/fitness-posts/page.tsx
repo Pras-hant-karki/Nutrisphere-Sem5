@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Clock, User, Tag } from "lucide-react";
 import axios from "axios";
+import { API_BASE_URL, buildApiUrl } from "@/lib/api/base-url";
 
 interface FitnessContent {
   _id: string;
@@ -29,7 +30,7 @@ export default function FitnessPostsPage() {
   const fetchFitnessContent = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:5000/api/fitness");
+      const response = await axios.get(buildApiUrl("/api/fitness"));
       if (response.data.success) {
         setContent(response.data.data);
       }
@@ -124,7 +125,7 @@ export default function FitnessPostsPage() {
               {item.image && (
                 <div className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 border border-[#2A3630]">
                   <Image
-                    src={`http://localhost:5000${item.image}`}
+                    src={`${API_BASE_URL}${item.image}`}
                     alt={item.title}
                     width={96}
                     height={96}
