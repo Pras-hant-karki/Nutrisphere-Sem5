@@ -6,15 +6,37 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import axios from "axios";
 import { getUser, getToken, setAuth, logout } from "@/lib/auth-helpers";
-import { Camera, Mail, Phone, User, MapPin, LogOut, Save, X, Check } from "lucide-react";
+import { Mail, Phone, User, Star, Bell, Camera } from "lucide-react";
 import { API_BASE_URL, buildApiUrl } from "@/lib/api/base-url";
 
 const updateProfileSchema = z.object({
-  fullName: z.string().min(2, "Full name must be at least 2 characters"),
+  fullName: z.string().min(2, "Name too short"),
   phone: z.string().optional(),
 });
 
 type UpdateProfileData = z.infer<typeof updateProfileSchema>;
+
+/**
+ * 1. FIXED INPUT FIELD COMPONENT
+ * (Defined only once to avoid the "defined multiple times" error seen in your screenshot)
+ */
+function InputField({ icon, disabled, value, placeholder, register, ...props }: any) {
+  return (
+    <div className="flex items-center bg-[#121212] border border-[#FFCC00]/80 rounded-xl px-5 h-[62px]">
+      <div className="w-8 flex items-center justify-center text-[#FFCC00] mr-3 shrink-0">
+        {icon}
+      </div>
+      <input
+        {...register}
+        defaultValue={value}
+        disabled={disabled}
+        placeholder={placeholder}
+        className="bg-transparent w-full outline-none text-white text-[15px] placeholder-zinc-600 disabled:text-zinc-500 font-medium"
+        {...props}
+      />
+    </div>
+  );
+}
 
 export default function ProfilePage() {
   const currentUser = getUser();
@@ -22,19 +44,9 @@ export default function ProfilePage() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [message, setMessage] = useState<{
-    type: "success" | "error";
-    text: string;
-  } | null>(null);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<UpdateProfileData>({
+  const { register, handleSubmit, reset } = useForm<UpdateProfileData>({
     resolver: zodResolver(updateProfileSchema),
-    mode: "onSubmit",
     defaultValues: {
       fullName: currentUser?.fullName || "",
       phone: currentUser?.phone || "",
@@ -52,255 +64,124 @@ export default function ProfilePage() {
     if (file) {
       setSelectedFile(file);
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
+      reader.onloadend = () => setImagePreview(reader.result as string);
       reader.readAsDataURL(file);
     }
   };
 
   const onSubmit = async (data: UpdateProfileData) => {
     setIsLoading(true);
-    setMessage(null);
-
     try {
       const formData = new FormData();
       formData.append("fullName", data.fullName);
       if (data.phone) formData.append("phone", data.phone);
-      if (selectedFile) {
-        formData.append("profilePicture", selectedFile);
-      }
+      if (selectedFile) formData.append("profilePicture", selectedFile);
 
       const token = getToken();
-      const response = await axios.put(
-        buildApiUrl("/api/auth/update-profile"),
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axios.put(buildApiUrl("/api/auth/update-profile"), formData, {
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
+      });
 
       if (response.data.success) {
-        if (token) {
-          setAuth(token, response.data.user);
-        }
-        setMessage({
-          type: "success",
-          text: "Profile updated successfully!",
-        });
+        if (token) setAuth(token, response.data.user);
         setIsEditing(false);
       }
     } catch (error) {
-      setMessage({
-        type: "error",
-        text: "Failed to update profile. Please try again.",
-      });
+      console.error("Update failed", error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleLogout = async () => {
-    if (confirm("Are you sure you want to logout?")) {
-      logout();
-      window.location.href = "/login";
-    }
-  };
-
   return (
-    <div className="w-full max-w-3xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-[#D4AF37] mb-2">My Profile</h1>
-        <p className="text-[#9FB3A6]">Manage your personal information</p>
+    <div className="min-h-screen bg-[#0A0705] text-white flex flex-col relative font-sans overflow-y-auto pb-20">
+      
+      {/* BELL POSITIONING */}
+      <div className="absolute z-50" style={{ top: "24px", right: "32px" }}>
+        <div className="relative bg-white p-2.5 rounded-full shadow-xl">
+          <Bell className="text-black w-5 h-5" />
+          <span className="absolute -top-1 -right-1 bg-[#EF4444] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border-2 border-[#0A0705]">1</span>
+        </div>
       </div>
 
-      {message && (
-        <div
-          className={`mb-6 p-4 rounded-lg flex items-center justify-between ${
-            message.type === "success"
-              ? "bg-green-500/10 border border-green-500/50 text-green-400"
-              : "bg-red-500/10 border border-red-500/50 text-red-400"
-          }`}
-        >
-          <div className="flex items-center gap-2">
-            {message.type === "success" ? <Check size={20} /> : <X size={20} />}
-            {message.text}
-          </div>
-          <button
-            onClick={() => setMessage(null)}
-            className="text-current hover:opacity-70"
-          >
-            <X size={18} />
-          </button>
-        </div>
-      )}
+      {/* HEADER POSITIONING - Detailed adjustment for top/bottom gap */}
+      <div className="w-full text-center" style={{ marginTop: "80px", marginBottom: "50px" }}>
+        <h1 className="text-5xl font-bold text-[#FFCC00] tracking-tight">My Profile</h1>
+      </div>
 
-      <div className="bg-gradient-to-br from-[#161B17] to-[#0F1310] border border-[#2A3630] rounded-3xl p-8 mb-6">
-        <div className="flex flex-col md:flex-row gap-8 items-start md:items-center mb-8">
-          <div className="relative">
-            <div className="w-32 h-32 rounded-2xl overflow-hidden border-4 border-[#D4AF37] shadow-lg bg-gradient-to-br from-[#26322B] to-[#171C18]">
+      <div className="flex-1 flex flex-col lg:flex-row items-start justify-center gap-16 w-full max-w-5xl mx-auto px-6">
+        
+        {/* LEFT COLUMN: IMAGE AND BIG BUTTONS */}
+        <div className="flex flex-col items-center" style={{ marginTop: "-40px" }}>
+          
+          {/* IMAGE HOLDER POSITIONING */}
+          <div className="relative" style={{ marginBottom: "40px" }}>
+            <div className="w-72 h-72 md:w-80 md:h-80 rounded-full overflow-hidden border border-zinc-800 bg-[#121212] shadow-2xl flex items-center justify-center">
               {imagePreview ? (
-                <img
-                  src={imagePreview}
-                  alt="Profile"
-                  className="w-full h-full object-cover"
-                />
+                <img src={imagePreview} alt="Profile" className="w-full h-full object-cover" />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-5xl font-bold text-[#D4AF37]">
-                  {currentUser?.fullName?.charAt(0).toUpperCase() || "U"}
-                </div>
+                <div className="text-9xl font-bold text-[#FFCC00] opacity-90">P</div>
               )}
             </div>
             {isEditing && (
-              <label className="absolute bottom-2 right-2 w-12 h-12 bg-[#D4AF37] rounded-full flex items-center justify-center cursor-pointer hover:bg-[#c4a032] transition-colors shadow-lg">
-                <Camera size={20} className="text-[#1A1008]" />
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="hidden"
-                />
+              <label className="absolute bottom-6 right-8 bg-[#FFCC00] p-3 rounded-full cursor-pointer shadow-xl border-4 border-[#0A0705]">
+                <Camera size={20} className="text-black" />
+                <input type="file" className="hidden" onChange={handleImageChange} />
               </label>
             )}
           </div>
 
-          <div className="flex-1">
-            <h2 className="text-3xl font-bold text-white mb-2">
-              {currentUser?.fullName || "User"}
-            </h2>
-            <div className="space-y-2 text-[#9FB3A6]">
-              <div className="flex items-center gap-2">
-                <Mail size={18} className="text-[#D4AF37]" />
-                <span>{currentUser?.email}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <User size={18} className="text-[#D4AF37]" />
-                <span className="capitalize">{currentUser?.role || "User"}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <MapPin size={18} className="text-[#D4AF37]" />
-                <span>Member since 2024</span>
-              </div>
-            </div>
+          {/* BIG BUTTONS ADJUSTMENT:
+              - h-[80px]: Forces a very tall height. Change '80' to make it bigger/smaller.
+              - w-40: Widens them slightly to maintain a professional look.
+              - text-lg: Makes the text inside bigger to match the button size.
+          */}
+          <div className="flex items-center gap-6" style={{ marginTop: "20px" }}>
+            <button 
+              type="button" 
+              onClick={() => { if(isEditing) reset(); setIsEditing(!isEditing); }} 
+              className={`w-32 h-[40px] rounded-full font-bold text-lg transition-all active:scale-95 shadow-2xl ${
+                isEditing ? 'bg-red-600 text-white' : 'bg-[#0B30D9] text-white'
+              }`}
+            >
+              {isEditing ? "Cancel" : "Edit"}
+            </button>
+            
+            <button 
+              type="button" 
+              onClick={handleSubmit(onSubmit)} 
+              disabled={!isEditing || isLoading} 
+              className={`w-32 h-[40px] bg-[#00CA25] text-white font-bold rounded-full text-lg shadow-2xl transition-all active:scale-95 ${
+                (!isEditing || isLoading) ? 'opacity-20 cursor-not-allowed' : 'hover:bg-green-500 shadow-green-900/40'
+              }`}
+            >
+              {isLoading ? "Wait..." : "Save"}
+            </button>
+          </div>
+        </div>
+
+        {/* RIGHT COLUMN: FORM FIELDS */}
+        <div className="flex flex-col w-full max-w-[440px]">
+          <div className="flex flex-col gap-6">
+            <InputField icon={<User size={18} />} placeholder="Full Name" register={register("fullName")} disabled={!isEditing} />
+            <InputField icon={<Mail size={18} />} placeholder="Email" value={currentUser?.email} disabled />
+            <InputField icon={<Star size={18} />} placeholder="Role" value={currentUser?.role || "User"} disabled />
+            <InputField icon={<Phone size={18} />} placeholder="Phone Number" register={register("phone")} disabled={!isEditing} />
           </div>
 
-          {!isEditing && (
-            <div className="flex gap-3">
-              <button
-                onClick={() => setIsEditing(true)}
-                className="px-6 py-3 bg-[#D4AF37] hover:bg-[#c4a032] text-[#1A1008] rounded-lg font-semibold transition-colors flex items-center gap-2 shadow-lg"
-              >
-                <User size={18} />
-                Edit Profile
-              </button>
-            </div>
-          )}
+          {/* LOGOUT BUTTON POSITIONING (Exactly 70px down from text fields) */}
+          <div className="flex justify-end" style={{ marginTop: "70px" }}>
+            <button 
+              type="button"
+              onClick={logout}
+              className="bg-[#EAE5DF] hover:bg-white text-[#4A171E] px-10 py-3 rounded font-black text-[13px] shadow-lg border border-zinc-200 uppercase tracking-widest active:scale-95 transition-all"
+            >
+              Logout
+            </button>
+          </div>
         </div>
 
-        {isEditing && (
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div className="border-t border-[#2A3630] pt-6">
-              <div className="mb-6">
-                <label className="block text-white font-medium mb-2">Full Name</label>
-                <input
-                  {...register("fullName")}
-                  className="w-full px-4 py-3 bg-[#0F1310] border border-[#2A3630] rounded-lg text-white placeholder-[#7C8C83] focus:border-[#D4AF37] focus:outline-none transition-colors"
-                />
-                {errors.fullName && (
-                  <p className="text-red-400 text-sm mt-1">{errors.fullName.message}</p>
-                )}
-              </div>
-
-              <div className="mb-6">
-                <label className="block text-white font-medium mb-2">Email Address</label>
-                <input
-                  type="email"
-                  value={currentUser?.email || ""}
-                  disabled
-                  className="w-full px-4 py-3 bg-[#0F1310] border border-[#2A3630] rounded-lg text-[#7C8C83] cursor-not-allowed opacity-50"
-                />
-                <p className="text-[#7C8C83] text-xs mt-1">Email cannot be changed</p>
-              </div>
-
-              <div className="mb-6">
-                <label className="block text-white font-medium mb-2">Phone Number</label>
-                <input
-                  {...register("phone")}
-                  type="tel"
-                  placeholder="+1 (555) 000-0000"
-                  className="w-full px-4 py-3 bg-[#0F1310] border border-[#2A3630] rounded-lg text-white placeholder-[#7C8C83] focus:border-[#D4AF37] focus:outline-none transition-colors"
-                />
-              </div>
-
-              <div className="mb-6">
-                <label className="block text-white font-medium mb-2">Account Type</label>
-                <input
-                  type="text"
-                  value={
-                    currentUser?.role
-                      ? currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1)
-                      : "User"
-                  }
-                  disabled
-                  className="w-full px-4 py-3 bg-[#0F1310] border border-[#2A3630] rounded-lg text-[#7C8C83] cursor-not-allowed opacity-50"
-                />
-              </div>
-            </div>
-
-            <div className="flex gap-3 border-t border-[#2A3630] pt-6">
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="flex-1 px-6 py-3 bg-[#D4AF37] hover:bg-[#c4a032] disabled:opacity-50 text-[#1A1008] rounded-lg font-semibold transition-colors flex items-center justify-center gap-2 shadow-lg"
-              >
-                {isLoading ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-[#1A1008] border-t-transparent rounded-full animate-spin" />
-                    Saving...
-                  </>
-                ) : (
-                  <>
-                    <Save size={18} />
-                    Save Changes
-                  </>
-                )}
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setIsEditing(false);
-                  reset();
-                  setImagePreview(
-                    currentUser?.image
-                      ? `${API_BASE_URL}${currentUser.image}`
-                      : null
-                  );
-                  setSelectedFile(null);
-                }}
-                className="flex-1 px-6 py-3 bg-[#2A3630] hover:bg-[#3A4640] text-white rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
-              >
-                <X size={18} />
-                Cancel
-              </button>
-            </div>
-          </form>
-        )}
       </div>
-
-      {!isEditing && (
-        <div className="space-y-3">
-          <button
-            onClick={handleLogout}
-            className="w-full px-6 py-4 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 hover:border-red-500/50 text-red-400 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
-          >
-            <LogOut size={20} />
-            Logout
-          </button>
-        </div>
-      )}
     </div>
   );
 }

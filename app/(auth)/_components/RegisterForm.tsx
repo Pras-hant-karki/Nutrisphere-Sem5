@@ -15,17 +15,15 @@ type FieldRowProps = {
 
 function FieldRow({ id, label, icon, children }: FieldRowProps) {
   return (
-    <div className="space-y-2.5">
-      <label htmlFor={id} className="block text-sm font-semibold text-[var(--text-secondary)]">
+    <div className="space-y-2">
+      <label htmlFor={id} className="block text-[14px] font-semibold text-[#8B8B8B] tracking-wide ml-1 select-none">
         {label}
       </label>
-      <div className="h-[var(--input-h)] w-full border border-[var(--border)] rounded-[var(--radius-lg)] bg-[var(--bg-input)] transition-colors focus-within:border-[var(--gold)]">
-        <div className="h-full w-full flex items-center">
-          <div className="h-full w-12 shrink-0 flex items-center justify-center border-r border-[var(--border)] text-[var(--text-muted)]">
-            {icon}
-          </div>
-          <div className="min-w-0 flex-1 h-full">{children}</div>
+      <div className="group relative flex items-center h-[56px] w-full border border-[#333333] rounded-[16px] bg-[#1A1A1A] transition-all duration-300 focus-within:border-[#D4AF37] focus-within:bg-[#222222] focus-within:shadow-[0_0_0_4px_rgba(212,175,55,0.15)] hover:border-[#555555]">
+        <div className="absolute left-4 flex flex-col justify-center items-center text-[#666666] group-focus-within:text-[#D4AF37] transition-colors duration-300 pointer-events-none">
+          {icon}
         </div>
+        {children}
       </div>
     </div>
   );
@@ -110,107 +108,120 @@ export default function RegisterForm() {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-extrabold text-[var(--text-primary)] mb-2 tracking-tight">
+    <div className="w-full max-w-[420px] mx-auto px-4 md:px-0">
+      <div className="text-center mb-10">
+        <h2 className="text-[32px] font-extrabold text-[#FFFFFF] mb-3 tracking-tight">
           Join NutriSphere
         </h2>
-        <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
+        <p className="text-[#8B8B8B] text-[15px] font-medium leading-relaxed">
           Create your account to start your nutrition journey
         </p>
       </div>
 
       {error && (
-        <div className="mb-6 p-3.5 bg-[var(--error)]/10 border border-[var(--error)]/30 rounded-[var(--radius-lg)] flex items-center gap-2.5">
-          <AlertCircle className="w-4.5 h-4.5 text-[var(--error)] shrink-0" />
-          <p className="text-[var(--error)] text-sm font-medium">{error}</p>
+        <div className="mb-6 p-4 bg-[#EF4444]/15 border border-[#EF4444]/40 rounded-[14px] flex items-center gap-3 animate-in fade-in zoom-in duration-300">
+          <AlertCircle className="w-5 h-5 text-[#EF4444] shrink-0" />
+          <p className="text-[#EF4444] text-[14px] font-medium">{error}</p>
         </div>
       )}
 
-      <form onSubmit={(e) => { e.preventDefault(); handleSignup(); }} className="space-y-4">
-        <FieldRow id="fullName" label="Full Name" icon={<User className="w-5 h-5" />}>
-          <input
-            id="fullName"
-            name="fullName"
-            type="text"
-            placeholder="Enter your full name"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            className="h-full w-full bg-transparent px-4 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] outline-none"
-          />
-        </FieldRow>
-
-        <FieldRow id="email" label="Email Address" icon={<Mail className="w-5 h-5" />}>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="h-full w-full bg-transparent px-4 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] outline-none"
-          />
-        </FieldRow>
-
-        <FieldRow id="password" label="Password" icon={<Lock className="w-5 h-5" />}>
-          <div className="h-full w-full flex items-center">
+      <form onSubmit={(e) => { e.preventDefault(); handleSignup(); }} className="space-y-5">
+        <div className="flex flex-col">
+          <FieldRow id="fullName" label="Full Name" icon={<User className="w-[22px] h-[22px]" />}>
             <input
-              id="password"
-              name="password"
-              type={obscurePassword ? "password" : "text"}
-              placeholder="Create a password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="h-full min-w-0 flex-1 bg-transparent px-4 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] outline-none"
+              id="fullName"
+              name="fullName"
+              type="text"
+              placeholder="Enter your full name"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              className="w-full h-full bg-transparent pl-[52px] pr-4 text-white placeholder:text-[#555555] outline-none text-[16px] font-medium tracking-wide rounded-[16px]"
             />
-            <button
-              type="button"
-              onClick={() => setObscurePassword(!obscurePassword)}
-              className="h-full px-3 text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors"
-              aria-label={obscurePassword ? "Show password" : "Hide password"}
-            >
-              {obscurePassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-            </button>
-          </div>
-        </FieldRow>
+          </FieldRow>
+        </div>
 
-        <FieldRow id="confirmPassword" label="Confirm Password" icon={<Lock className="w-5 h-5" />}>
-          <div className="h-full w-full flex items-center">
+        <div className="flex flex-col">
+          <FieldRow id="email" label="Email Address" icon={<Mail className="w-[22px] h-[22px]" />}>
             <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type={obscureConfirmPassword ? "password" : "text"}
-              placeholder="Confirm your password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="h-full min-w-0 flex-1 bg-transparent px-4 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] outline-none"
+              id="email"
+              name="email"
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full h-full bg-transparent pl-[52px] pr-4 text-white placeholder:text-[#555555] outline-none text-[16px] font-medium tracking-wide rounded-[16px]"
             />
-            <button
-              type="button"
-              onClick={() => setObscureConfirmPassword(!obscureConfirmPassword)}
-              className="h-full px-3 text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors"
-              aria-label={obscureConfirmPassword ? "Show password" : "Hide password"}
-            >
-              {obscureConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-            </button>
-          </div>
-        </FieldRow>
+          </FieldRow>
+        </div>
 
-        <div className="pt-1 flex items-start gap-3">
-          <input
-            type="checkbox"
-            id="terms"
-            checked={agreedToTerms}
-            onChange={(e) => setAgreedToTerms(e.target.checked)}
-            className="w-4 h-4 mt-0.5 cursor-pointer rounded border border-white bg-white appearance-none checked:bg-[var(--primary)] checked:border-[var(--primary)] checked:bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2012%2010%22%20fill=%22none%22%3E%3Cpath%20d=%22M1%205L4.5%208.5L11%201.5%22%20stroke=%22%23111417%22%20stroke-width=%223%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22/%3E%3Cpath%20d=%22M1%205L4.5%208.5L11%201.5%22%20stroke=%22%23D4AF37%22%20stroke-width=%221.8%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22/%3E%3C/svg%3E')] checked:bg-center checked:bg-no-repeat checked:bg-[length:10px_10px]"
-          />
-          <label htmlFor="terms" className="text-sm text-[var(--text-secondary)] leading-relaxed">
+        <div className="flex flex-col">
+          <FieldRow id="password" label="Password" icon={<Lock className="w-[22px] h-[22px]" />}>
+            <div className="relative w-full h-full flex items-center justify-end">
+              <input
+                id="password"
+                name="password"
+                type={obscurePassword ? "password" : "text"}
+                placeholder="Create a password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="absolute inset-0 w-full h-full bg-transparent pl-[52px] pr-12 text-white placeholder:text-[#555555] outline-none text-[16px] font-medium tracking-wide rounded-[16px]"
+              />
+              <button
+                type="button"
+                onClick={() => setObscurePassword(!obscurePassword)}
+                className="relative z-10 mr-2 p-2 text-[#666666] hover:text-[#D4AF37] transition-colors rounded-[12px] hover:bg-white/5 outline-none focus:text-[#D4AF37]"
+                aria-label={obscurePassword ? "Show password" : "Hide password"}
+              >
+                {obscurePassword ? <EyeOff className="w-[20px] h-[20px]" /> : <Eye className="w-[20px] h-[20px]" />}
+              </button>
+            </div>
+          </FieldRow>
+        </div>
+
+        <div className="flex flex-col">
+          <FieldRow id="confirmPassword" label="Confirm Password" icon={<Lock className="w-[22px] h-[22px]" />}>
+            <div className="relative w-full h-full flex items-center justify-end">
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type={obscureConfirmPassword ? "password" : "text"}
+                placeholder="Confirm your password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="absolute inset-0 w-full h-full bg-transparent pl-[52px] pr-12 text-white placeholder:text-[#555555] outline-none text-[16px] font-medium tracking-wide rounded-[16px]"
+              />
+              <button
+                type="button"
+                onClick={() => setObscureConfirmPassword(!obscureConfirmPassword)}
+                className="relative z-10 mr-2 p-2 text-[#666666] hover:text-[#D4AF37] transition-colors rounded-[12px] hover:bg-white/5 outline-none focus:text-[#D4AF37]"
+                aria-label={obscureConfirmPassword ? "Show password" : "Hide password"}
+              >
+                {obscureConfirmPassword ? <EyeOff className="w-[20px] h-[20px]" /> : <Eye className="w-[20px] h-[20px]" />}
+              </button>
+            </div>
+          </FieldRow>
+        </div>
+
+        <div className="pt-2 flex items-start gap-3 pl-1">
+          <div className="relative flex items-center justify-center w-[20px] h-[20px] mt-0.5 shrink-0">
+            <input
+              type="checkbox"
+              id="terms"
+              checked={agreedToTerms}
+              onChange={(e) => setAgreedToTerms(e.target.checked)}
+              className="peer absolute w-full h-full opacity-0 cursor-pointer"
+            />
+            <div className="w-full h-full rounded-[4px] border-[2px] border-[#555555] peer-hover:border-[#D4AF37] peer-checked:bg-[#D4AF37] peer-checked:border-[#D4AF37] transition-all flex items-center justify-center pointer-events-none">
+              <CheckCircle className="w-[14px] h-[14px] text-[#1A1A1A] opacity-0 peer-checked:opacity-100 transition-opacity" strokeWidth={4} />
+            </div>
+          </div>
+          <label htmlFor="terms" className="text-[14px] text-[#A5A5A5] leading-relaxed select-none cursor-pointer">
             I agree to the{" "}
-            <Link href="/terms" className="text-[var(--gold)] hover:underline font-medium">
+            <Link href="/terms" className="text-[#D4AF37] hover:text-[#F3CD55] font-semibold transition-colors" onClick={(e) => e.stopPropagation()}>
               Terms & Conditions
             </Link>{" "}
             and{" "}
-            <Link href="/privacy" className="text-[var(--gold)] hover:underline font-medium">
+            <Link href="/privacy" className="text-[#D4AF37] hover:text-[#F3CD55] font-semibold transition-colors" onClick={(e) => e.stopPropagation()}>
               Privacy Policy
             </Link>
           </label>
@@ -219,25 +230,25 @@ export default function RegisterForm() {
         <button
           type="submit"
           disabled={isLoading}
-          className="group mt-2 w-full h-[var(--button-h)] bg-[var(--primary)] hover:opacity-90 text-white font-bold rounded-[var(--radius-lg)] transition-all duration-300 shadow-lg shadow-[var(--primary)]/25 hover:shadow-xl hover:shadow-[var(--primary)]/40 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2"
+          className="group mt-6 w-full h-[56px] bg-[#22C55E] hover:bg-[#16A34A] text-white font-bold text-[17px] rounded-[16px] transition-all duration-300 shadow-[0_4px_14px_0_rgba(34,197,94,0.39)] hover:shadow-[0_6px_20px_rgba(34,197,94,0.23)] hover:-translate-y-[1px] active:translate-y-[1px] disabled:opacity-50 disabled:pointer-events-none disabled:transform-none flex items-center justify-center gap-2.5"
         >
           {isLoading ? (
             <>
-              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-              <span>Creating account...</span>
+              <div className="w-[22px] h-[22px] border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
+              <span className="tracking-wide">Creating account...</span>
             </>
           ) : (
             <>
-              <span>Create Account</span>
-              <CheckCircle className="w-5 h-5 group-hover:scale-110 transition-transform" />
+              <span className="tracking-wide">Create Account</span>
+              <CheckCircle className="w-[22px] h-[22px] opacity-90 group-hover:scale-110 transition-transform" />
             </>
           )}
         </button>
       </form>
 
-      <p className="mt-6 text-center text-[var(--text-secondary)] text-sm font-medium">
+      <p className="mt-8 text-center text-[#A5A5A5] text-[15px] font-medium">
         Already have an account?{" "}
-        <Link href="/login" className="font-bold text-[var(--gold)] hover:opacity-80 transition-colors">
+        <Link href="/login" className="font-bold text-[#D4AF37] hover:text-[#F3CD55] transition-colors ml-1">
           Sign in here
         </Link>
       </p>

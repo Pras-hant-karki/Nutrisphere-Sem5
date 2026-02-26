@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Clock, User, Tag } from "lucide-react";
+import { Clock3, UserRound } from "lucide-react";
 import axios from "axios";
 import { API_BASE_URL, buildApiUrl } from "@/lib/api/base-url";
 
@@ -42,22 +42,35 @@ export default function FitnessPostsPage() {
     }
   };
 
+  const formatCreatedTime = (dateValue: string) => {
+    const date = new Date(dateValue);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMin = Math.floor(diffMs / (1000 * 60));
+    const diffHr = Math.floor(diffMin / 60);
+    const diffDay = Math.floor(diffHr / 24);
+
+    if (diffMin < 1) return "Just now";
+    if (diffMin < 60) return `${diffMin}m ago`;
+    if (diffHr < 24) return `${diffHr}h ago`;
+    if (diffDay < 7) return `${diffDay}d ago`;
+    return date.toLocaleDateString();
+  };
+
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-[#D4AF37] mb-2">Fitness Posts</h1>
-        <p className="text-[#9FB3A6] mb-8 text-sm">View your personalized fitness plans</p>
+      <div className="max-w-3xl mx-auto">
+        <h1 className="text-4xl md:text-5xl font-bold text-[#D4AF37] mb-2">Fitness Posts</h1>
+        <p className="text-[#9FB3A6] mb-8 text-base">High quality fitness guidance below !</p>
 
-        <div className="space-y-6">
+        <div className="space-y-10">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="bg-[#161B17] border border-[#2A3630] rounded-2xl p-6 animate-pulse">
-              <div className="flex gap-4">
-                <div className="w-24 h-24 bg-[#2A3630] rounded-xl flex-shrink-0"></div>
-                <div className="flex-1 space-y-3">
-                  <div className="h-6 bg-[#2A3630] rounded w-3/4"></div>
-                  <div className="h-4 bg-[#2A3630] rounded w-1/2"></div>
-                  <div className="h-4 bg-[#2A3630] rounded w-2/3"></div>
-                </div>
+            <div key={i} className="bg-[#161B17] border border-[#2A3630] rounded-2xl p-4 animate-pulse">
+              <div className="w-full h-[360px] bg-[#2A3630] rounded-xl" />
+              <div className="mt-5 space-y-3">
+                <div className="h-7 bg-[#2A3630] rounded w-3/4"></div>
+                <div className="h-4 bg-[#2A3630] rounded w-full"></div>
+                <div className="h-4 bg-[#2A3630] rounded w-4/5"></div>
               </div>
             </div>
           ))}
@@ -69,8 +82,8 @@ export default function FitnessPostsPage() {
   if (error) {
     return (
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-3xl font-bold text-[#D4AF37] mb-2">Fitness Posts</h1>
-        <p className="text-[#9FB3A6] mb-8 text-sm">View your personalized fitness plans</p>
+        <h1 className="text-4xl md:text-5xl font-bold text-[#D4AF37] mb-2">Fitness Posts</h1>
+        <p className="text-[#9FB3A6] mb-8 text-base">High quality fitness guidance below !</p>
 
         <div className="rounded-xl border border-red-500/20 bg-red-500/5 p-6">
           <div className="text-center">
@@ -93,8 +106,8 @@ export default function FitnessPostsPage() {
   if (content.length === 0) {
     return (
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-3xl font-bold text-[#D4AF37] mb-2">Fitness Posts</h1>
-        <p className="text-[#9FB3A6] mb-8 text-sm">View your personalized fitness plans</p>
+        <h1 className="text-4xl md:text-5xl font-bold text-[#D4AF37] mb-2">Fitness Posts</h1>
+        <p className="text-[#9FB3A6] mb-8 text-base">High quality fitness guidance below !</p>
 
         <div className="rounded-xl border border-[#26322B] bg-[#171C18] p-6">
           <div className="text-center py-16">
@@ -110,70 +123,50 @@ export default function FitnessPostsPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold text-[#D4AF37] mb-2">Fitness Posts</h1>
-      <p className="text-[#9FB3A6] mb-8 text-sm">High quality fitness guidance below!</p>
+    <div className="max-w-3xl mx-auto">
+      <h1 className="text-4xl md:text-5xl font-bold text-[#D4AF37] mb-2">Fitness Posts</h1>
+      <p className="text-[#9FB3A6] mb-8 text-base">High quality fitness guidance below !</p>
 
-      <div className="space-y-6">
+      <div className="space-y-10">
         {content.map((item) => (
           <div
             key={item._id}
-            className="bg-[#161B17] border border-[#2A3630] rounded-2xl p-6 hover:border-[#D4AF37]/30 transition-colors"
+            className="bg-[#161B17] border border-[#2A3630] rounded-2xl p-4 md:p-5 hover:border-[#D4AF37]/30 transition-colors"
           >
-            <div className="flex gap-6">
-              {/* Image */}
-              {item.image && (
-                <div className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 border border-[#2A3630]">
+            <div className="w-full">
+              {item.image ? (
+                <div className="w-full rounded-xl overflow-hidden border border-[#2A3630]">
                   <Image
                     src={`${API_BASE_URL}${item.image}`}
                     alt={item.title}
-                    width={96}
-                    height={96}
-                    className="w-full h-full object-cover"
+                    width={1200}
+                    height={900}
+                    className="w-full h-[340px] md:h-[480px] object-cover"
                   />
+                </div>
+              ) : (
+                <div className="w-full h-[340px] md:h-[480px] rounded-xl border border-[#2A3630] bg-[#0F1310] flex items-center justify-center">
+                  <p className="text-[#7C8C83] text-sm">No media available</p>
                 </div>
               )}
 
-              {/* Content */}
-              <div className="flex-1 min-w-0">
-                <h2 className="text-xl font-semibold text-white mb-2 line-clamp-2">
+              <div className="pt-5 px-1">
+                <h2 className="text-2xl md:text-3xl font-bold text-white leading-tight mb-3">
                   {item.title}
                 </h2>
-
-                <p className="text-[#9FB3A6] text-sm mb-3 line-clamp-3">
-                  {item.description}
+                <p className="text-[#C3D2C8] text-base md:text-lg leading-relaxed mb-4 whitespace-pre-line">
+                  {item.description || item.content || ""}
                 </p>
-
-                {/* Metadata */}
-                <div className="flex flex-wrap items-center gap-4 text-xs text-[#7C8C83]">
-                  {item.tags && item.tags.length > 0 && (
-                    <div className="flex items-center gap-1">
-                      <Tag size={12} />
-                      <span>{item.tags.join(", ")}</span>
-                    </div>
-                  )}
-
-                  {item.duration && (
-                    <div className="flex items-center gap-1">
-                      <Clock size={12} />
-                      <span>{item.duration} min</span>
-                    </div>
-                  )}
-
-                  <div className="flex items-center gap-1">
-                    <User size={12} />
-                    <span>By {item.adminName}</span>
+                <div className="flex flex-wrap items-center gap-5 text-sm text-[#9FB3A6]">
+                  <div className="flex items-center gap-2">
+                    <Clock3 size={15} />
+                    <span>{formatCreatedTime(item.createdAt)}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <UserRound size={15} />
+                    <span>Created by {item.adminName || "Admin"}</span>
                   </div>
                 </div>
-
-                {/* Full content if available */}
-                {item.content && (
-                  <div className="mt-4 pt-4 border-t border-[#2A3630]">
-                    <p className="text-[#9FB3A6] text-sm leading-relaxed">
-                      {item.content}
-                    </p>
-                  </div>
-                )}
               </div>
             </div>
           </div>

@@ -20,17 +20,15 @@ type FieldRowProps = {
 
 function FieldRow({ id, label, icon, children }: FieldRowProps) {
   return (
-    <div className="space-y-2.5">
-      <label htmlFor={id} className="block text-sm font-semibold text-[var(--text-secondary)]">
+    <div className="space-y-2">
+      <label htmlFor={id} className="block text-[14px] font-semibold text-[#8B8B8B] tracking-wide ml-1">
         {label}
       </label>
-      <div className="h-[var(--input-h)] w-full border border-[var(--border)] rounded-[var(--radius-lg)] bg-[var(--bg-input)] transition-colors focus-within:border-[var(--gold)]">
-        <div className="h-full w-full flex items-center">
-          <div className="h-full w-12 shrink-0 flex items-center justify-center border-r border-[var(--border)] text-[var(--text-muted)]">
-            {icon}
-          </div>
-          <div className="min-w-0 flex-1 h-full">{children}</div>
+      <div className="group relative flex items-center h-[56px] w-full border border-[#333333] rounded-[16px] bg-[#1A1A1A] transition-all duration-300 focus-within:border-[#D4AF37] focus-within:bg-[#222222] focus-within:shadow-[0_0_0_4px_rgba(212,175,55,0.15)] hover:border-[#555555]">
+        <div className="absolute left-4 flex flex-col justify-center items-center text-[#666666] group-focus-within:text-[#D4AF37] transition-colors duration-300 pointer-events-none">
+          {icon}
         </div>
+        {children}
       </div>
     </div>
   );
@@ -96,92 +94,101 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-extrabold text-[var(--text-primary)] mb-2 tracking-tight">
+    <div className="w-full max-w-[420px] mx-auto px-4 md:px-0">
+      <div className="text-center mb-10">
+        <h2 className="text-[32px] font-extrabold text-[#FFFFFF] mb-3 tracking-tight">
           Welcome Back
         </h2>
-        <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
+        <p className="text-[#8B8B8B] text-[15px] font-medium leading-relaxed">
           Log in to continue your nutrition journey
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(submit)} className="space-y-4">
+      <form onSubmit={handleSubmit(submit)} className="space-y-6">
         {error && (
-          <div className="p-3.5 bg-[var(--error)]/10 border border-[var(--error)]/30 rounded-[var(--radius-lg)] flex items-center gap-2.5">
-            <AlertCircle className="w-4.5 h-4.5 text-[var(--error)] shrink-0" />
-            <p className="text-[var(--error)] text-sm font-medium">{error}</p>
+          <div className="p-4 bg-[#EF4444]/15 border border-[#EF4444]/40 rounded-[14px] flex items-center gap-3 animate-in fade-in zoom-in duration-300">
+            <AlertCircle className="w-5 h-5 text-[#EF4444] shrink-0" />
+            <p className="text-[#EF4444] text-[14px] font-medium">{error}</p>
           </div>
         )}
 
-        <FieldRow id="email" label="Email Address" icon={<Mail className="w-5 h-5" />}>
-          <input
-            id="email"
-            type="email"
-            placeholder="Enter your email"
-            {...register("email")}
-            className="h-full w-full bg-transparent px-4 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] outline-none"
-          />
-        </FieldRow>
-        {errors.email && <p className="text-sm text-[var(--error)] -mt-2">{errors.email.message}</p>}
-
-        <FieldRow id="password" label="Password" icon={<Lock className="w-5 h-5" />}>
-          <div className="h-full w-full flex items-center">
+        <div className="space-y-1.5 flex flex-col">
+          <FieldRow id="email" label="Email Address" icon={<Mail className="w-[22px] h-[22px]" />}>
             <input
-              id="password"
-              type={obscurePassword ? "password" : "text"}
-              placeholder="Enter your password"
-              {...register("password")}
-              className="h-full min-w-0 flex-1 bg-transparent px-4 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] outline-none"
+              id="email"
+              type="email"
+              placeholder="Enter your email"
+              {...register("email")}
+              className="w-full h-full bg-transparent pl-[52px] pr-4 text-white placeholder:text-[#555555] outline-none text-[16px] font-medium tracking-wide rounded-[16px]"
             />
-            <button
-              type="button"
-              onClick={() => setObscurePassword(!obscurePassword)}
-              className="h-full px-3 text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors"
-              aria-label={obscurePassword ? "Show password" : "Hide password"}
-            >
-              {obscurePassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-            </button>
-          </div>
-        </FieldRow>
-        {errors.password && <p className="text-sm text-[var(--error)] -mt-2">{errors.password.message}</p>}
+          </FieldRow>
+          {errors.email && <p className="text-[13px] font-medium text-[#EF4444] pl-1 mt-1 animate-in fade-in">{errors.email.message}</p>}
+        </div>
 
-        <div className="flex items-center justify-between text-sm pt-1">
-          <label htmlFor="rememberMe" className="flex items-center gap-2 text-[var(--text-secondary)] cursor-pointer">
-            <input
-              type="checkbox"
-              id="rememberMe"
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
-              className="h-4 w-4 cursor-pointer rounded border border-white bg-white appearance-none checked:bg-[var(--primary)] checked:border-[var(--primary)] checked:bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2012%2010%22%20fill=%22none%22%3E%3Cpath%20d=%22M1%205L4.5%208.5L11%201.5%22%20stroke=%22%23111417%22%20stroke-width=%223%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22/%3E%3Cpath%20d=%22M1%205L4.5%208.5L11%201.5%22%20stroke=%22%23D4AF37%22%20stroke-width=%221.8%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22/%3E%3C/svg%3E')] checked:bg-center checked:bg-no-repeat checked:bg-[length:10px_10px]"
-            />
+        <div className="space-y-1.5 flex flex-col">
+          <FieldRow id="password" label="Password" icon={<Lock className="w-[22px] h-[22px]" />}>
+            <div className="relative w-full h-full flex items-center justify-end">
+              <input
+                id="password"
+                type={obscurePassword ? "password" : "text"}
+                placeholder="Enter your password"
+                {...register("password")}
+                className="absolute inset-0 w-full h-full bg-transparent pl-[52px] pr-12 text-white placeholder:text-[#555555] outline-none text-[16px] font-medium tracking-wide rounded-[16px]"
+              />
+              <button
+                type="button"
+                onClick={() => setObscurePassword(!obscurePassword)}
+                className="relative z-10 mr-2 p-2 text-[#666666] hover:text-[#D4AF37] transition-colors rounded-[12px] hover:bg-white/5 outline-none focus:text-[#D4AF37]"
+                aria-label={obscurePassword ? "Show password" : "Hide password"}
+              >
+                {obscurePassword ? <EyeOff className="w-[20px] h-[20px]" /> : <Eye className="w-[20px] h-[20px]" />}
+              </button>
+            </div>
+          </FieldRow>
+          {errors.password && <p className="text-[13px] font-medium text-[#EF4444] pl-1 mt-1 animate-in fade-in">{errors.password.message}</p>}
+        </div>
+
+        <div className="flex items-center justify-between text-[14px] pt-1">
+          <label htmlFor="rememberMe" className="flex items-center gap-2.5 text-[#A5A5A5] hover:text-white transition-colors cursor-pointer group font-medium">
+            <div className="relative flex items-center justify-center w-[18px] h-[18px]">
+              <input
+                type="checkbox"
+                id="rememberMe"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="peer absolute w-full h-full opacity-0 cursor-pointer"
+              />
+              <div className="w-full h-full rounded-[4px] border-[2px] border-[#555555] group-hover:border-[#D4AF37] peer-checked:bg-[#D4AF37] peer-checked:border-[#D4AF37] transition-all flex items-center justify-center">
+                <CheckCircle2 className="w-[12px] h-[12px] text-[#1A1A1A] opacity-0 peer-checked:opacity-100 transition-opacity" strokeWidth={4} />
+              </div>
+            </div>
             Remember me
           </label>
-          <Link href="/forgotPassword" className="text-[var(--gold)] hover:opacity-80 transition-colors text-sm font-semibold">
+          <Link href="/forgotPassword" className="text-[#D4AF37] hover:text-[#F3CD55] transition-colors font-semibold">
             Forgot password?
           </Link>
         </div>
 
         <button
           disabled={isLoading}
-          className="group mt-2 w-full h-[var(--button-h)] bg-[var(--primary)] hover:opacity-90 text-white font-bold rounded-[var(--radius-lg)] transition-all duration-300 shadow-lg shadow-[var(--primary)]/25 hover:shadow-xl hover:shadow-[var(--primary)]/40 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2"
+          className="group mt-6 w-full h-[56px] bg-[#22C55E] hover:bg-[#16A34A] text-white font-bold text-[17px] rounded-[16px] transition-all duration-300 shadow-[0_4px_14px_0_rgba(34,197,94,0.39)] hover:shadow-[0_6px_20px_rgba(34,197,94,0.23)] hover:-translate-y-[1px] active:translate-y-[1px] disabled:opacity-50 disabled:pointer-events-none disabled:transform-none flex items-center justify-center gap-2.5"
         >
           {isLoading ? (
             <>
-              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-              <span>Logging in...</span>
+              <div className="w-[22px] h-[22px] border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
+              <span className="tracking-wide">Logging in...</span>
             </>
           ) : (
             <>
-              <span>Log in</span>
-              <CheckCircle2 className="w-5 h-5 group-hover:scale-110 transition-transform" />
+              <span className="tracking-wide">Log in</span>
+              <CheckCircle2 className="w-[22px] h-[22px] opacity-90 group-hover:scale-110 transition-transform" />
             </>
           )}
         </button>
 
-        <p className="text-center text-sm text-[var(--text-secondary)] font-medium pt-2">
+        <p className="text-center text-[15px] text-[#A5A5A5] font-medium pt-3">
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="font-bold text-[var(--gold)] hover:opacity-80 transition-colors">
+          <Link href="/register" className="font-bold text-[#D4AF37] hover:text-[#F3CD55] transition-colors ml-1">
             Register
           </Link>
         </p>
