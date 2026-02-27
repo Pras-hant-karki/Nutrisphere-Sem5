@@ -12,7 +12,8 @@ export const handleRegister = async (data: RegisterData) => {
             return {
                 success: true,
                 message: 'Registration successful',
-                data: response.data
+                data: response.data,
+                token: response.token
             }
         }
         return {
@@ -33,7 +34,8 @@ export const handleLogin = async (data: LoginData) => {
             return {
                 success: true,
                 message: 'Login successful',
-                data: response.data
+                data: response.data,
+                token: response.token
             }
         }
         return {

@@ -5,29 +5,25 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { ReactNode, useState } from "react";
 import { useRouter } from "next/navigation";
-import { AlertCircle, CheckCircle2, Eye, EyeOff, Lock, Mail } from "lucide-react";
-import { LoginData, loginSchema } from "../schema";
-import { setAuthToken, setUserData } from "@/lib/cookie";
-import { login } from "@/lib/api/auth";
+import { handleLogin } from "@/lib/actions/auth-action";
 import { setAuth } from "@/lib/auth-helpers";
+import { AlertCircle } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, Check } from "lucide-react";
+import { LoginData, loginSchema } from "../schema";
 
 type FieldRowProps = {
-  id: string;
-  label: string;
   icon: ReactNode;
   children: ReactNode;
 };
 
-function FieldRow({ id, label, icon, children }: FieldRowProps) {
+function FieldRow({ icon, children }: FieldRowProps) {
   return (
-    <div className="space-y-2">
-      <label htmlFor={id} className="block text-[14px] font-semibold text-[#8B8B8B] tracking-wide ml-1">
-        {label}
-      </label>
-      <div className="group relative flex items-center h-[56px] w-full border border-[#333333] rounded-[16px] bg-[#1A1A1A] transition-all duration-300 focus-within:border-[#D4AF37] focus-within:bg-[#222222] focus-within:shadow-[0_0_0_4px_rgba(212,175,55,0.15)] hover:border-[#555555]">
-        <div className="absolute left-4 flex flex-col justify-center items-center text-[#666666] group-focus-within:text-[#D4AF37] transition-colors duration-300 pointer-events-none">
-          {icon}
-        </div>
+    /* HEIGHT: Using !h-[72px] to force thickness */
+    <div className="flex items-center w-full border-2 border-[#FACC15] rounded-[20px] bg-[#1E1E1E] overflow-hidden transition-all duration-300 focus-within:ring-4 focus-within:ring-[#FACC15]/10 !h-[72px]">
+      <div className="flex justify-center items-center min-w-[64px] text-white border-r border-white/10">
+        {icon}
+      </div>
+      <div className="flex-1 h-full relative">
         {children}
       </div>
     </div>
@@ -36,160 +32,132 @@ function FieldRow({ id, label, icon, children }: FieldRowProps) {
 
 export default function LoginForm() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
   const [obscurePassword, setObscurePassword] = useState(true);
   const [rememberMe, setRememberMe] = useState(false);
-  const [error, setError] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginData>({
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginData>({
     resolver: zodResolver(loginSchema),
   });
 
-  const submit = async (values: LoginData) => {
+  const onSubmit = async (data: LoginData) => {
     setError("");
     setIsLoading(true);
     try {
-      const result = await login(values);
-
-      if (!result || !result.token) {
-        throw new Error("Invalid response from server");
-      }
-
-      const userData = result.user || result.data;
-
-      if (!userData) {
-        throw new Error("User data not found in response");
-      }
-
-      await setAuthToken(result.token);
-      await setUserData(userData);
-
-      const userId = userData._id || userData.id || "";
-
-      setAuth(result.token, {
-        id: userId,
-        email: userData.email || "",
-        role: userData.role || "user",
-        fullName: userData.fullName || userData.name || "",
-        phone: userData.phone || "",
-        image: userData.image || "",
-      });
-
+      const result = await handleLogin(data);
       if (result.success) {
-        router.push(
-          userData.role === "admin" ? "/admin/dashboard" : "/user/profile"
-        );
+        // persist token + user in localStorage for client-side helpers
+        if (result.token && result.data) {
+          setAuth(result.token, result.data);
+        }
+        const role = result.data?.role || result.data?.user?.role;
+        if (role === "admin") {
+          router.push("/admin/dashboard");
+        } else {
+          router.push("/user/home");
+        }
       } else {
-        throw new Error(result.message || "Login failed");
+        setError(result.message || "Login failed");
       }
-    } catch (err: Error | any) {
-      setError(err.message || "Login failed");
+    } catch (err: any) {
+      setError(err?.message || "Login failed");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="w-full max-w-[420px] mx-auto px-4 md:px-0">
-      <div className="text-center mb-10">
-        <h2 className="text-[32px] font-extrabold text-[#FFFFFF] mb-3 tracking-tight">
-          Welcome Back
+    <div className="w-full max-w-[460px] mx-auto px-4">
+      
+      {/* 1. HEADING POSITION FIX: 
+          If mb-20 didn't work, use !mb-[100px]. 
+          Increase the number inside [] to move it even higher. */}
+      <div className="mt-10 !mb-[60px]">
+        <h2 className="!text-[64px] font-black text-[#FACC15] leading-none tracking-tight">
+          Log in
         </h2>
-        <p className="text-[#8B8B8B] text-[15px] font-medium leading-relaxed">
-          Log in to continue your nutrition journey
-        </p>
       </div>
 
-      <form onSubmit={handleSubmit(submit)} className="space-y-6">
-        {error && (
-          <div className="p-4 bg-[#EF4444]/15 border border-[#EF4444]/40 rounded-[14px] flex items-center gap-3 animate-in fade-in zoom-in duration-300">
-            <AlertCircle className="w-5 h-5 text-[#EF4444] shrink-0" />
-            <p className="text-[#EF4444] text-[14px] font-medium">{error}</p>
-          </div>
-        )}
+      {error && (
+        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/50 rounded-xl flex items-center gap-3">
+          <AlertCircle className="w-5 h-5 text-red-500" />
+          <p className="text-red-500 text-sm font-medium">{error}</p>
+        </div>
+      )}
 
-        <div className="space-y-1.5 flex flex-col">
-          <FieldRow id="email" label="Email Address" icon={<Mail className="w-[22px] h-[22px]" />}>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col !gap-y-5">
+        
+        {/* Email Field */}
+        <div className="flex flex-col gap-2">
+          <FieldRow icon={<Mail className="w-6 h-6" />}>
             <input
-              id="email"
               type="email"
-              placeholder="Enter your email"
+              placeholder="Email"
               {...register("email")}
-              className="w-full h-full bg-transparent pl-[52px] pr-4 text-white placeholder:text-[#555555] outline-none text-[16px] font-medium tracking-wide rounded-[16px]"
+              className="w-full h-full bg-transparent px-5 text-white placeholder:text-gray-500 outline-none !text-[20px] font-medium"
             />
           </FieldRow>
-          {errors.email && <p className="text-[13px] font-medium text-[#EF4444] pl-1 mt-1 animate-in fade-in">{errors.email.message}</p>}
         </div>
 
-        <div className="space-y-1.5 flex flex-col">
-          <FieldRow id="password" label="Password" icon={<Lock className="w-[22px] h-[22px]" />}>
-            <div className="relative w-full h-full flex items-center justify-end">
+        {/* Password Field */}
+        <div className="flex flex-col gap-1">
+          <FieldRow icon={<Lock className="w-6 h-6" />}>
+            <div className="flex items-center h-full w-full">
               <input
-                id="password"
                 type={obscurePassword ? "password" : "text"}
-                placeholder="Enter your password"
+                placeholder="Password"
                 {...register("password")}
-                className="absolute inset-0 w-full h-full bg-transparent pl-[52px] pr-12 text-white placeholder:text-[#555555] outline-none text-[16px] font-medium tracking-wide rounded-[16px]"
+                className="flex-1 h-full bg-transparent px-5 text-white placeholder:text-gray-500 outline-none !text-[20px] font-medium"
               />
+              
+              {/* 2. EYE BUTTON POSITION FIX: 
+                  If pr-4 didn't work, we use !mr-8 (Margin Right). 
+                  Increase the number in !mr-10, !mr-12 etc. to move it further LEFT. */}
               <button
                 type="button"
                 onClick={() => setObscurePassword(!obscurePassword)}
-                className="relative z-10 mr-2 p-2 text-[#666666] hover:text-[#D4AF37] transition-colors rounded-[12px] hover:bg-white/5 outline-none focus:text-[#D4AF37]"
-                aria-label={obscurePassword ? "Show password" : "Hide password"}
+                className="!mr-8 text-gray-400 hover:text-[#FACC15] transition-colors"
               >
-                {obscurePassword ? <EyeOff className="w-[20px] h-[20px]" /> : <Eye className="w-[20px] h-[20px]" />}
+                {obscurePassword ? <EyeOff size={24} /> : <Eye size={24} />}
               </button>
             </div>
           </FieldRow>
-          {errors.password && <p className="text-[13px] font-medium text-[#EF4444] pl-1 mt-1 animate-in fade-in">{errors.password.message}</p>}
         </div>
 
-        <div className="flex items-center justify-between text-[14px] pt-1">
-          <label htmlFor="rememberMe" className="flex items-center gap-2.5 text-[#A5A5A5] hover:text-white transition-colors cursor-pointer group font-medium">
-            <div className="relative flex items-center justify-center w-[18px] h-[18px]">
-              <input
-                type="checkbox"
-                id="rememberMe"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                className="peer absolute w-full h-full opacity-0 cursor-pointer"
-              />
-              <div className="w-full h-full rounded-[4px] border-[2px] border-[#555555] group-hover:border-[#D4AF37] peer-checked:bg-[#D4AF37] peer-checked:border-[#D4AF37] transition-all flex items-center justify-center">
-                <CheckCircle2 className="w-[12px] h-[12px] text-[#1A1A1A] opacity-0 peer-checked:opacity-100 transition-opacity" strokeWidth={4} />
-              </div>
+        {/* Remember Me UI */}
+        <div className="flex items-center justify-between text-[16px] font-semibold">
+          <label className="flex items-center gap-3 text-gray-300 cursor-pointer group">
+            <input
+              type="checkbox"
+              className="hidden"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+            />
+            <div className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all 
+              ${rememberMe ? 'bg-black border-white' : 'bg-transparent border-white'}`}>
+              {rememberMe && <Check className="text-white w-4 h-4" strokeWidth={4} />}
             </div>
-            Remember me
+            <span>Remember me</span>
           </label>
-          <Link href="/forgotPassword" className="text-[#D4AF37] hover:text-[#F3CD55] transition-colors font-semibold">
-            Forgot password?
-          </Link>
+          <Link href="/forgotPassword" className="text-red-700 font-bold">Forgot password?</Link>
         </div>
 
+        {/* 3. BUTTON TEXT SIZE FIX:
+            Use !text-[24px] to force the size. 
+            Increase the number to make text bigger. */}
         <button
+          type="submit"
           disabled={isLoading}
-          className="group mt-6 w-full h-[56px] bg-[#22C55E] hover:bg-[#16A34A] text-white font-bold text-[17px] rounded-[16px] transition-all duration-300 shadow-[0_4px_14px_0_rgba(34,197,94,0.39)] hover:shadow-[0_6px_20px_rgba(34,197,94,0.23)] hover:-translate-y-[1px] active:translate-y-[1px] disabled:opacity-50 disabled:pointer-events-none disabled:transform-none flex items-center justify-center gap-2.5"
+          className="w-full !h-[70px] bg-[#39FF14] text-black font-black !text-[29px] rounded-full shadow-lg"
         >
-          {isLoading ? (
-            <>
-              <div className="w-[22px] h-[22px] border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
-              <span className="tracking-wide">Logging in...</span>
-            </>
-          ) : (
-            <>
-              <span className="tracking-wide">Log in</span>
-              <CheckCircle2 className="w-[22px] h-[22px] opacity-90 group-hover:scale-110 transition-transform" />
-            </>
-          )}
+          {isLoading ? "Logging in..." : "Log in"}
         </button>
 
-        <p className="text-center text-[15px] text-[#A5A5A5] font-medium pt-3">
+        <p className="text-center text-[18px] text-white !mt-1">
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="font-bold text-[#D4AF37] hover:text-[#F3CD55] transition-colors ml-1">
-            Register
+          <Link href="/register" className="font-bold text-[#39FF14] hover:underline ml-1">
+            Register !
           </Link>
         </p>
       </form>

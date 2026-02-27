@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import axios from "axios";
-import { ArrowLeft, Calendar, Clock, Dumbbell, MapPin, X } from "lucide-react";
+import { ChevronLeft, Bell, X, Clock, MapPin, Dumbbell } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { getToken } from "@/lib/auth-helpers";
 import { buildApiUrl } from "@/lib/api/base-url";
@@ -18,14 +18,8 @@ type SessionItem = {
   isActive: boolean;
 };
 
-const daysOfWeek = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
+const DAYS_OF_WEEK = [
+  "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
 ];
 
 export default function SessionsPage() {
@@ -35,93 +29,97 @@ export default function SessionsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchSessions();
-  }, []);
-
-  const grouped = useMemo(() => {
-    const map: Record<string, SessionItem[]> = {};
-    for (const day of daysOfWeek) map[day] = [];
-    for (const session of sessions) {
-      if (!map[session.day]) map[session.day] = [];
-      map[session.day].push(session);
-    }
-    return map;
-  }, [sessions]);
-
-  const fetchSessions = async () => {
+  const fetchSessions = useCallback(async () => {
     try {
       setLoading(true);
-      setError(null);
       const token = getToken();
       const response = await axios.get(buildApiUrl("/api/sessions"), {
         headers: { Authorization: `Bearer ${token}` },
       });
       setSessions(response.data?.data || []);
     } catch (err: any) {
-      setError(err.response?.data?.message || err.message || "Failed to fetch sessions");
+      setError(err.response?.data?.message || "Failed to fetch sessions");
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchSessions();
+  }, [fetchSessions]);
+
+  const groupedSessions = useMemo(() => {
+    const map: Record<string, SessionItem[]> = {};
+    DAYS_OF_WEEK.forEach(day => map[day] = []);
+    sessions.forEach(session => {
+      if (map[session.day]) map[session.day].push(session);
+    });
+    return map;
+  }, [sessions]);
 
   return (
-    <div className="relative min-h-full w-full overflow-hidden bg-[#110104] text-white">
-      <div
-        className="pointer-events-none absolute inset-0 opacity-10"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)",
-          backgroundSize: "72px 72px",
-        }}
-      />
+    <div className="relative min-h-screen w-full bg-[#0A0705] text-white font-sans overflow-x-hidden">
+      
+      {/* NOTIFICATION BELL */}
+      <div className="absolute top-8 right-10 z-50">
+        <div className="relative bg-white !p-4 rounded-full shadow-2xl cursor-pointer hover:scale-105 transition-all">
+          <Bell className="text-black w-7 h-7" />
+          <span className="absolute top-0 right-0 bg-red-600 text-white text-[12px] font-black w-6 h-6 flex items-center justify-center rounded-full border-2 border-black">1</span>
+        </div>
+      </div>
 
-      <div className="relative z-10 px-4 py-8 sm:px-8 lg:px-10">
-        <div className="mx-auto w-full max-w-[1400px]">
-          <div className="mb-8 flex items-center justify-between">
+      {/* MAIN CONTENT WRAPPER 
+          - !ml-[320px]: This creates the explicit 2-space gap from your sidebar.
+          - pl-10: Extra padding to ensure text never touches the sidebar line.
+      */}
+      <div className="relative z-10 !ml-[40px] pl-10 pr-12">
+        <div className="mx-auto w-full max-w-5xl">
+          
+          {/* HEADER SECTION: Aligned with the new margin */}
+          <div className="flex items-center justify-between !pt-20 !mb-16">
             <button
               onClick={() => router.push("/user/home")}
-              className="inline-flex items-center gap-2 rounded-md border border-[#FFD600]/35 bg-[#1D1D1D]/70 px-3 py-2 text-sm font-medium text-[#FFD600] transition hover:bg-[#2A2A2A]"
+              className="text-[#FACC15] hover:scale-110 transition-transform"
             >
-              <ArrowLeft size={16} />
-              Back
+              <ChevronLeft size={48} strokeWidth={3} />
             </button>
 
-            <h1 className="text-center text-5xl font-bold tracking-tight text-[#FFD600]">
+            <h1 className="!text-[56px] font-black text-[#FACC15] tracking-tight text-center flex-1">
               Workout Sessions
             </h1>
-            <div className="w-[78px]" />
+            <div className="w-12" /> 
           </div>
 
-          {error && (
-            <div className="mb-6 rounded-lg border border-[#E53935]/30 bg-[#E53935]/10 p-4 text-[#ff8c8c]">
-              {error}
-            </div>
-          )}
-
           {loading ? (
-            <div className="rounded-lg border border-[#3C3C3C] bg-[#1D1D1D]/80 p-5 text-[#D7D7D7]">
-              Loading sessions...
-            </div>
+            <div className="text-center text-[#FACC15] text-xl mt-20 font-bold">Loading schedule...</div>
           ) : (
-            <div className="space-y-8">
-              {daysOfWeek.map((day) => (
-                <section key={day}>
-                  <h2 className="mb-3 text-[32px] font-semibold text-white sm:text-[34px]">{day}</h2>
+            <div className="space-y-14">
+              {DAYS_OF_WEEK.map((day) => (
+                <section key={day} className="flex flex-col gap-2">
+                  
+                  {/* DAY HEADER: text-[28px] as per Figma design */}
+                  <h2 className="text-[28px] font-bold text-white tracking-wide">
+                    {day}
+                  </h2>
 
-                  {grouped[day]?.length > 0 && (
-                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                      {grouped[day].map((session) => (
+                  {/* SESSIONS GRID: Placed directly below the day name */}
+                  <div className="flex flex-wrap gap-10">
+                    {groupedSessions[day]?.length > 0 ? (
+                      groupedSessions[day].map((session) => (
                         <button
                           key={session._id}
                           onClick={() => setSelectedSession(session)}
-                          className="h-14 rounded-sm border border-[#3C3C3C] bg-[#2A2A2A]/80 px-4 text-base font-medium text-[#D7D7D7] transition hover:border-[#FFD600]/50 hover:text-white"
+                          className="h-[60px] min-w-[200px] px-8 rounded-xl bg-[#1E1E1E] border-2 border-transparent text-[#FACC15] font-bold text-[18px] transition-all hover:border-white hover:bg-[#252525] flex items-center justify-center shadow-lg"
                         >
                           {session.timeRange}
                         </button>
-                      ))}
-                    </div>
-                  )}
+                      ))
+                    ) : (
+                      <div className="h-[60px] min-w-[200px] border-2 border-dashed border-white/10 rounded-xl flex items-center justify-center">
+                        <span className="text-white/20 font-medium italic text-[14px]">No sessions</span>
+                      </div>
+                    )}
+                  </div>
                 </section>
               ))}
             </div>
@@ -129,64 +127,30 @@ export default function SessionsPage() {
         </div>
       </div>
 
+      {/* DETAIL MODAL */}
       {selectedSession && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/70 p-6 backdrop-blur-[1px]">
-          <div className="w-full max-w-2xl rounded-lg border border-[#3A3A3A] bg-[#171717] p-6">
-            <div className="mb-4 flex items-start justify-between">
-              <div>
-                <h3 className="text-2xl font-semibold text-[#FFD600]">
-                  {selectedSession.sessionName}
-                </h3>
-                <p className="mt-1 text-sm text-[#BBBBBB]">Session details</p>
-              </div>
-              <button
-                onClick={() => setSelectedSession(null)}
-                className="rounded-md p-2 text-[#BEBEBE] transition hover:bg-[#2A2A2A] hover:text-white"
-                aria-label="Close session details"
-              >
-                <X size={20} />
-              </button>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-sm p-4" onClick={() => setSelectedSession(null)}>
+          <div 
+            className="w-full max-w-md bg-[#1E1E1E] border-2 border-[#FACC15] rounded-[32px] p-8 relative shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button 
+              onClick={() => setSelectedSession(null)}
+              className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors"
+            >
+              <X size={28} />
+            </button>
+            <h3 className="text-[32px] font-black text-[#FACC15] mb-6">{selectedSession.sessionName}</h3>
+            <div className="space-y-5 text-gray-200 font-bold text-lg">
+              <div className="flex items-center gap-4"><Clock size={22} className="text-[#FACC15]"/> {selectedSession.timeRange}</div>
+              <div className="flex items-center gap-4"><Dumbbell size={22} className="text-[#FACC15]"/> {selectedSession.workoutTitle}</div>
+              <div className="flex items-center gap-4"><MapPin size={22} className="text-[#FACC15]"/> {selectedSession.location}</div>
             </div>
-
-            <div className="space-y-3 text-sm text-[#D2D2D2]">
-              <div className="flex items-center gap-3">
-                <Calendar size={16} className="text-[#FFD600]" />
-                <span>{selectedSession.day}</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Clock size={16} className="text-[#FFD600]" />
-                <span>{selectedSession.timeRange}</span>
-              </div>
-              {selectedSession.location && (
-                <div className="flex items-center gap-3">
-                  <MapPin size={16} className="text-[#FFD600]" />
-                  <span>{selectedSession.location}</span>
-                </div>
-              )}
-              {selectedSession.workoutTitle && (
-                <div className="flex items-center gap-3">
-                  <Dumbbell size={16} className="text-[#FFD600]" />
-                  <span>{selectedSession.workoutTitle}</span>
-                </div>
-              )}
-            </div>
-
-            {selectedSession.exercises.length > 0 && (
-              <div className="mt-5 rounded-md border border-[#2E2E2E] bg-[#101010] p-4">
-                <p className="mb-2 text-sm font-semibold text-[#FFD600]">Exercises</p>
-                <div className="space-y-1 text-sm text-[#C3C3C3]">
-                  {selectedSession.exercises.map((exercise, idx) => (
-                    <p key={`${exercise}-${idx}`}>- {exercise}</p>
-                  ))}
-                </div>
-              </div>
-            )}
-
             <button
               onClick={() => setSelectedSession(null)}
-              className="mt-6 w-full rounded-md bg-[#FFD600] px-4 py-3 text-sm font-semibold text-black transition hover:bg-[#E8C500]"
+              className="mt-10 w-full !h-[60px] bg-[#FACC15] text-black font-black text-[20px] rounded-full transition-all"
             >
-              Close
+              Done
             </button>
           </div>
         </div>
@@ -194,4 +158,3 @@ export default function SessionsPage() {
     </div>
   );
 }
-

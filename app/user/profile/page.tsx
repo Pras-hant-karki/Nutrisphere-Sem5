@@ -16,24 +16,22 @@ const updateProfileSchema = z.object({
 
 type UpdateProfileData = z.infer<typeof updateProfileSchema>;
 
-/**
- * 1. FIXED INPUT FIELD COMPONENT
- * (Defined only once to avoid the "defined multiple times" error seen in your screenshot)
- */
-function InputField({ icon, disabled, value, placeholder, register, ...props }: any) {
+function ProfileInputField({ icon, disabled, value, placeholder, register, ...props }: any) {
   return (
-    <div className="flex items-center bg-[#121212] border border-[#FFCC00]/80 rounded-xl px-5 h-[62px]">
-      <div className="w-8 flex items-center justify-center text-[#FFCC00] mr-3 shrink-0">
+    <div className={`flex items-center w-full border-2 border-[#FACC15] rounded-[20px] bg-[#1E1E1E] overflow-hidden transition-all !h-[72px] ${disabled ? 'opacity-80' : 'focus-within:ring-4 focus-within:ring-[#FACC15]/10'}`}>
+      <div className="flex justify-center items-center min-w-[64px] text-white border-r border-white/10">
         {icon}
       </div>
-      <input
-        {...register}
-        defaultValue={value}
-        disabled={disabled}
-        placeholder={placeholder}
-        className="bg-transparent w-full outline-none text-white text-[15px] placeholder-zinc-600 disabled:text-zinc-500 font-medium"
-        {...props}
-      />
+      <div className="flex-1 h-full relative">
+        <input
+          {...register}
+          defaultValue={value}
+          disabled={disabled}
+          placeholder={placeholder}
+          className="w-full h-full bg-transparent px-5 text-white placeholder:text-gray-500 outline-none !text-[18px] font-medium disabled:cursor-not-allowed"
+          {...props}
+        />
+      </div>
     </div>
   );
 }
@@ -94,93 +92,87 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0705] text-white flex flex-col relative font-sans overflow-y-auto pb-20">
+    <div className="min-h-screen bg-[#0A0705] text-white flex flex-col relative font-sans overflow-x-hidden">
       
-      {/* BELL POSITIONING */}
-      <div className="absolute z-50" style={{ top: "24px", right: "32px" }}>
-        <div className="relative bg-white p-2.5 rounded-full shadow-xl">
-          <Bell className="text-black w-5 h-5" />
-          <span className="absolute -top-1 -right-1 bg-[#EF4444] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border-2 border-[#0A0705]">1</span>
+      {/* NOTIFICATION BELL */}
+      <div className="absolute top-8 right-10 z-50">
+        <div className="relative bg-white !p-4 rounded-full shadow-2xl cursor-pointer hover:scale-105 transition-all">
+          <Bell className="text-black w-7 h-7" />
+          <span className="absolute top-0 right-0 bg-red-600 text-white text-[12px] font-black w-6 h-6 flex items-center justify-center rounded-full border-2 border-black">1</span>
         </div>
       </div>
 
-      {/* HEADER POSITIONING - Detailed adjustment for top/bottom gap */}
-      <div className="w-full text-center" style={{ marginTop: "80px", marginBottom: "50px" }}>
-        <h1 className="text-5xl font-bold text-[#FFCC00] tracking-tight">My Profile</h1>
+      {/* HEADING */}
+      <div className="w-full text-center !pt-24 !mb-24">
+        <h1 className="!text-[64px] font-black text-[#FACC15] tracking-tight">My Profile</h1>
       </div>
 
-      <div className="flex-1 flex flex-col lg:flex-row items-start justify-center gap-16 w-full max-w-5xl mx-auto px-6">
+      {/* MAIN CONTENT AREA */}
+      <div className="flex-1 flex flex-col lg:flex-row items-center lg:items-start justify-center !gap-x-32 w-full max-w-6xl mx-auto px-10 pb-32">
         
-        {/* LEFT COLUMN: IMAGE AND BIG BUTTONS */}
-        <div className="flex flex-col items-center" style={{ marginTop: "-40px" }}>
-          
-          {/* IMAGE HOLDER POSITIONING */}
-          <div className="relative" style={{ marginBottom: "40px" }}>
-            <div className="w-72 h-72 md:w-80 md:h-80 rounded-full overflow-hidden border border-zinc-800 bg-[#121212] shadow-2xl flex items-center justify-center">
+        {/* LEFT COLUMN: Avatar Shifted 4 steps right */}
+        <div className="flex flex-col items-center !-mt-10 !ml-45">
+          <div className="relative mb-12 group">
+            <div className="w-72 h-72 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-zinc-800 bg-[#1E1E1E] shadow-[0_0_60px_rgba(0,0,0,0.6)] flex items-center justify-center">
               {imagePreview ? (
                 <img src={imagePreview} alt="Profile" className="w-full h-full object-cover" />
               ) : (
-                <div className="text-9xl font-bold text-[#FFCC00] opacity-90">P</div>
+                <div className="text-[120px] font-black text-[#FACC15]">P</div>
               )}
             </div>
             {isEditing && (
-              <label className="absolute bottom-6 right-8 bg-[#FFCC00] p-3 rounded-full cursor-pointer shadow-xl border-4 border-[#0A0705]">
-                <Camera size={20} className="text-black" />
+              <label className="absolute bottom-6 right-8 bg-[#FACC15] p-4 rounded-full cursor-pointer shadow-xl border-4 border-black hover:scale-110 transition-transform">
+                <Camera size={24} className="text-black" />
                 <input type="file" className="hidden" onChange={handleImageChange} />
               </label>
             )}
           </div>
-
-          {/* BIG BUTTONS ADJUSTMENT:
-              - h-[80px]: Forces a very tall height. Change '80' to make it bigger/smaller.
-              - w-40: Widens them slightly to maintain a professional look.
-              - text-lg: Makes the text inside bigger to match the button size.
-          */}
-          <div className="flex items-center gap-6" style={{ marginTop: "20px" }}>
-            <button 
-              type="button" 
-              onClick={() => { if(isEditing) reset(); setIsEditing(!isEditing); }} 
-              className={`w-32 h-[40px] rounded-full font-bold text-lg transition-all active:scale-95 shadow-2xl ${
-                isEditing ? 'bg-red-600 text-white' : 'bg-[#0B30D9] text-white'
-              }`}
-            >
-              {isEditing ? "Cancel" : "Edit"}
-            </button>
-            
-            <button 
-              type="button" 
-              onClick={handleSubmit(onSubmit)} 
-              disabled={!isEditing || isLoading} 
-              className={`w-32 h-[40px] bg-[#00CA25] text-white font-bold rounded-full text-lg shadow-2xl transition-all active:scale-95 ${
-                (!isEditing || isLoading) ? 'opacity-20 cursor-not-allowed' : 'hover:bg-green-500 shadow-green-900/40'
-              }`}
-            >
-              {isLoading ? "Wait..." : "Save"}
-            </button>
-          </div>
         </div>
 
-        {/* RIGHT COLUMN: FORM FIELDS */}
-        <div className="flex flex-col w-full max-w-[440px]">
-          <div className="flex flex-col gap-6">
-            <InputField icon={<User size={18} />} placeholder="Full Name" register={register("fullName")} disabled={!isEditing} />
-            <InputField icon={<Mail size={18} />} placeholder="Email" value={currentUser?.email} disabled />
-            <InputField icon={<Star size={18} />} placeholder="Role" value={currentUser?.role || "User"} disabled />
-            <InputField icon={<Phone size={18} />} placeholder="Phone Number" register={register("phone")} disabled={!isEditing} />
-          </div>
+        {/* RIGHT COLUMN: Input Fields */}
+        <div className="flex flex-col w-full max-w-[440px] !ml-auto !gap-y-8 mt-12 lg:mt-0">
+          <ProfileInputField icon={<User size={24} />} placeholder="Full Name" register={register("fullName")} disabled={!isEditing} />
+          <ProfileInputField icon={<Mail size={24} />} placeholder="Email" value={currentUser?.email} disabled={true} />
+          <ProfileInputField icon={<Star size={24} />} placeholder="Role" value={currentUser?.role || "User"} disabled={true} />
+          <ProfileInputField icon={<Phone size={24} />} placeholder="Phone Number" register={register("phone")} disabled={!isEditing} />
+        </div>
+      </div>
 
-          {/* LOGOUT BUTTON POSITIONING (Exactly 70px down from text fields) */}
-          <div className="flex justify-end" style={{ marginTop: "70px" }}>
-            <button 
-              type="button"
-              onClick={logout}
-              className="bg-[#EAE5DF] hover:bg-white text-[#4A171E] px-10 py-3 rounded font-black text-[13px] shadow-lg border border-zinc-200 uppercase tracking-widest active:scale-95 transition-all"
-            >
-              Logout
-            </button>
-          </div>
+      {/* FIXED FOOTER: Horizontal alignment for ALL buttons */}
+      <div className="fixed bottom-32 left-110 right-40 flex items-center justify-between px-10 z-50">
+        
+        {/* EDIT/SAVE BUTTONS: Horizontal row with left gap */}
+        <div className="flex flex-row items-center gap-6 ml-10">
+          <button
+            type="button"
+            onClick={() => { if(isEditing) reset(); setIsEditing(!isEditing); }}
+            className={`!w-[160px] !h-[60px] rounded-[20px] font-black !text-[22px] transition-all active:scale-95 shadow-xl ${
+              isEditing ? 'bg-red-600 text-white' : 'bg-[#0B30D9] text-white'
+            }`}
+          >
+            {isEditing ? "Cancel" : "Edit"}
+          </button>
+          
+          <button
+            type="button"
+            onClick={handleSubmit(onSubmit)}
+            disabled={!isEditing || isLoading}
+            className={`!w-[160px] !h-[60px] bg-[#00CA25] text-white font-black rounded-[20px] !text-[22px] shadow-xl transition-all active:scale-95 ${
+              (!isEditing || isLoading) ? 'opacity-20 cursor-not-allowed' : 'hover:bg-green-500'
+            }`}
+          >
+            {isLoading ? "Wait..." : "Save"}
+          </button>
         </div>
 
+        {/* LOGOUT BUTTON: Fixed in corner, aligned with row above */}
+        <button 
+          type="button"
+          onClick={logout}
+          className="bg-[#EAE5DF] hover:bg-white text-[#4A171E] !px-8 !h-[45px] rounded-[6px] font-black !text-[14px] shadow-2xl uppercase tracking-widest transition-all active:scale-95 border border-zinc-300 mr-10"
+        >
+          Logout
+        </button>
       </div>
     </div>
   );

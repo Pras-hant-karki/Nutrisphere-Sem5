@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, BarChart3, Users, ChevronRight } from "lucide-react";
+import { Calendar, BarChart3, Users, ChevronRight, Bell } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function HomePage() {
@@ -28,38 +28,59 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="flex flex-col items-center min-h-screen">
-      <div className="w-full text-center mb-10">
-        <h1 className="text-4xl font-bold text-[#D4AF37]">
+    /* 1) BACKGROUND COLOR: Matches your Login/Profile design #0A0705 */
+    <div className="min-h-screen bg-[#0A0705] text-white flex flex-col relative font-sans overflow-x-hidden">
+      
+      {/* 6) NOTIFICATION BELL: Styled exactly like the Profile Page */}
+      <div className="absolute top-8 right-10 z-50">
+        <div className="relative bg-white !p-4 rounded-full shadow-2xl cursor-pointer hover:scale-105 transition-all">
+          <Bell className="text-black w-7 h-7" />
+          <span className="absolute top-0 right-0 bg-red-600 text-white text-[12px] font-black w-6 h-6 flex items-center justify-center rounded-full border-2 border-black">1</span>
+        </div>
+      </div>
+
+      {/* 2) HEADING POSITION: Brought down using !pt-24 and !mb-20 */}
+      <div className="w-full text-center !pt-24 !mb-20">
+        <h1 className="!text-[64px] font-black text-[#FACC15] tracking-tight leading-none">
           Welcome to Dashboard !
         </h1>
       </div>
 
-      <div className="w-full max-w-3xl flex flex-col gap-8">
+      {/* 4) PLACEMENT & SIZE: Centered container for cards */}
+      <div className="flex-1 flex flex-col items-center gap-y-8 w-full max-w-6xl mx-auto px-10 pb-20">
         {dashboardCards.map((card) => {
           const IconComponent = card.icon;
           return (
             <div
               key={card.title}
               onClick={() => router.push(card.href)}
-              className="flex items-center justify-between h-36 px-10 bg-gradient-to-r from-[#1a1f1e] to-[#151a19] border border-[#2a3530] rounded-2xl shadow-lg cursor-pointer transition-all duration-200 hover:border-[#D4AF37]/50 hover:shadow-xl"
+              /* 3) CONTAINER SHADE & OUTLINE: bg-[#1E1E1E] with #FACC15 border */
+              /* 4) HEIGHT: Set to !h-[120px] for a sleek figma look */
+              className="group flex items-center w-full max-w-[800px] !h-[120px] bg-[#1E1E1E] border-2 border-[#FACC15] rounded-[24px] overflow-hidden transition-all duration-300 hover:ring-4 hover:ring-[#FACC15]/10 cursor-pointer"
             >
-              <div className="flex items-center gap-8 flex-1 min-w-0">
-                <IconComponent size={28} strokeWidth={1.5} className="text-[#D4AF37] flex-shrink-0" />
-                <div className="flex flex-col justify-center min-w-0">
-                  <h2 className="text-xl font-semibold text-[#D4AF37] leading-tight">
-                    {card.title}
-                  </h2>
-                  <p className="text-sm text-[#9FB3A6] mt-2 leading-tight line-clamp-1">
-                    {card.subtitle}
-                  </p>
-                </div>
+              {/* 5) ICON GUTTER: Defines a specific zone (min-w-[100px]) so icons never overlap text */}
+              <div className="flex justify-center items-center min-w-[100px] text-white border-r border-white/10 h-full">
+                <IconComponent size={32} strokeWidth={2} />
               </div>
-              <ChevronRight
-                size={32}
-                strokeWidth={1.5}
-                className="text-[#7C8C83] hover:text-[#D4AF37] transition-colors ml-6 flex-shrink-0"
-              />
+
+              {/* 5) TEXT GAPPINGS: px-8 for internal breathing room */}
+              <div className="flex-1 flex flex-col justify-center px-8 min-w-0">
+                <h2 className="!text-[24px] font-bold text-[#FACC15] leading-tight">
+                  {card.title}
+                </h2>
+                <p className="text-[16px] text-gray-400 mt-1 font-medium line-clamp-1">
+                  {card.subtitle}
+                </p>
+              </div>
+
+              {/* CHEVRON: Positioned to the right with margin */}
+              <div className="pr-10">
+                <ChevronRight
+                  size={32}
+                  strokeWidth={2.5}
+                  className="text-gray-500 group-hover:text-white transition-colors"
+                />
+              </div>
             </div>
           );
         })}
