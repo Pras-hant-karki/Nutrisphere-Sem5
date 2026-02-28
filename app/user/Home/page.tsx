@@ -28,7 +28,6 @@ export default function HomePage() {
   ];
 
   return (
-    /* 1) BACKGROUND COLOR: Matches your Login/Profile design #0A0705 */
     <div className="min-h-screen bg-[#0A0705] text-white flex flex-col relative font-sans overflow-x-hidden">
       
       {/* 6) NOTIFICATION BELL: Styled exactly like the Profile Page */}
@@ -54,16 +53,14 @@ export default function HomePage() {
             <div
               key={card.title}
               onClick={() => router.push(card.href)}
-              /* 3) CONTAINER SHADE & OUTLINE: bg-[#1E1E1E] with #FACC15 border */
-              /* 4) HEIGHT: Set to !h-[120px] for a sleek figma look */
               className="group flex items-center w-full max-w-[800px] !h-[120px] bg-[#1E1E1E] border-2 border-[#FACC15] rounded-[24px] overflow-hidden transition-all duration-300 hover:ring-4 hover:ring-[#FACC15]/10 cursor-pointer"
             >
-              {/* 5) ICON GUTTER: Defines a specific zone (min-w-[100px]) so icons never overlap text */}
+              {/* ICON GUTTER: Defines a specific zone (min-w-[100px]) so icons never overlap text */}
               <div className="flex justify-center items-center min-w-[100px] text-white border-r border-white/10 h-full">
                 <IconComponent size={32} strokeWidth={2} />
               </div>
 
-              {/* 5) TEXT GAPPINGS: px-8 for internal breathing room */}
+              {/* TEXT GAPPINGS: px-8 for internal breathing room */}
               <div className="flex-1 flex flex-col justify-center px-8 min-w-0">
                 <h2 className="!text-[24px] font-bold text-[#FACC15] leading-tight">
                   {card.title}

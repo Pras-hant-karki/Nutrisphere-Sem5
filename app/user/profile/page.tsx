@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
@@ -37,6 +38,7 @@ function ProfileInputField({ icon, disabled, value, placeholder, register, ...pr
 }
 
 export default function ProfilePage() {
+  const router = useRouter();
   const currentUser = getUser();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -164,7 +166,7 @@ export default function ProfilePage() {
       {/* LOGOUT: fixed 20px from bottom-right */}
       <button 
         type="button"
-        onClick={logout}
+        onClick={() => { logout(); router.push("/login"); }}
         className="fixed bottom-[20px] right-10 bg-[#EAE5DF] hover:bg-white text-[#4A171E] !px-8 !h-[45px] rounded-[6px] font-black !text-[14px] shadow-2xl uppercase tracking-widest transition-all active:scale-95 border border-zinc-300 z-50"
       >
         Logout

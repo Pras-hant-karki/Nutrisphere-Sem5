@@ -30,11 +30,11 @@ export const handleLogin = async (data: LoginData) => {
         const response = await login(data)
         if (response.success) {
             await setAuthToken(response.token)
-            await setUserData(response.data)
+            await setUserData(response.user)
             return {
                 success: true,
                 message: 'Login successful',
-                data: response.data,
+                data: response.user,
                 token: response.token
             }
         }
