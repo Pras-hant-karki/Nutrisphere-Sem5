@@ -73,10 +73,11 @@ export default function ProfilePage() {
       const formData = new FormData();
       formData.append("fullName", data.fullName);
       if (data.phone) formData.append("phone", data.phone);
-      if (selectedFile) formData.append("profilePicture", selectedFile);
+      if (selectedFile) formData.append("image", selectedFile);
 
       const token = getToken();
-      const response = await axios.put(buildApiUrl("/api/auth/update-profile"), formData, {
+      const userId = currentUser?._id || currentUser?.id;
+      const response = await axios.put(buildApiUrl(`/api/auth/${userId}`), formData, {
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
       });
 
@@ -103,16 +104,16 @@ export default function ProfilePage() {
       </div>
 
       {/* HEADING */}
-      <div className="w-full text-center !pt-24 !mb-24">
+      <div className="w-full text-center !pt-10 !mb-10">
         <h1 className="!text-[64px] font-black text-[#FACC15] tracking-tight">My Profile</h1>
       </div>
 
       {/* MAIN CONTENT AREA */}
-      <div className="flex-1 flex flex-col lg:flex-row items-center lg:items-start justify-center !gap-x-32 w-full max-w-6xl mx-auto px-10 pb-32">
+      <div className="flex-1 flex flex-col lg:flex-row items-center lg:items-start justify-center !gap-x-32 w-full max-w-6xl mx-auto px-10 pb-0">
         
-        {/* LEFT COLUMN: Avatar Shifted 4 steps right */}
-        <div className="flex flex-col items-center !-mt-10 !ml-45">
-          <div className="relative mb-12 group">
+        {/* LEFT COLUMN: Avatar + Edit/Save buttons */}
+        <div className="flex flex-col items-center justify-between !h-[500px] !-mt-10 !ml-45">
+          <div className="relative group">
             <div className="w-72 h-72 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-zinc-800 bg-[#1E1E1E] shadow-[0_0_60px_rgba(0,0,0,0.6)] flex items-center justify-center">
               {imagePreview ? (
                 <img src={imagePreview} alt="Profile" className="w-full h-full object-cover" />
@@ -127,6 +128,28 @@ export default function ProfilePage() {
               </label>
             )}
           </div>
+          {/* Edit + Save below avatar */}
+          <div className="flex items-center gap-6">
+            <button
+              type="button"
+              onClick={() => { if(isEditing) reset(); setIsEditing(!isEditing); }}
+              className={`!w-[120px] !h-[50px] rounded-[10px] font-black !text-[18px] transition-all active:scale-95 shadow-xl ${
+                isEditing ? 'bg-red-600 text-white' : 'bg-[#0B30D9] text-white'
+              }`}
+            >
+              {isEditing ? "Cancel" : "Edit"}
+            </button>
+            <button
+              type="button"
+              onClick={handleSubmit(onSubmit)}
+              disabled={!isEditing || isLoading}
+              className={`!w-[120px] !h-[50px] bg-[#00CA25] text-white font-black rounded-[10px] !text-[18px] shadow-xl transition-all active:scale-95 ${
+                (!isEditing || isLoading) ? 'opacity-20 cursor-not-allowed' : 'hover:bg-green-500'
+              }`}
+            >
+              {isLoading ? "Wait..." : "Save"}
+            </button>
+          </div>
         </div>
 
         {/* RIGHT COLUMN: Input Fields */}
@@ -138,42 +161,14 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      {/* FIXED FOOTER: Horizontal alignment for ALL buttons */}
-      <div className="fixed bottom-32 left-110 right-40 flex items-center justify-between px-10 z-50">
-        
-        {/* EDIT/SAVE BUTTONS: Horizontal row with left gap */}
-        <div className="flex flex-row items-center gap-6 ml-10">
-          <button
-            type="button"
-            onClick={() => { if(isEditing) reset(); setIsEditing(!isEditing); }}
-            className={`!w-[160px] !h-[60px] rounded-[20px] font-black !text-[22px] transition-all active:scale-95 shadow-xl ${
-              isEditing ? 'bg-red-600 text-white' : 'bg-[#0B30D9] text-white'
-            }`}
-          >
-            {isEditing ? "Cancel" : "Edit"}
-          </button>
-          
-          <button
-            type="button"
-            onClick={handleSubmit(onSubmit)}
-            disabled={!isEditing || isLoading}
-            className={`!w-[160px] !h-[60px] bg-[#00CA25] text-white font-black rounded-[20px] !text-[22px] shadow-xl transition-all active:scale-95 ${
-              (!isEditing || isLoading) ? 'opacity-20 cursor-not-allowed' : 'hover:bg-green-500'
-            }`}
-          >
-            {isLoading ? "Wait..." : "Save"}
-          </button>
-        </div>
-
-        {/* LOGOUT BUTTON: Fixed in corner, aligned with row above */}
-        <button 
-          type="button"
-          onClick={logout}
-          className="bg-[#EAE5DF] hover:bg-white text-[#4A171E] !px-8 !h-[45px] rounded-[6px] font-black !text-[14px] shadow-2xl uppercase tracking-widest transition-all active:scale-95 border border-zinc-300 mr-10"
-        >
-          Logout
-        </button>
-      </div>
+      {/* LOGOUT: fixed 20px from bottom-right */}
+      <button 
+        type="button"
+        onClick={logout}
+        className="fixed bottom-[20px] right-10 bg-[#EAE5DF] hover:bg-white text-[#4A171E] !px-8 !h-[45px] rounded-[6px] font-black !text-[14px] shadow-2xl uppercase tracking-widest transition-all active:scale-95 border border-zinc-300 z-50"
+      >
+        Logout
+      </button>
     </div>
   );
 }

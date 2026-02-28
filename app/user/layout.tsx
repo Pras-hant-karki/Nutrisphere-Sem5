@@ -92,7 +92,7 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
       </aside>
 
       <div className="flex-1 flex flex-col h-screen">
-        <main className="flex-1 overflow-y-auto bg-[#260C0C]">
+        <main className="flex-1 overflow-y-auto bg-[#0A0705]">
           {children}
         </main>
       </div>
