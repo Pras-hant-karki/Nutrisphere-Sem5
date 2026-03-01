@@ -59,6 +59,8 @@ export default function AdminSessionsPage() {
   const [timePickerOpen, setTimePickerOpen] = useState(false);
   const [startTime, setStartTime] = useState("07:00");
   const [endTime, setEndTime] = useState("08:30");
+  const [deleteTarget, setDeleteTarget] = useState<SessionItem | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const formatTime = (t: string) => {
     const [hStr, mStr] = t.split(":");
@@ -178,15 +180,18 @@ export default function AdminSessionsPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Delete this session?")) return;
     try {
+      setIsDeleting(true);
       const token = getToken();
       await axios.delete(buildApiUrl(`/api/sessions/admin/${id}`), {
         headers: { Authorization: `Bearer ${token}` },
       });
+      setDeleteTarget(null);
       await fetchSessions();
     } catch (err: any) {
       setError(err.response?.data?.message || err.message || "Failed to delete session");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -238,7 +243,7 @@ export default function AdminSessionsPage() {
             <div className="relative">
               <button
                 onClick={() => setDayDropdownOpen((o) => !o)}
-                className="h-[40px] px-4 pr-3 rounded-xl border-2 border-[#FACC15]/60 bg-[#1E1E1E] text-white font-bold text-[15px] outline-none flex items-center gap-2 min-w-[150px] justify-between hover:border-[#FACC15] transition-all"
+                className="h-[44px] px-5 pr-4 rounded-[15px] border-2 border-[#FACC15]/60 bg-[#1E1E1E] text-white font-bold text-[15px] outline-none flex items-center gap-3 min-w-[170px] justify-between hover:border-[#FACC15] transition-all"
               >
                 <span>{selectedDay === "All" ? "All Days" : selectedDay}</span>
                 <ChevronDown
@@ -265,7 +270,7 @@ export default function AdminSessionsPage() {
             </div>
             <button
               onClick={openCreate}
-              className="inline-flex items-center gap-2 h-[35px] px-8 rounded-xl bg-[#FACC15] text-black font-black text-[16px] hover:bg-yellow-300 transition-all shadow-lg"
+              className="inline-flex items-center gap-3 h-[44px] px-8 rounded-[15px] bg-[#FACC15] text-black font-black text-[16px] hover:bg-yellow-300 transition-all shadow-lg"
             >
               <Plus size={20} strokeWidth={3} />
               Add Session
@@ -334,7 +339,7 @@ export default function AdminSessionsPage() {
                               className="w-[32px] h-[32px] flex items-center justify-center rounded-lg text-white/40 hover:text-[#FACC15] hover:bg-[#FACC15]/10 transition-all">
                               <Pencil size={14} />
                             </button>
-                            <button onClick={() => handleDelete(session._id)} title="Delete"
+                            <button onClick={() => setDeleteTarget(session)} title="Delete"
                               className="w-[32px] h-[32px] flex items-center justify-center rounded-lg text-red-500/50 hover:text-red-400 hover:bg-red-500/10 transition-all">
                               <Trash2 size={14} />
                             </button>
@@ -534,6 +539,31 @@ export default function AdminSessionsPage() {
             </div>
 
           </div>
+          </div>
+        </div>
+      )}
+
+      {deleteTarget && (
+        <div className="fixed inset-0 bg-black/90 z-[100] flex items-center justify-center p-4">
+          <div className="bg-[#1E1E1E] p- min-h-[170px] rounded-2xl max-w-sm w-full text-center border border-white/10 flex flex-col justify-center">
+            <h3 className="text-xl font-bold mb-4">Are you sure?</h3>
+            <p className="text-gray-400 mb-7 font-normal">You want to delete this session?</p>
+            <div className="flex items-center justify-center gap-4 mt-1">
+              <button
+                onClick={() => setDeleteTarget(null)}
+                disabled={isDeleting}
+                className="w-[100px] py-2.5 rounded-[8px] bg-white/5 hover:bg-white/10 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleDelete(deleteTarget._id)}
+                disabled={isDeleting}
+                className="w-[100px] py-2.5 rounded-[8px] bg-red-600 hover:bg-red-700 font-bold transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {isDeleting ? "Deleting..." : "Delete"}
+              </button>
+            </div>
           </div>
         </div>
       )}

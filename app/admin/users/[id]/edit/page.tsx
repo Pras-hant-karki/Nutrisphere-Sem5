@@ -163,23 +163,24 @@ export default function EditUserPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0F1310] p-4 md:p-8">
-      <div className="mx-auto max-w-4xl">
+    <div className="bg-[#0A0705] min-h-screen">
+      <div className="!ml-[40px] pl-10 pr-12 pt-16 pb-12">
+        <div className="mx-auto w-full max-w-5xl">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-10">
           <Link
             href="/admin/users"
             className="text-[#2ECC71] hover:text-[#26c969] text-sm mb-4 inline-flex items-center gap-2 font-semibold"
           >
             ← Back to Users
           </Link>
-          <h1 className="text-4xl font-bold text-[#D4AF37] mt-4">Edit User</h1>
-          <p className="text-[#9FB3A6] mt-2">Update user information</p>
+          <h1 className="text-4xl font-extrabold text-[#D4AF37] mt-4 tracking-tight">Edit User</h1>
+          <p className="text-[#9FB3A6] mt-2 text-base">Update user information</p>
         </div>
 
         {/* Error Message */}
         {error && (
-          <div className="mb-6 p-4 rounded-lg bg-[#E53935]/10 text-[#E53935] border border-[#E53935]/30">
+          <div className="mb-8 p-5 rounded-xl bg-[#E53935]/10 text-[#E53935] border border-[#E53935]/30">
             {error}
           </div>
         )}
@@ -187,7 +188,7 @@ export default function EditUserPage() {
         {/* Success/Error Message */}
         {message && (
           <div
-            className={`mb-6 p-4 rounded-lg border ${
+            className={`mb-8 p-5 rounded-xl border ${
               message.type === "success"
                 ? "bg-[#2ECC71]/10 text-[#2ECC71] border-[#2ECC71]/30"
                 : "bg-[#E53935]/10 text-[#E53935] border-[#E53935]/30"
@@ -199,7 +200,7 @@ export default function EditUserPage() {
 
         {/* Loading State */}
         {isLoading && (
-          <div className="p-8 text-center text-[#9FB3A6] rounded-lg border border-[#26322B] bg-[#171C18]">
+          <div className="py-16 text-center text-[#9FB3A6] rounded-2xl border border-[#26322B] bg-[#171C18] shadow-xl">
             Loading user details...
           </div>
         )}
@@ -207,10 +208,10 @@ export default function EditUserPage() {
         {/* Edit Form */}
         {!isLoading && user && (
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="rounded-lg border border-[#26322B] bg-[#171C18] p-6 md:p-8 shadow-lg">
-              <div className="space-y-6">
+            <div className="rounded-2xl border border-[#26322B] bg-[#171C18] p-8 md:p-10 shadow-xl">
+              <div className="space-y-8">
                 {/* Profile Image */}
-                <div className="pb-6 border-b border-[#26322B]">
+                <div className="pb-8 border-b border-[#26322B]">
                   <label className="block text-sm font-bold text-[#D4AF37] mb-4">
                     Profile Image
                   </label>
@@ -236,7 +237,7 @@ export default function EditUserPage() {
                       />
                       <label
                         htmlFor="image"
-                        className="cursor-pointer px-4 py-2 rounded-lg bg-[#26322B] text-[#9FB3A6] hover:bg-[#2E3A33] hover:text-[#FFFFFF] transition-all inline-block font-semibold"
+                        className="cursor-pointer px-5 py-2.5 rounded bg-[#26322B] text-[#9FB3A6] hover:bg-[#2E3A33] hover:text-[#FFFFFF] transition-all inline-block font-semibold"
                       >
                         📁 Choose Image
                       </label>
@@ -248,7 +249,7 @@ export default function EditUserPage() {
                 </div>
 
                 {/* Form Fields */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
                   {/* Full Name */}
                   <div>
                     <label
@@ -261,7 +262,7 @@ export default function EditUserPage() {
                       type="text"
                       id="fullName"
                       {...register("fullName")}
-                      className="w-full px-4 py-3 rounded-lg bg-[#1B211D] border border-[#26322B] text-[#FFFFFF] placeholder-[#9FB3A6]/50 focus:border-[#D4AF37] focus:outline-none transition-colors"
+                      className="w-full px-5 py-5 rounded-[5px] bg-[#1B211D] border border-[#26322B] text-[#FFFFFF] placeholder-[#9FB3A6]/50 focus:border-[#D4AF37] focus:outline-none transition-colors"
                       placeholder="Enter full name"
                     />
                     {errors.fullName && (
@@ -283,7 +284,7 @@ export default function EditUserPage() {
                       type="email"
                       id="email"
                       {...register("email")}
-                      className="w-full px-4 py-3 rounded-lg bg-[#1B211D] border border-[#26322B] text-[#FFFFFF] placeholder-[#9FB3A6]/50 focus:border-[#D4AF37] focus:outline-none transition-colors"
+                      className="w-full px-5 py-5 rounded-[5px] bg-[#1B211D] border border-[#26322B] text-[#FFFFFF] placeholder-[#9FB3A6]/50 focus:border-[#D4AF37] focus:outline-none transition-colors"
                       placeholder="Enter email"
                     />
                     {errors.email && (
@@ -305,7 +306,7 @@ export default function EditUserPage() {
                       type="tel"
                       id="phone"
                       {...register("phone")}
-                      className="w-full px-4 py-3 rounded-lg bg-[#1B211D] border border-[#26322B] text-[#FFFFFF] placeholder-[#9FB3A6]/50 focus:border-[#D4AF37] focus:outline-none transition-colors"
+                      className="w-full px-5 py-5 rounded-[5px] bg-[#1B211D] border border-[#26322B] text-[#FFFFFF] placeholder-[#9FB3A6]/50 focus:border-[#D4AF37] focus:outline-none transition-colors"
                       placeholder="Enter phone number"
                     />
                     {errors.phone && (
@@ -326,7 +327,7 @@ export default function EditUserPage() {
                     <select
                       id="role"
                       {...register("role")}
-                      className="w-full px-4 py-3 rounded-lg bg-[#1B211D] border border-[#26322B] text-[#FFFFFF] focus:border-[#D4AF37] focus:outline-none transition-colors"
+                      className="w-full px-5 py-5 rounded-[5px] bg-[#1B211D] border border-[#26322B] text-[#FFFFFF] focus:border-[#D4AF37] focus:outline-none transition-colors"
                     >
                       <option value="user">👤 User</option>
                       <option value="admin">👑 Admin</option>
@@ -340,7 +341,7 @@ export default function EditUserPage() {
                 </div>
 
                 {/* Active Status */}
-                <div className="flex items-center gap-3 p-4 rounded-lg bg-[#1B211D] border border-[#26322B]">
+                <div className="flex items-center gap-3 p-4 min-h-[52px] rounded-[5px] bg-[#1B211D] border border-[#26322B]">
                   <input
                     type="checkbox"
                     id="isActive"
@@ -356,17 +357,17 @@ export default function EditUserPage() {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex gap-3 pt-6 border-t border-[#26322B]">
+                <div className="flex gap-3 pt-8 border-t border-[#26322B]">
                   <button
                     type="submit"
                     disabled={isSaving}
-                    className="px-6 py-3 rounded-lg bg-[#2ECC71] text-[#0F1310] font-bold hover:bg-[#26c969] transition-all shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="px-7 py-3 rounded bg-[#2ECC71] text-[#0F1310] font-bold hover:bg-[#26c969] transition-all shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     {isSaving ? "Saving..." : "💾 Save Changes"}
                   </button>
                   <Link
                     href={`/admin/users/${userId}`}
-                    className="px-6 py-3 rounded-lg border border-[#26322B] text-[#9FB3A6] font-semibold hover:bg-[#1B211D] hover:text-[#FFFFFF] transition-all"
+                    className="px-7 py-3 rounded border border-[#26322B] text-[#9FB3A6] font-semibold hover:bg-[#1B211D] hover:text-[#FFFFFF] transition-all"
                   >
                     Cancel
                   </Link>
@@ -375,6 +376,7 @@ export default function EditUserPage() {
             </div>
           </form>
         )}
+        </div>
       </div>
     </div>
   );
