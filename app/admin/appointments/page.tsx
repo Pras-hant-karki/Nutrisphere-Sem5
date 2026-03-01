@@ -1,189 +1,71 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { Calendar, CheckCircle2, Clock3, MapPin, XCircle } from "lucide-react";
-import { getToken } from "@/lib/auth-helpers";
-import { buildApiUrl } from "@/lib/api/base-url";
+import { ChevronRight, ClipboardList, UserRoundSearch } from "lucide-react";
+import { useRouter } from "next/navigation";
+import NotificationBell from "@/app/components/notification-bell";
 
-type Appointment = {
-  _id: string;
-  userId?: {
-    fullName?: string;
-    email?: string;
-    phone?: string;
-  };
-  trainingType: string;
-  goal: string;
-  preferredDate: string;
-  preferredTime: string;
-  country?: string;
-  status: "pending" | "approved" | "rescheduled" | "cancelled";
-  specialRequest?: string;
-  createdAt: string;
-};
+export default function AdminAppointmentsHubPage() {
+	const router = useRouter();
 
-export default function AdminAppointmentsPage() {
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [actingId, setActingId] = useState<string | null>(null);
+	const cards = [
+		{
+			title: "View Appointments",
+			subtitle: "View and reply to appointment requests from users",
+			icon: UserRoundSearch,
+			href: "/admin/appointments/view_appointments",
+		},
+		{
+			title: "View Plan Requests",
+			subtitle: "View and reply to plan requests from users",
+			icon: ClipboardList,
+			href: "/admin/appointments/plan_requests",
+		},
+	];
 
-  useEffect(() => {
-    fetchAppointments();
-  }, []);
+	return (
+		<div className="min-h-screen bg-[#0A0705] text-white flex flex-col relative font-sans overflow-x-hidden">
+			<NotificationBell className="absolute top-8 right-10 z-50" />
 
-  const fetchAppointments = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const token = getToken();
-      const response = await axios.get(buildApiUrl("/api/appointments/admin"), {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setAppointments(response.data?.data || []);
-    } catch (err: any) {
-      setError(err.response?.data?.message || err.message || "Failed to load appointments");
-    } finally {
-      setLoading(false);
-    }
-  };
+			<div className="w-full text-center !pt-24 !mb-20">
+				<h1 className="!text-[64px] font-black text-[#FACC15] tracking-tight leading-none">
+					Appointments &amp; Plans
+				</h1>
+			</div>
 
-  const approveAppointment = async (id: string) => {
-    try {
-      setActingId(id);
-      setError(null);
-      const token = getToken();
-      await axios.put(
-        buildApiUrl(`/api/appointments/admin/${id}/approve`),
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      await fetchAppointments();
-    } catch (err: any) {
-      setError(err.response?.data?.message || err.message || "Failed to approve appointment");
-    } finally {
-      setActingId(null);
-    }
-  };
+			<div className="flex-1 flex flex-col items-center gap-y-8 w-full max-w-6xl mx-auto px-10 pb-20">
+				{cards.map((card) => {
+					const IconComponent = card.icon;
 
-  const cancelAppointment = async (id: string) => {
-    const reason = prompt("Enter cancellation reason:");
-    if (!reason) return;
+					return (
+						<div
+							key={card.title}
+							onClick={() => router.push(card.href)}
+							className="group flex items-center w-full max-w-[800px] !h-[120px] bg-[#1E1E1E] border-2 border-[#FACC15] rounded-[24px] overflow-hidden transition-all duration-300 hover:ring-4 hover:ring-[#FACC15]/10 cursor-pointer"
+						>
+							<div className="flex justify-center items-center min-w-[100px] text-white border-r border-white/10 h-full">
+								<IconComponent size={32} strokeWidth={2} />
+							</div>
 
-    try {
-      setActingId(id);
-      setError(null);
-      const token = getToken();
-      await axios.put(
-        buildApiUrl(`/api/appointments/admin/${id}/cancel`),
-        { reason },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      await fetchAppointments();
-    } catch (err: any) {
-      setError(err.response?.data?.message || err.message || "Failed to cancel appointment");
-    } finally {
-      setActingId(null);
-    }
-  };
+							<div className="flex-1 flex flex-col justify-center px-8 min-w-0">
+								<h2 className="!text-[24px] font-bold text-[#FACC15] leading-tight">
+									{card.title}
+								</h2>
+								<p className="text-[16px] text-gray-400 mt-1 font-medium line-clamp-1">
+									{card.subtitle}
+								</p>
+							</div>
 
-  return (
-    <div className="mx-auto w-full max-w-6xl">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-[#D4AF37]">Appointments</h1>
-        <p className="text-[#9FB3A6] mt-2">Manage appointment requests from users</p>
-      </div>
-
-      {error && (
-        <div className="mb-6 rounded-lg border border-[#E53935]/30 bg-[#E53935]/10 p-4 text-[#ff8c8c]">
-          {error}
-        </div>
-      )}
-
-      {loading ? (
-        <div className="rounded-xl border border-[#26322B] bg-[#171C18] p-6 text-[#9FB3A6]">
-          Loading appointments...
-        </div>
-      ) : appointments.length === 0 ? (
-        <div className="rounded-xl border border-[#26322B] bg-[#171C18] p-10 text-center text-[#9FB3A6]">
-          No appointment requests found.
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {appointments.map((item) => (
-            <div
-              key={item._id}
-              className="rounded-xl border border-[#26322B] bg-[#171C18] p-5 hover:border-[#D4AF37]/30 transition-colors"
-            >
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                <div className="space-y-2 min-w-0">
-                  <p className="text-lg font-semibold text-white truncate">
-                    {item.userId?.fullName || "Unknown User"}
-                  </p>
-                  <p className="text-sm text-[#9FB3A6]">{item.userId?.email || "No email"}</p>
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-[#9FB3A6]">
-                    <span className="inline-flex items-center gap-1">
-                      <Calendar size={14} className="text-[#D4AF37]" />
-                      {item.preferredDate}
-                    </span>
-                    <span className="inline-flex items-center gap-1">
-                      <Clock3 size={14} className="text-[#D4AF37]" />
-                      {item.preferredTime}
-                    </span>
-                    {item.country && (
-                      <span className="inline-flex items-center gap-1">
-                        <MapPin size={14} className="text-[#D4AF37]" />
-                        {item.country}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-sm text-[#C8D2CC]">Training: {item.trainingType}</p>
-                  <p className="text-sm text-[#C8D2CC]">Goal: {item.goal}</p>
-                  {item.specialRequest && (
-                    <p className="text-sm text-[#9FB3A6]">Request: {item.specialRequest}</p>
-                  )}
-                </div>
-
-                <div className="flex flex-col items-start lg:items-end gap-3">
-                  <span
-                    className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold border ${
-                      item.status === "pending"
-                        ? "border-[#D4AF37]/40 bg-[#D4AF37]/15 text-[#D4AF37]"
-                        : item.status === "approved"
-                        ? "border-[#2ECC71]/40 bg-[#2ECC71]/15 text-[#2ECC71]"
-                        : "border-[#7C8C83]/40 bg-[#7C8C83]/15 text-[#9FB3A6]"
-                    }`}
-                  >
-                    {item.status}
-                  </span>
-
-                  {item.status === "pending" && (
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => approveAppointment(item._id)}
-                        disabled={actingId === item._id}
-                        className="inline-flex items-center gap-2 rounded-lg bg-[#2ECC71] px-3 py-2 text-sm font-semibold text-[#0F1310] hover:bg-[#26c969] disabled:opacity-60"
-                      >
-                        <CheckCircle2 size={16} />
-                        Approve
-                      </button>
-                      <button
-                        onClick={() => cancelAppointment(item._id)}
-                        disabled={actingId === item._id}
-                        className="inline-flex items-center gap-2 rounded-lg bg-[#E53935] px-3 py-2 text-sm font-semibold text-white hover:bg-[#d12d2d] disabled:opacity-60"
-                      >
-                        <XCircle size={16} />
-                        Cancel
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
+							<div className="pr-10">
+								<ChevronRight
+									size={32}
+									strokeWidth={2.5}
+									className="text-gray-500 group-hover:text-white transition-colors"
+								/>
+							</div>
+						</div>
+					);
+				})}
+			</div>
+		</div>
+	);
 }

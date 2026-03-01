@@ -2,10 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { Bell, CalendarClock, ChevronDown, ChevronLeft, Pencil, Plus, Power, Trash2, X } from "lucide-react";
+import { CalendarClock, ChevronDown, ChevronLeft, Pencil, Plus, Power, Trash2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { getToken } from "@/lib/auth-helpers";
 import { buildApiUrl } from "@/lib/api/base-url";
+import NotificationBell from "@/app/components/notification-bell";
 
 type SessionItem = {
   _id: string;
@@ -213,12 +214,7 @@ export default function AdminSessionsPage() {
     <div className="relative min-h-screen w-full bg-[#0A0705] text-white font-sans overflow-x-hidden">
 
       {/* NOTIFICATION BELL */}
-      <div className="absolute top-8 right-10 z-50">
-        <div className="relative bg-white !p-4 rounded-full shadow-2xl cursor-pointer hover:scale-105 transition-all">
-          <Bell className="text-black w-7 h-7" />
-          <span className="absolute top-0 right-0 bg-red-600 text-white text-[12px] font-black w-6 h-6 flex items-center justify-center rounded-full border-2 border-black">1</span>
-        </div>
-      </div>
+      <NotificationBell className="absolute top-8 right-10 z-50" />
 
       <div className="relative z-10 !ml-[40px] pl-10 pr-12">
         <div className="mx-auto w-full max-w-5xl">

@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Clock3, UserRound, ChevronLeft, Maximize2, X, Bell } from "lucide-react";
+import { Clock3, UserRound, ChevronLeft, Maximize2, X } from "lucide-react";
 import axios from "axios";
 import { API_BASE_URL, buildApiUrl } from "@/lib/api/base-url";
 import { useRouter } from "next/navigation";
+import NotificationBell from "@/app/components/notification-bell";
 
 interface FitnessContent {
   _id: string;
@@ -63,12 +64,7 @@ export default function FitnessPostsPage() {
   if (loading) {
     return (
       <div className="!ml-[40px] !mr-[80px] min-h-screen bg-[#0A0705] relative">
-        <div className="absolute top-8 right-10 z-50">
-          <div className="relative bg-white !p-4 rounded-full shadow-2xl cursor-pointer hover:scale-105 transition-all">
-            <Bell className="text-black w-7 h-7" />
-            <span className="absolute top-0 right-0 bg-red-600 text-white text-[12px] font-black w-6 h-6 flex items-center justify-center rounded-full border-2 border-black">1</span>
-          </div>
-        </div>
+        <NotificationBell className="absolute top-8 right-10 z-50" />
         <div className="!pt-4 pb-12">
         <div className="flex items-center justify-between px-4 !mb-8">
           <button onClick={() => router.push("/user/home")} className="text-[#FACC15] hover:scale-110 transition-transform">
@@ -99,12 +95,7 @@ export default function FitnessPostsPage() {
   if (error) {
     return (
       <div className="!ml-[40px] !mr-[80px] min-h-screen bg-[#0A0705] relative">
-        <div className="absolute top-8 right-10 z-50">
-          <div className="relative bg-white !p-4 rounded-full shadow-2xl cursor-pointer hover:scale-105 transition-all">
-            <Bell className="text-black w-7 h-7" />
-            <span className="absolute top-0 right-0 bg-red-600 text-white text-[12px] font-black w-6 h-6 flex items-center justify-center rounded-full border-2 border-black">1</span>
-          </div>
-        </div>
+        <NotificationBell className="absolute top-8 right-10 z-50" />
         <div className="!pt-4 pb-12">
         <div className="flex items-center justify-between px-4 !mb-8">
           <button onClick={() => router.push("/user/home")} className="text-[#FACC15] hover:scale-110 transition-transform">
@@ -137,12 +128,7 @@ export default function FitnessPostsPage() {
   if (content.length === 0) {
     return (
       <div className="!ml-[40px] !mr-[80px] min-h-screen bg-[#0A0705] relative">
-        <div className="absolute top-8 right-10 z-50">
-          <div className="relative bg-white !p-4 rounded-full shadow-2xl cursor-pointer hover:scale-105 transition-all">
-            <Bell className="text-black w-7 h-7" />
-            <span className="absolute top-0 right-0 bg-red-600 text-white text-[12px] font-black w-6 h-6 flex items-center justify-center rounded-full border-2 border-black">1</span>
-          </div>
-        </div>
+        <NotificationBell className="absolute top-8 right-10 z-50" />
         <div className="!pt-4 pb-12">
         <div className="flex items-center justify-between px-4 !mb-8">
           <button onClick={() => router.push("/user/home")} className="text-[#FACC15] hover:scale-110 transition-transform">
@@ -169,12 +155,7 @@ export default function FitnessPostsPage() {
 
   return (
     <div className="!ml-[40px] !mr-[80px] min-h-screen bg-[#0A0705] relative">
-      <div className="absolute top-8 right-10 z-50">
-        <div className="relative bg-white !p-4 rounded-full shadow-2xl cursor-pointer hover:scale-105 transition-all">
-          <Bell className="text-black w-7 h-7" />
-          <span className="absolute top-0 right-0 bg-red-600 text-white text-[12px] font-black w-6 h-6 flex items-center justify-center rounded-full border-2 border-black">1</span>
-        </div>
-      </div>
+      <NotificationBell className="absolute top-8 right-10 z-50" />
       <div className="!pt-4 pb-12">
       <div className="flex items-center justify-between px-4 !mb-8">
         <button onClick={() => router.push("/user/home")} className="text-[#FACC15] hover:scale-110 transition-transform">

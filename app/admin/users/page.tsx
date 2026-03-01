@@ -154,9 +154,9 @@ export default function UsersPage() {
             <div className="flex flex-col items-center justify-center py-24 gap-4 rounded-2xl border border-[#26322B] bg-[#171C18]">
               <span className="text-5xl">👤</span>
               <p className="text-[#9FB3A6] text-base font-medium">No users found</p>
-              <Link href="/admin/users/create" className="px-5 py-2 rounded-lg bg-[#2ECC71] text-[#0F1310] font-bold text-sm hover:bg-[#26c969] transition-all">
-                Create First User
-              </Link>
+              <p className="text-[#9FB3A6] text-sm text-center max-w-md">
+                Users are created automatically when they sign up.
+              </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4">

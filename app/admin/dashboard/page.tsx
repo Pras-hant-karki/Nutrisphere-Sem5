@@ -1,7 +1,8 @@
 "use client";
 
-import { Calendar, ChevronRight, Users, UserCircle, Bell } from "lucide-react";
+import { Calendar, ChevronRight, Users, UserCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
+import NotificationBell from "@/app/components/notification-bell";
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -23,7 +24,7 @@ export default function AdminDashboard() {
       title: "My Bio",
       subtitle: "Manage your trainer bio and profile",
       icon: UserCircle,
-      href: "/admin/profile",
+      href: "/admin/my_bio",
     },
   ];
 
@@ -31,12 +32,7 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-[#0A0705] text-white flex flex-col relative font-sans overflow-x-hidden">
 
       {/* NOTIFICATION BELL */}
-      <div className="absolute top-8 right-10 z-50">
-        <div className="relative bg-white !p-4 rounded-full shadow-2xl cursor-pointer hover:scale-105 transition-all">
-          <Bell className="text-black w-7 h-7" />
-          <span className="absolute top-0 right-0 bg-red-600 text-white text-[12px] font-black w-6 h-6 flex items-center justify-center rounded-full border-2 border-black">1</span>
-        </div>
-      </div>
+      <NotificationBell className="absolute top-8 right-10 z-50" />
 
       {/* HEADING */}
       <div className="w-full text-center !pt-24 !mb-20">
