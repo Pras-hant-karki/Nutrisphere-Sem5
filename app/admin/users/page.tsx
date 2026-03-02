@@ -3,8 +3,11 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import axios from "axios";
+import { ChevronLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { getToken } from "@/lib/auth-helpers";
 import { API_BASE_URL, buildApiUrl } from "@/lib/api/base-url";
+import NotificationBell from "@/app/components/notification-bell";
 
 interface User {
   _id: string;
@@ -17,6 +20,7 @@ interface User {
 }
 
 export default function UsersPage() {
+  const router = useRouter();
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -105,14 +109,27 @@ export default function UsersPage() {
   };
 
   return (
-    <div className="bg-[#0A0705] min-h-screen">
-      <div className="!ml-[40px] pl-10 pr-12 pt-16 pb-12">
+    <div className="bg-[#0A0705] min-h-screen relative">
+      <NotificationBell className="absolute top-8 right-10 z-50" />
+
+      <div className="!ml-[40px] pl-10 pr-12 pb-12">
         <div className="mx-auto w-full max-w-5xl">
 
-          {/* Header - Updated spacing and removed Admin Panel text */}
-          <div className="flex flex-col items-center text-center gap-1">
+          <div className="flex items-center justify-between !pt-20 !mb-2">
+            <button
+              onClick={() => router.push("/admin/dashboard")}
+              className="text-[#FACC15] hover:scale-110 transition-transform"
+            >
+              <ChevronLeft size={48} strokeWidth={3} />
+            </button>
+            <h1 className="!text-[56px] font-black text-[#FACC15] tracking-tight text-center flex-1">
+              Users Management
+            </h1>
+            <div className="w-12" />
+          </div>
+
+          <div className="flex flex-col items-center text-center gap-1 mt-2">
             <div>
-              <h1 className="text-4xl font-extrabold text-[#D4AF37] mb-2 tracking-tight">Users Management</h1>
               <p className="text-[#9FB3A6] text-sm">View, manage and control all registered system users.</p>
             </div>
           </div>
@@ -212,13 +229,13 @@ export default function UsersPage() {
                     <div className="sm:col-span-1 flex items-center gap-2 sm:justify-end sm:pr-3 md:pr-4 flex-wrap">
                       <Link
                         href={`/admin/users/${user._id}`}
-                        className="px-6 py-2.5 rounded bg-[#2ECC71]/10 text-[#2ECC71] border border-[#2ECC71]/30 text-sm font-bold hover:bg-[#2ECC71]/20 transition-all"
+                        className="inline-flex min-w-[85px] justify-center items-center h-[32px] px-3 rounded-[10px] bg-[#3B82F6]/12 text-[#93C5FD] border border-[#60A5FA]/35 text-xs font-bold hover:bg-[#3B82F6]/20 transition-all"
                       >
                         View
                       </Link>
                       <button
                         onClick={() => setDeleteTarget(user)}
-                        className="px-6 py-2.5 rounded bg-[#E53935]/10 text-[#E53935] border border-[#E53935]/30 text-sm font-bold hover:bg-[#E53935]/20 transition-all"
+                        className="inline-flex min-w-[85px] justify-center items-center h-[32px] px-3 rounded-[10px] bg-[#EF4444]/12 text-[#FCA5A5] border border-[#EF4444]/35 text-xs font-bold hover:bg-[#EF4444]/20 transition-all"
                       >
                         Delete
                       </button>

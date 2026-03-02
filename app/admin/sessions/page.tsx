@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { CalendarClock, ChevronDown, ChevronLeft, Pencil, Plus, Power, Trash2, X } from "lucide-react";
+import { CalendarClock, Check, ChevronDown, ChevronLeft, Pencil, Plus, Power, Trash2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { getToken } from "@/lib/auth-helpers";
 import { buildApiUrl } from "@/lib/api/base-url";
@@ -62,6 +62,7 @@ export default function AdminSessionsPage() {
   const [endTime, setEndTime] = useState("08:30");
   const [deleteTarget, setDeleteTarget] = useState<SessionItem | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const formatTime = (t: string) => {
     const [hStr, mStr] = t.split(":");
@@ -80,6 +81,20 @@ export default function AdminSessionsPage() {
   useEffect(() => {
     fetchSessions();
   }, []);
+
+  useEffect(() => {
+    if (!successMessage) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setSuccessMessage(null);
+    }, 3000);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [successMessage]);
 
   const groupedSessions = useMemo(() => {
     const map: Record<string, SessionItem[]> = {};
@@ -147,6 +162,8 @@ export default function AdminSessionsPage() {
     try {
       setSaving(true);
       setError(null);
+      setSuccessMessage(null);
+      const isCreating = !editing;
       const token = getToken();
       const parsed = parseDetails(form.details);
       const payload = {
@@ -173,6 +190,9 @@ export default function AdminSessionsPage() {
       setEditing(null);
       setForm(emptyForm);
       await fetchSessions();
+      if (isCreating) {
+        setSuccessMessage("Session added sucessfully");
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || err.message || "Failed to save session");
     } finally {
@@ -219,6 +239,15 @@ export default function AdminSessionsPage() {
       <div className="relative z-10 !ml-[40px] pl-10 pr-12">
         <div className="mx-auto w-full max-w-5xl">
 
+          {successMessage && (
+            <div className="mb-4 flex justify-center">
+              <div className="inline-flex min-h-[56px] min-w-[360px] items-center justify-center gap-2 rounded-[20px] border border-[#15803D] bg-[#4ADE80] px-6 py-4 text-[18px] font-normal text-black shadow-lg">
+                <Check size={18} className="text-black" strokeWidth={2.25} />
+                <span className="font-normal text-black">{successMessage}</span>
+              </div>
+            </div>
+          )}
+
           {/* HEADER */}
           <div className="flex items-center justify-between !pt-20 !mb-6">
             <button
@@ -239,13 +268,13 @@ export default function AdminSessionsPage() {
             <div className="relative">
               <button
                 onClick={() => setDayDropdownOpen((o) => !o)}
-                className="h-[44px] px-5 pr-4 rounded-[15px] border-2 border-[#FACC15]/60 bg-[#1E1E1E] text-white font-bold text-[15px] outline-none flex items-center gap-3 min-w-[170px] justify-between hover:border-[#FACC15] transition-all"
+                className="inline-flex min-w-[170px] justify-between items-center gap-2 h-[46px] px-7 rounded-[14px] bg-[#3B82F6]/12 text-[#93C5FD] border border-[#60A5FA]/35 text-base font-bold hover:bg-[#3B82F6]/20 transition-all outline-none"
               >
                 <span>{selectedDay === "All" ? "All Days" : selectedDay}</span>
                 <ChevronDown
                   size={16}
                   strokeWidth={3}
-                  className={`text-[#FACC15] transition-transform duration-200 ${dayDropdownOpen ? "rotate-180" : ""}`}
+                  className={`text-[#93C5FD] transition-transform duration-200 ${dayDropdownOpen ? "rotate-180" : ""}`}
                 />
               </button>
               {dayDropdownOpen && (
@@ -266,9 +295,9 @@ export default function AdminSessionsPage() {
             </div>
             <button
               onClick={openCreate}
-              className="inline-flex items-center gap-3 h-[44px] px-8 rounded-[15px] bg-[#FACC15] text-black font-black text-[16px] hover:bg-yellow-300 transition-all shadow-lg"
+              className="inline-flex min-w-[170px] justify-center items-center gap-2 h-[46px] px-7 rounded-[14px] bg-[#3B82F6]/12 text-[#93C5FD] border border-[#60A5FA]/35 text-base font-bold hover:bg-[#3B82F6]/20 transition-all"
             >
-              <Plus size={20} strokeWidth={3} />
+              <Plus size={18} />
               Add Session
             </button>
           </div>
