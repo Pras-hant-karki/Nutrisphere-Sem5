@@ -40,11 +40,19 @@ function ProfileInputField({ icon, disabled, value, placeholder, register, ...pr
 
 export default function ProfilePage() {
   const router = useRouter();
-  const currentUser = getUser();
+  const [currentUser, setCurrentUser] = useState<any>(getUser());
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
+  const resolveImageUrl = (user: any): string | null => {
+    const raw = user?.image || user?.profilePicture;
+    if (!raw || typeof raw !== "string") {
+      return null;
+    }
+    return raw.startsWith("http") ? raw : `${API_BASE_URL}${raw}`;
+  };
 
   const { register, handleSubmit, reset } = useForm<UpdateProfileData>({
     resolver: zodResolver(updateProfileSchema),
@@ -55,10 +63,35 @@ export default function ProfilePage() {
   });
 
   useEffect(() => {
-    if (currentUser?.image) {
-      setImagePreview(`${API_BASE_URL}${currentUser.image}`);
-    }
-  }, [currentUser?.image]);
+    setImagePreview(resolveImageUrl(currentUser));
+  }, [currentUser]);
+
+  useEffect(() => {
+    const syncProfile = async () => {
+      try {
+        const token = getToken();
+        if (!token) return;
+
+        const response = await axios.get(buildApiUrl("/api/auth/me"), {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const serverUser = response.data?.data;
+        if (serverUser) {
+          setCurrentUser(serverUser);
+          setAuth(token, serverUser);
+          reset({
+            fullName: serverUser?.fullName || "",
+            phone: serverUser?.phone || "",
+          });
+        }
+      } catch {
+        // keep existing local user data if sync fails
+      }
+    };
+
+    syncProfile();
+  }, [reset]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -86,6 +119,8 @@ export default function ProfilePage() {
 
       if (response.data.success) {
         if (token) setAuth(token, response.data.user);
+        setCurrentUser(response.data.user);
+        setImagePreview(resolveImageUrl(response.data.user));
         setIsEditing(false);
       }
     } catch (error) {

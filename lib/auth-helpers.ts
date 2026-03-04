@@ -11,6 +11,7 @@ export interface User {
   fullName: string;
   phone?: string;
   image?: string;
+  profilePicture?: string;
 }
 
 const TOKEN_KEY = "auth_token";
