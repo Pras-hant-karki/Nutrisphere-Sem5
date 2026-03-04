@@ -46,3 +46,7 @@ describe("api/auth.ts - Failure Paths", () => {
     await expect(login({ email: "a@a.com", password: "123456" })).rejects.toThrow("network");
   });
 });
+
+// npm test -- --coverage --watchAll=false (frontend to run tests with coverage report)
+// npm test -- --coverage --verbose (backend to run tests with coverage report and verbose output)
+// npm test -- --coverage (simple coverage test both frontend and backend)
