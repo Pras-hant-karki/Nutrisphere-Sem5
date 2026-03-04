@@ -23,6 +23,17 @@ const DAYS_OF_WEEK = [
   "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
 ];
 
+const normalizeSession = (session: any): SessionItem => ({
+  _id: String(session?._id ?? ""),
+  day: typeof session?.day === "string" ? session.day : "",
+  sessionName: typeof session?.sessionName === "string" ? session.sessionName : "",
+  timeRange: typeof session?.timeRange === "string" ? session.timeRange : "",
+  location: typeof session?.location === "string" ? session.location : "",
+  workoutTitle: typeof session?.workoutTitle === "string" ? session.workoutTitle : "",
+  exercises: Array.isArray(session?.exercises) ? session.exercises : [],
+  isActive: Boolean(session?.isActive),
+});
+
 export default function SessionsPage() {
   const router = useRouter();
   const [selectedSession, setSelectedSession] = useState<SessionItem | null>(null);
@@ -33,11 +44,13 @@ export default function SessionsPage() {
   const fetchSessions = useCallback(async () => {
     try {
       setLoading(true);
+      setError(null);
       const token = getToken();
       const response = await axios.get(buildApiUrl("/api/sessions"), {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setSessions(response.data?.data || []);
+      const list = Array.isArray(response.data?.data) ? response.data.data : [];
+      setSessions(list.map(normalizeSession));
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to fetch sessions");
     } finally {
@@ -47,6 +60,16 @@ export default function SessionsPage() {
 
   useEffect(() => {
     fetchSessions();
+  }, [fetchSessions]);
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      fetchSessions();
+    }, 30000);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
   }, [fetchSessions]);
 
   const groupedSessions = useMemo(() => {
@@ -85,6 +108,18 @@ export default function SessionsPage() {
             </h1>
             <div className="w-12" /> 
           </div>
+
+          {error && (
+            <div className="mb-8 rounded-xl border border-red-500/30 bg-red-500/10 px-5 py-3 text-red-400 font-medium flex items-center justify-between gap-3">
+              <span>{error}</span>
+              <button
+                onClick={fetchSessions}
+                className="px-3 py-1.5 rounded-lg bg-red-500/20 hover:bg-red-500/30 text-red-300 text-sm font-semibold transition-colors"
+              >
+                Retry
+              </button>
+            </div>
+          )}
 
           {loading ? (
             <div className="text-center text-[#FACC15] text-xl mt-20 font-bold">Loading schedule...</div>

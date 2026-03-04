@@ -2,6 +2,7 @@
 
 import { FileText, Calendar } from "lucide-react";
 import { useRouter } from "next/navigation";
+import NotificationBell from "@/app/components/notification-bell";
 
 export default function AppointmentsPage() {
   const router = useRouter();
@@ -22,25 +23,27 @@ export default function AppointmentsPage() {
   ];
 
   return (
-    <div className="max-w-4xl mx-auto text-center py-2">
-      <h1 className="text-4xl md:text-5xl font-bold text-[#D4AF37] mb-4">Appointments</h1>
-      <p className="text-[#9FB3A6] mb-12 text-lg">Choose any service below!</p>
+    <div className="min-h-screen bg-[#0A0705] text-white flex flex-col relative font-sans overflow-x-hidden">
+      <NotificationBell className="absolute top-8 right-10 z-50" />
 
-      <div className="space-y-8">
+      <div className="w-full text-center !pt-24 !mb-20">
+        <h1 className="!text-[64px] font-black text-[#FACC15] tracking-tight leading-none">Appointments</h1>
+        <p className="text-[#9FB3A6] mt-2 text-[34px]">Choose any service below!</p>
+      </div>
+
+      <div className="flex-1 flex flex-col items-center gap-y-8 w-full max-w-6xl mx-auto px-10 pb-20">
         {appointmentOptions.map((option) => (
           <div
             key={option.title}
             onClick={() => router.push(option.href)}
-            className="group bg-[#161B17] border border-[#2A3630] rounded-2xl p-8 md:p-10 cursor-pointer transition-all duration-200 hover:border-[#D4AF37]/50 hover:shadow-[0_0_20px_rgba(212,175,55,0.05)]"
+            className="group flex items-center w-full max-w-[800px] !h-[120px] bg-[#1E1E1E] border-2 border-[#FACC15] rounded-[24px] overflow-hidden transition-all duration-300 hover:ring-4 hover:ring-[#FACC15]/10 cursor-pointer"
           >
-            <div className="flex flex-col items-center justify-center gap-5">
-              <div className="w-16 h-16 rounded-xl bg-[#D4AF37]/15 flex items-center justify-center flex-shrink-0 border border-[#D4AF37]/20">
-                <option.icon size={28} className="text-[#D4AF37]" />
-              </div>
-              <div className="flex-1">
-                <h2 className="text-white text-2xl font-semibold mb-3">{option.title}</h2>
-                <p className="text-[#9FB3A6] text-base">{option.description}</p>
-              </div>
+            <div className="flex justify-center items-center min-w-[100px] text-white border-r border-white/10 h-full">
+              <option.icon size={32} strokeWidth={2} />
+            </div>
+            <div className="flex-1 flex flex-col justify-center px-8 min-w-0">
+              <h2 className="!text-[24px] font-bold text-[#FACC15] leading-tight">{option.title}</h2>
+              <p className="text-[16px] text-gray-400 mt-1 font-medium line-clamp-1">{option.description}</p>
             </div>
           </div>
         ))}

@@ -19,6 +19,17 @@ type SessionItem = {
   isActive: boolean;
 };
 
+const normalizeSession = (session: any): SessionItem => ({
+  _id: String(session?._id ?? ""),
+  day: typeof session?.day === "string" ? session.day : "",
+  sessionName: typeof session?.sessionName === "string" ? session.sessionName : "",
+  timeRange: typeof session?.timeRange === "string" ? session.timeRange : "",
+  location: typeof session?.location === "string" ? session.location : "",
+  workoutTitle: typeof session?.workoutTitle === "string" ? session.workoutTitle : "",
+  exercises: Array.isArray(session?.exercises) ? session.exercises : [],
+  isActive: Boolean(session?.isActive),
+});
+
 const daysOfWeek = [
   "Sunday",
   "Monday",
@@ -83,6 +94,16 @@ export default function AdminSessionsPage() {
   }, []);
 
   useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      fetchSessions();
+    }, 30000);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, []);
+
+  useEffect(() => {
     if (!successMessage) {
       return;
     }
@@ -114,7 +135,8 @@ export default function AdminSessionsPage() {
       const response = await axios.get(buildApiUrl("/api/sessions/admin"), {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setSessions(response.data?.data || []);
+      const list = Array.isArray(response.data?.data) ? response.data.data : [];
+      setSessions(list.map(normalizeSession));
     } catch (err: any) {
       setError(err.response?.data?.message || err.message || "Failed to fetch sessions");
     } finally {
