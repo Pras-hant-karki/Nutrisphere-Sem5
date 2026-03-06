@@ -3,13 +3,15 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useTransition } from "react";
+import { useTransition, useState } from "react";
 import { useRouter } from "next/navigation";
 import { RegisterData, registerSchema } from "../schema";
+import { handleRegister } from "@/app/lib/actions/auth-action";
 
 export default function RegisterForm() {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
+  const [error, setError] = useState<string >("");
 
   const {
     register,
@@ -19,11 +21,20 @@ export default function RegisterForm() {
     resolver: zodResolver(registerSchema),
   });
 
-  const submit = (values: RegisterData) => {
-    startTransition(() => {
-      console.log(values);
-      router.push("/login");
-    });
+  const submit = async (values: RegisterData) => {
+    setError("");
+    try{
+      const result = await handleRegister(values);
+      if (result.success) {
+        startTransition(() => {
+          router.push("/login");
+        });
+      } else {
+        setError(result.message || "Registration failed");
+      }
+    }catch(err: Error | any){
+      setError(err.message || "Registration failed");
+    }
   };
 
   return (
@@ -31,16 +42,22 @@ export default function RegisterForm() {
       onSubmit={handleSubmit(submit)}
       className="space-y-4 text-black"
     >
+      {error && (
+        <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {error}
+        </div>
+      )}
+
       {/* Full name */}
       <div>
         <input
-          {...register("name")}
+          {...register("fullName")}
           placeholder="Full name"
           className="w-full h-11 border border-gray-300 rounded-md px-4 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400"
         />
-        {errors.name && (
+        {errors.fullName && (
           <p className="text-sm text-red-500 mt-1">
-            {errors.name.message}
+            {errors.fullName.message}
           </p>
         )}
       </div>
@@ -91,7 +108,7 @@ export default function RegisterForm() {
 
       <button
         disabled={pending}
-        className="w-full h-11 rounded-md bg-orange-500 hover:bg-orange-600 transition text-white font-semibold"
+        className="w-full h-11 rounded-md bg-orange-500 hover:bg-orange-600 transition text-white font-semibold disabled:opacity-50"
       >
         {pending ? "Creating..." : "Create account"}
       </button>
