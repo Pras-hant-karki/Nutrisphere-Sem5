@@ -1,26 +1,125 @@
 @import "tailwindcss";
 
+/* ===============================
+   DESIGN TOKENS 
+   =============================== */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Backgrounds */
+  --bg-main: #0F1310;
+  --bg-card: #171C18;
+  --bg-input: #1B211D;
+
+  /* Text */
+  --text-primary: #FFFFFF;
+  --text-secondary: #9FB3A6;
+  --text-muted: #7C8C83;
+
+  /* Accents */
+  --primary: #2ECC71;
+  --gold: #D4AF37;
+  --border: #26322B;
+  --error: #E53935;
+
+  /* Sizes (Flutter derived) */
+  --input-h: 56px;
+  --button-h: 48px;
+  --radius-lg: 20px;
+
+  /* Spacing */
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 30px;
+
+  /* Fonts */
+  --font-body: "Open Sans", system-ui, sans-serif;
+  --font-display: "Montserrat", system-ui, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ===============================
+   BASE RESET
+   =============================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===============================
+   FORM NORMALIZATION 
+   =============================== */
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
+  font-size: 14px;
+}
+
+/* Remove browser styles */
+input,
+textarea,
+select {
+  appearance: none;
+  background: none;
+}
+
+/* Focus — match with my app */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.15);
+}
+
+/* Autofill fix for dark UI */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--bg-input) inset !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+  caret-color: var(--text-primary);
+}
+
+/* ===============================
+   SCROLLBAR
+   =============================== */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-card);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ===============================
+   SELECTION
+   =============================== */
+::selection {
+  background: var(--primary);
+  color: var(--bg-main);
 }

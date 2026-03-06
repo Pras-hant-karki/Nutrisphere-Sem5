@@ -1,5 +1,5 @@
 "use server";
-import { login, register } from "@/app/lib/api/auth"
+import { login, register } from "@/lib/api/auth"
 import { LoginData, RegisterData } from "@/app/(auth)/schema"
 import { setAuthToken, setUserData, clearAuthCookies } from "../cookie"
 import { redirect } from "next/navigation";
@@ -7,10 +7,13 @@ export const handleRegister = async (data: RegisterData) => {
     try {
         const response = await register(data)
         if (response.success) {
+            await setAuthToken(response.token)
+            await setUserData(response.data)
             return {
                 success: true,
                 message: 'Registration successful',
-                data: response.data
+                data: response.data,
+                token: response.token
             }
         }
         return {
@@ -31,7 +34,8 @@ export const handleLogin = async (data: LoginData) => {
             return {
                 success: true,
                 message: 'Login successful',
-                data: response.data
+                data: response.data,
+                token: response.token
             }
         }
         return {
