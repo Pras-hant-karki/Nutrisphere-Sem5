@@ -1,13 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import axios from "axios";
 import { getUser, getToken, setAuth, logout } from "@/lib/auth-helpers";
-import { Mail, Phone, User, Star, Bell, Camera } from "lucide-react";
+import { Mail, Phone, User, Star, Camera } from "lucide-react";
 import { API_BASE_URL, buildApiUrl } from "@/lib/api/base-url";
+import NotificationBell from "@/app/components/notification-bell";
 
 const updateProfileSchema = z.object({
   fullName: z.string().min(2, "Name too short"),
@@ -37,11 +39,20 @@ function ProfileInputField({ icon, disabled, value, placeholder, register, ...pr
 }
 
 export default function ProfilePage() {
-  const currentUser = getUser();
+  const router = useRouter();
+  const [currentUser, setCurrentUser] = useState<any>(getUser());
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
+  const resolveImageUrl = (user: any): string | null => {
+    const raw = user?.image || user?.profilePicture;
+    if (!raw || typeof raw !== "string") {
+      return null;
+    }
+    return raw.startsWith("http") ? raw : `${API_BASE_URL}${raw}`;
+  };
 
   const { register, handleSubmit, reset } = useForm<UpdateProfileData>({
     resolver: zodResolver(updateProfileSchema),
@@ -52,10 +63,35 @@ export default function ProfilePage() {
   });
 
   useEffect(() => {
-    if (currentUser?.image) {
-      setImagePreview(`${API_BASE_URL}${currentUser.image}`);
-    }
-  }, [currentUser?.image]);
+    setImagePreview(resolveImageUrl(currentUser));
+  }, [currentUser]);
+
+  useEffect(() => {
+    const syncProfile = async () => {
+      try {
+        const token = getToken();
+        if (!token) return;
+
+        const response = await axios.get(buildApiUrl("/api/auth/me"), {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const serverUser = response.data?.data;
+        if (serverUser) {
+          setCurrentUser(serverUser);
+          setAuth(token, serverUser);
+          reset({
+            fullName: serverUser?.fullName || "",
+            phone: serverUser?.phone || "",
+          });
+        }
+      } catch {
+        // keep existing local user data if sync fails
+      }
+    };
+
+    syncProfile();
+  }, [reset]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -83,6 +119,8 @@ export default function ProfilePage() {
 
       if (response.data.success) {
         if (token) setAuth(token, response.data.user);
+        setCurrentUser(response.data.user);
+        setImagePreview(resolveImageUrl(response.data.user));
         setIsEditing(false);
       }
     } catch (error) {
@@ -96,12 +134,7 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-[#0A0705] text-white flex flex-col relative font-sans overflow-x-hidden">
       
       {/* NOTIFICATION BELL */}
-      <div className="absolute top-8 right-10 z-50">
-        <div className="relative bg-white !p-4 rounded-full shadow-2xl cursor-pointer hover:scale-105 transition-all">
-          <Bell className="text-black w-7 h-7" />
-          <span className="absolute top-0 right-0 bg-red-600 text-white text-[12px] font-black w-6 h-6 flex items-center justify-center rounded-full border-2 border-black">1</span>
-        </div>
-      </div>
+      <NotificationBell className="absolute top-8 right-10 z-50" />
 
       {/* HEADING */}
       <div className="w-full text-center !pt-10 !mb-10">
@@ -164,7 +197,7 @@ export default function ProfilePage() {
       {/* LOGOUT: fixed 20px from bottom-right */}
       <button 
         type="button"
-        onClick={logout}
+        onClick={() => { logout(); router.push("/login"); }}
         className="fixed bottom-[20px] right-10 bg-[#EAE5DF] hover:bg-white text-[#4A171E] !px-8 !h-[45px] rounded-[6px] font-black !text-[14px] shadow-2xl uppercase tracking-widest transition-all active:scale-95 border border-zinc-300 z-50"
       >
         Logout

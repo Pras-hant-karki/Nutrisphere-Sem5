@@ -3,8 +3,11 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import axios from "axios";
+import { ChevronLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { getToken } from "@/lib/auth-helpers";
-import { buildApiUrl } from "@/lib/api/base-url";
+import { API_BASE_URL, buildApiUrl } from "@/lib/api/base-url";
+import NotificationBell from "@/app/components/notification-bell";
 
 interface User {
   _id: string;
@@ -12,13 +15,17 @@ interface User {
   email: string;
   role: string;
   phone?: string;
+  image?: string;
   createdAt: string;
 }
 
 export default function UsersPage() {
+  const router = useRouter();
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<User | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -39,6 +46,11 @@ export default function UsersPage() {
         setUsers(response.data.data || []);
       }
     } catch (err: any) {
+      if (axios.isAxiosError(err) && !err.response) {
+        setError("Unable to connect to server. Please make sure backend API is running.");
+        return;
+      }
+
       const errorMsg =
         err.response?.data?.message ||
         err.message ||
@@ -50,131 +62,221 @@ export default function UsersPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this user?")) return;
-
     try {
+      setIsDeleting(true);
       const token = getToken();
       await axios.delete(buildApiUrl(`/api/admin/users/${id}`), {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      setUsers(users.filter((user) => user._id !== id));
+      setUsers((prevUsers) => prevUsers.filter((user) => user._id !== id));
+      setDeleteTarget(null);
     } catch (err: any) {
+      if (axios.isAxiosError(err) && !err.response) {
+        setError("Unable to connect to server. Please make sure backend API is running.");
+        return;
+      }
+
       const errorMsg =
         err.response?.data?.message ||
         err.message ||
         "Failed to delete user";
       setError(errorMsg);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
+  const totalUsers = users.length;
+  const adminCount = users.filter((u) => u.role === "admin").length;
+  const regularCount = users.filter((u) => u.role !== "admin").length;
+
+  const getInitials = (name: string) =>
+    name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+
+  const getProfileImageSrc = (image?: string) => {
+    if (!image) return null;
+    if (image.startsWith("http://") || image.startsWith("https://")) {
+      return image;
+    }
+    return `${API_BASE_URL}${image}`;
+  };
+
   return (
-    <div className="min-h-screen bg-[#0F1310] p-4 md:p-8">
-      <div className="mx-auto max-w-7xl">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-          <div>
-            <h1 className="text-4xl font-bold text-[#D4AF37] mb-2">Users Management</h1>
-            <p className="text-[#9FB3A6]">View and manage all system users</p>
-          </div>
-          <Link
-            href="/admin/users/create"
-            className="mt-4 md:mt-0 px-6 py-3 rounded-lg bg-[#2ECC71] text-[#0F1310] font-bold hover:bg-[#26c969] transition-all inline-flex items-center gap-2 w-fit shadow-lg"
-          >
-            ➕ Create User
-          </Link>
-        </div>
+    <div className="bg-[#0A0705] min-h-screen relative">
+      <NotificationBell className="absolute top-8 right-10 z-50" />
 
-        {/* Error Message */}
-        {error && (
-          <div className="mb-6 p-4 rounded-lg bg-[#E53935]/10 text-[#E53935] border border-[#E53935]/30">
-            {error}
-          </div>
-        )}
+      <div className="!ml-[40px] pl-10 pr-12 pb-12">
+        <div className="mx-auto w-full max-w-5xl">
 
-        {/* Table */}
-        <div className="rounded-lg border border-[#26322B] bg-[#171C18] overflow-hidden shadow-lg">
+          <div className="flex items-center justify-between !pt-20 !mb-2">
+            <button
+              onClick={() => router.push("/admin/dashboard")}
+              className="text-[#FACC15] hover:scale-110 transition-transform"
+            >
+              <ChevronLeft size={48} strokeWidth={3} />
+            </button>
+            <h1 className="!text-[56px] font-black text-[#FACC15] tracking-tight text-center flex-1">
+              Users Management
+            </h1>
+            <div className="w-12" />
+          </div>
+
+          <div className="flex flex-col items-center text-center gap-1 mt-2">
+            <div>
+              <p className="text-[#9FB3A6] text-sm">View, manage and control all registered system users.</p>
+            </div>
+          </div>
+
+          <div className="h-8" />
+
+          {/* Stats Bar - Changed mb-20 to mb-1 (4px) */}
+          {!isLoading && users.length > 0 && (
+            <div className="grid grid-cols-3 gap-4">
+              {[
+                { label: "Total Users", value: totalUsers, color: "text-[#D4AF37]", bg: "bg-[#D4AF37]/10 border-[#D4AF37]/20" },
+                { label: "Admins", value: adminCount, color: "text-[#D4AF37]", bg: "bg-[#D4AF37]/10 border-[#D4AF37]/20" },
+                { label: "Regular Users", value: regularCount, color: "text-[#2ECC71]", bg: "bg-[#2ECC71]/10 border-[#2ECC71]/20" },
+              ].map((stat) => (
+                <div key={stat.label} className={`rounded-2xl border ${stat.bg} p-5 text-center`}>
+                  <p className={`text-3xl font-extrabold ${stat.color}`}>{stat.value}</p>
+                  <p className="text-xs text-[#9FB3A6] mt-1 font-medium uppercase tracking-wider">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {!isLoading && users.length > 0 && <div className="h-10" />}
+
+          {/* Error */}
+          {error && (
+            <div className="mb-8 p-4 rounded-xl bg-[#E53935]/10 text-[#E53935] border border-[#E53935]/30 text-sm flex items-center gap-3">
+              <span className="text-lg">⚠️</span> {error}
+            </div>
+          )}
+
+          {/* Content */}
           {isLoading ? (
-            <div className="p-8 text-center text-[#9FB3A6]">Loading users...</div>
+            <div className="flex flex-col items-center justify-center py-24 gap-4">
+              <div className="w-10 h-10 rounded-full border-4 border-[#2ECC71] border-t-transparent animate-spin" />
+              <p className="text-[#9FB3A6] text-sm">Loading users...</p>
+            </div>
           ) : users.length === 0 ? (
-            <div className="p-8 text-center text-[#9FB3A6]">
-              No users found. <Link href="/admin/users/create" className="text-[#D4AF37] hover:underline">Create one</Link>
+            <div className="flex flex-col items-center justify-center py-24 gap-4 rounded-2xl border border-[#26322B] bg-[#171C18]">
+              <span className="text-5xl">👤</span>
+              <p className="text-[#9FB3A6] text-base font-medium">No users found</p>
+              <p className="text-[#9FB3A6] text-sm text-center max-w-md">
+                Users are created automatically when they sign up.
+              </p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-[#26322B] bg-[#1B211D]">
-                    <th className="px-6 py-3 text-left text-sm font-bold text-[#D4AF37]">
-                      Name
-                    </th>
-                    <th className="px-6 py-3 text-left text-sm font-bold text-[#D4AF37]">
-                      Email
-                    </th>
-                    <th className="px-6 py-3 text-left text-sm font-bold text-[#D4AF37]">
-                      Role
-                    </th>
-                    <th className="px-6 py-3 text-left text-sm font-bold text-[#D4AF37]">
-                      Phone
-                    </th>
-                    <th className="px-6 py-3 text-left text-sm font-bold text-[#D4AF37]">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {users.map((user) => (
-                    <tr
-                      key={user._id}
-                      className="border-b border-[#26322B] hover:bg-[#1B211D] transition-colors"
-                    >
-                      <td className="px-6 py-4 text-sm text-[#FFFFFF] font-semibold">
-                        {user.fullName}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-[#9FB3A6]">
-                        {user.email}
-                      </td>
-                      <td className="px-6 py-4 text-sm">
-                        <span
-                          className={`inline-flex px-3 py-1 rounded-full text-xs font-bold ${
-                            user.role === "admin"
-                              ? "bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/30"
-                              : "bg-[#2ECC71]/20 text-[#2ECC71] border border-[#2ECC71]/30"
-                          }`}
-                        >
-                          {user.role === "admin" ? "👑 " : "👤 "}{user.role}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-[#9FB3A6]">
-                        {user.phone || "--"}
-                      </td>
-                      <td className="px-6 py-4 text-sm">
-                        <div className="flex gap-3">
-                          <Link
-                            href={`/admin/users/${user._id}`}
-                            className="text-[#2ECC71] hover:text-[#26c969] font-semibold transition-colors"
-                          >
-                            👁️ View
-                          </Link>
-                          <Link
-                            href={`/admin/users/${user._id}/edit`}
-                            className="text-[#D4AF37] hover:text-[#F0C960] font-semibold transition-colors"
-                          >
-                            ✏️ Edit
-                          </Link>
-                          <button
-                            onClick={() => handleDelete(user._id)}
-                            className="text-[#E53935] hover:text-[#FF6B6B] font-semibold transition-colors"
-                          >
-                            🗑️ Delete
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="grid grid-cols-1 gap-4">
+              {users.map((user) => (
+                <div
+                  key={user._id}
+                  className="group flex flex-col sm:flex-row sm:items-center gap-4 rounded-2xl border border-[#26322B] bg-[#171C18] hover:bg-[#1B211D] hover:border-[#2ECC71]/30 transition-all px-10 py-5 min-h-[72px] shadow-md"
+                >
+                  {/* Avatar */}
+                  <div
+                    className={`flex-shrink-0 ml-1 sm:ml-2 w-12 h-12 rounded-full flex items-center justify-center text-sm font-extrabold shadow-md ${
+                      user.role === "admin"
+                        ? "bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/40"
+                        : "bg-[#2ECC71]/20 text-[#2ECC71] border border-[#2ECC71]/40"
+                    }`}
+                  >
+                    {getProfileImageSrc(user.image) ? (
+                      <img
+                        src={getProfileImageSrc(user.image)!}
+                        alt={user.fullName}
+                        className="w-full h-full rounded-full object-cover"
+                      />
+                    ) : (
+                      getInitials(user.fullName)
+                    )}
+                  </div>
+
+                  {/* Info */}
+                  <div className="flex-1 min-w-0 grid grid-cols-1 sm:grid-cols-4 gap-2 sm:gap-4 items-center">
+                    <div className="sm:col-span-1">
+                      <p className="text-white font-semibold text-sm truncate">{user.fullName}</p>
+                      <p className="text-[#9FB3A6] text-xs truncate">{user.email}</p>
+                    </div>
+
+                    <div className="sm:col-span-1 flex sm:justify-center">
+                      <span
+                        className={`inline-flex items-center gap-1 px-5 py-2 rounded text-sm font-bold border ${
+                          user.role === "admin"
+                            ? "bg-[#D4AF37]/15 text-[#D4AF37] border-[#D4AF37]/30"
+                            : "bg-[#2ECC71]/15 text-[#2ECC71] border-[#2ECC71]/30"
+                        }`}
+                      >
+                        {user.role === "admin" ? "👑" : "👤"} {user.role}
+                      </span>
+                    </div>
+
+                    <div className="sm:col-span-1 sm:text-center">
+                      <p className="text-[#9FB3A6] text-xs font-medium uppercase tracking-wide">Phone</p>
+                      <p className="text-white text-sm">{user.phone || "—"}</p>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="sm:col-span-1 flex items-center gap-2 sm:justify-end sm:pr-3 md:pr-4 flex-wrap">
+                      <Link
+                        href={`/admin/users/${user._id}`}
+                        className="inline-flex min-w-[85px] justify-center items-center h-[32px] px-3 rounded-[10px] bg-[#3B82F6]/12 text-[#93C5FD] border border-[#60A5FA]/35 text-xs font-bold hover:bg-[#3B82F6]/20 transition-all"
+                      >
+                        View
+                      </Link>
+                      <button
+                        onClick={() => setDeleteTarget(user)}
+                        className="inline-flex min-w-[85px] justify-center items-center h-[32px] px-3 rounded-[10px] bg-[#EF4444]/12 text-[#FCA5A5] border border-[#EF4444]/35 text-xs font-bold hover:bg-[#EF4444]/20 transition-all"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Footer count */}
+          {!isLoading && users.length > 0 && (
+            <p className="text-center text-[#9FB3A6] text-xs mt-8">
+              Showing <span className="text-[#D4AF37] font-semibold">{users.length}</span> users
+            </p>
+          )}
+
+          {deleteTarget && (
+            <div className="fixed inset-0 bg-black/90 z-[100] flex items-center justify-center p-4">
+              <div className="bg-[#1E1E1E] p-8 min-h-[170px] rounded-2xl max-w-sm w-full text-center border border-white/10 flex flex-col justify-center">
+                <h3 className="text-xl font-bold mb-2">Are you sure?</h3>
+                <p className="text-gray-400 mb-7 font-normal">
+                  You want to delete <span className="text-white font-semibold">{deleteTarget.fullName}</span>?
+                </p>
+                <div className="flex items-center justify-center gap-4">
+                  <button
+                    onClick={() => setDeleteTarget(null)}
+                    disabled={isDeleting}
+                    className="w-[100px] py-2.5 rounded-[8px] bg-white/5 hover:bg-white/10 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => handleDelete(deleteTarget._id)}
+                    disabled={isDeleting}
+                    className="w-[100px] py-2.5 rounded-[8px] bg-red-600 hover:bg-red-700 font-bold transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {isDeleting ? "Deleting..." : "Delete"}
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </div>

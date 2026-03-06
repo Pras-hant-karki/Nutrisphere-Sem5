@@ -69,9 +69,9 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
 
         <div className="border-t border-[#333333] px-[24px] py-6">
           <Link
-            href="/user/profile"
+            href="/user/settings"
             title={isCollapsed ? "Settings" : ""}
-            className={`flex items-center gap-[20px] w-full h-[46px] rounded-md px-4 text-[14.5px] font-[400] transition-all duration-200 justify-start ${isActive("/user/profile") // Note: The previous navItem is "Profile", settings links to it too in this template.
+            className={`flex items-center gap-[20px] w-full h-[46px] rounded-md px-4 text-[14.5px] font-[400] transition-all duration-200 justify-start ${isActive("/user/settings")
               ? "bg-transparent text-[#FFFFFF]"
               : "bg-transparent text-[#A0A0A0] hover:text-[#FFFFFF] border border-transparent"
               }`}

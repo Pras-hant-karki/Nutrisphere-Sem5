@@ -2,7 +2,17 @@
 
 import Link from "next/link";
 import { Mail, ArrowLeft } from "lucide-react";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
+import z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { handleRequestPasswordReset } from "@/lib/actions/auth-action";
+
+const RequestPasswordResetSchema = z.object({
+  email: z.string().email("Enter a valid email"),
+});
+
+type RequestPasswordResetDTO = z.infer<typeof RequestPasswordResetSchema>;
 
 type FieldRowProps = {
   icon: ReactNode;
@@ -25,6 +35,23 @@ function FieldRow({ icon, children }: FieldRowProps) {
 }
 
 export default function ForgotPasswordPage() {
+  const [serverMessage, setServerMessage] = useState<string>("");
+  const [isErrorMessage, setIsErrorMessage] = useState<boolean>(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<RequestPasswordResetDTO>({
+    resolver: zodResolver(RequestPasswordResetSchema),
+  });
+
+  const onSubmit = async (data: RequestPasswordResetDTO) => {
+    const response = await handleRequestPasswordReset(data.email);
+    setServerMessage(response.message);
+    setIsErrorMessage(!response.success);
+  };
+
   return (
     <div className="w-full max-w-[480px] mx-auto px-4">
       
@@ -36,7 +63,7 @@ export default function ForgotPasswordPage() {
         </h1>
       </div>
 
-      <div className="flex flex-col !gap-y-10">
+      <form className="flex flex-col !gap-y-10" onSubmit={handleSubmit(onSubmit)}>
         
         {/* Email Field Row */}
         <FieldRow icon={<Mail className="w-6 h-6" />}>
@@ -44,17 +71,32 @@ export default function ForgotPasswordPage() {
             type="email"
             id="email"
             placeholder="Enter your email"
+            {...register("email")}
             /* !text-[18px] ensures clear visibility */
             className="w-full h-full bg-transparent px-5 text-white placeholder:text-gray-500 outline-none !text-[18px] font-medium"
           />
         </FieldRow>
 
+        {errors.email && (
+          <p className="text-red-500 text-sm -mt-7">{errors.email.message}</p>
+        )}
+
+        {serverMessage && (
+          <p className={`text-sm -mt-7 ${isErrorMessage ? "text-red-500" : "text-[#39FF14]"}`}>
+            {serverMessage}
+          </p>
+        )}
+
         {/* 2. ACTION BUTTON: 
             - !h-[70px]: Matches height of previous form buttons
             - bg-[#FF0000]: Red theme for the Reset page
         */}
-        <button className="w-full !h-[70px] bg-[#FF0000] hover:bg-[#cc0000] text-white font-black !text-[24px] rounded-full transition-all shadow-[0_10px_20px_rgba(255,0,0,0.2)] mt-2">
-          Reset password
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full !h-[70px] bg-[#FF0000] hover:bg-[#cc0000] text-white font-black !text-[24px] rounded-full transition-all shadow-[0_10px_20px_rgba(255,0,0,0.2)] mt-2 disabled:opacity-60"
+        >
+          {isSubmitting ? "Sending..." : "Reset password"}
         </button>
 
         {/* 3. GO BACK LINK:
@@ -70,7 +112,7 @@ export default function ForgotPasswordPage() {
             Go back
           </Link>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

@@ -1,9 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import { Calendar, ChevronRight, Users, UserCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import NotificationBell from "@/app/components/notification-bell";
 
 export default function AdminDashboard() {
+  const router = useRouter();
+
   const dashboardCards = [
     {
       title: "Manage Sessions",
@@ -21,38 +24,57 @@ export default function AdminDashboard() {
       title: "My Bio",
       subtitle: "Manage your trainer bio and profile",
       icon: UserCircle,
-      href: "/admin/profile",
+      href: "/admin/my_bio",
     },
   ];
 
   return (
-    <div className="flex flex-col items-center min-h-screen">
-      <div className="w-full text-center mb-20">
-        <h1 className="text-4xl font-bold text-[#D4AF37]">Welcome to Admin Dashboard !</h1>
+    <div className="min-h-screen bg-[#0A0705] text-white flex flex-col relative font-sans overflow-x-hidden">
+
+      {/* NOTIFICATION BELL */}
+      <NotificationBell className="absolute top-8 right-10 z-50" />
+
+      {/* HEADING */}
+      <div className="w-full text-center !pt-24 !mb-20">
+        <h1 className="!text-[64px] font-black text-[#FACC15] tracking-tight leading-none">
+          Welcome to Admin Dashboard !
+        </h1>
       </div>
 
-      <div className="w-full max-w-3xl flex flex-col gap-8">
+      {/* CARDS */}
+      <div className="flex-1 flex flex-col items-center gap-y-8 w-full max-w-6xl mx-auto px-10 pb-20">
         {dashboardCards.map((card) => {
           const IconComponent = card.icon;
           return (
-            <Link
+            <div
               key={card.title}
-              href={card.href}
-              className="flex items-center justify-between h-36 px-10 bg-gradient-to-r from-[#1a1f1e] to-[#151a19] border border-[#2a3530] rounded-2xl shadow-lg cursor-pointer transition-all duration-200 hover:border-[#D4AF37]/50 hover:shadow-xl"
+              onClick={() => router.push(card.href)}
+              className="group flex items-center w-full max-w-[800px] !h-[120px] bg-[#1E1E1E] border-2 border-[#FACC15] rounded-[24px] overflow-hidden transition-all duration-300 hover:ring-4 hover:ring-[#FACC15]/10 cursor-pointer"
             >
-              <div className="flex items-center gap-8 flex-1 min-w-0">
-                <IconComponent size={28} strokeWidth={1.5} className="text-[#D4AF37] flex-shrink-0" />
-                <div className="flex flex-col justify-center min-w-0">
-                  <h2 className="text-xl font-semibold text-[#D4AF37] leading-tight">{card.title}</h2>
-                  <p className="text-sm text-[#9FB3A6] mt-2 leading-tight line-clamp-1">{card.subtitle}</p>
-                </div>
+              {/* ICON GUTTER */}
+              <div className="flex justify-center items-center min-w-[100px] text-white border-r border-white/10 h-full">
+                <IconComponent size={32} strokeWidth={2} />
               </div>
-              <ChevronRight
-                size={32}
-                strokeWidth={1.5}
-                className="text-[#7C8C83] hover:text-[#D4AF37] transition-colors ml-6 flex-shrink-0"
-              />
-            </Link>
+
+              {/* TEXT */}
+              <div className="flex-1 flex flex-col justify-center px-8 min-w-0">
+                <h2 className="!text-[24px] font-bold text-[#FACC15] leading-tight">
+                  {card.title}
+                </h2>
+                <p className="text-[16px] text-gray-400 mt-1 font-medium line-clamp-1">
+                  {card.subtitle}
+                </p>
+              </div>
+
+              {/* CHEVRON */}
+              <div className="pr-10">
+                <ChevronRight
+                  size={32}
+                  strokeWidth={2.5}
+                  className="text-gray-500 group-hover:text-white transition-colors"
+                />
+              </div>
+            </div>
           );
         })}
       </div>

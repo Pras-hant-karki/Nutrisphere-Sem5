@@ -1,7 +1,8 @@
 "use client";
 
-import { Calendar, BarChart3, Users, ChevronRight, Bell } from "lucide-react";
+import { Calendar, BarChart3, Users, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
+import NotificationBell from "@/app/components/notification-bell";
 
 export default function HomePage() {
   const router = useRouter();
@@ -28,16 +29,10 @@ export default function HomePage() {
   ];
 
   return (
-    /* 1) BACKGROUND COLOR: Matches your Login/Profile design #0A0705 */
     <div className="min-h-screen bg-[#0A0705] text-white flex flex-col relative font-sans overflow-x-hidden">
       
       {/* 6) NOTIFICATION BELL: Styled exactly like the Profile Page */}
-      <div className="absolute top-8 right-10 z-50">
-        <div className="relative bg-white !p-4 rounded-full shadow-2xl cursor-pointer hover:scale-105 transition-all">
-          <Bell className="text-black w-7 h-7" />
-          <span className="absolute top-0 right-0 bg-red-600 text-white text-[12px] font-black w-6 h-6 flex items-center justify-center rounded-full border-2 border-black">1</span>
-        </div>
-      </div>
+      <NotificationBell className="absolute top-8 right-10 z-50" />
 
       {/* 2) HEADING POSITION: Brought down using !pt-24 and !mb-20 */}
       <div className="w-full text-center !pt-24 !mb-20">
@@ -54,16 +49,14 @@ export default function HomePage() {
             <div
               key={card.title}
               onClick={() => router.push(card.href)}
-              /* 3) CONTAINER SHADE & OUTLINE: bg-[#1E1E1E] with #FACC15 border */
-              /* 4) HEIGHT: Set to !h-[120px] for a sleek figma look */
               className="group flex items-center w-full max-w-[800px] !h-[120px] bg-[#1E1E1E] border-2 border-[#FACC15] rounded-[24px] overflow-hidden transition-all duration-300 hover:ring-4 hover:ring-[#FACC15]/10 cursor-pointer"
             >
-              {/* 5) ICON GUTTER: Defines a specific zone (min-w-[100px]) so icons never overlap text */}
+              {/* ICON GUTTER: Defines a specific zone (min-w-[100px]) so icons never overlap text */}
               <div className="flex justify-center items-center min-w-[100px] text-white border-r border-white/10 h-full">
                 <IconComponent size={32} strokeWidth={2} />
               </div>
 
-              {/* 5) TEXT GAPPINGS: px-8 for internal breathing room */}
+              {/* TEXT GAPPINGS: px-8 for internal breathing room */}
               <div className="flex-1 flex flex-col justify-center px-8 min-w-0">
                 <h2 className="!text-[24px] font-bold text-[#FACC15] leading-tight">
                   {card.title}
